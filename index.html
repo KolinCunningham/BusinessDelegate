@@ -197,40 +197,11 @@
             color: var(--soft-gray);
             line-height: 1.7;
         }
-        .carousel {
-            position: relative;
-            max-width: 100%;
-            margin: auto;
-            overflow: hidden;
-        }
-        .carousel-inner {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-        .carousel-item {
-            flex: 0 0 100%;
-            text-align: center;
-            padding: 1rem;
-        }
-        .carousel-item.active {
-            display: block;
-        }
-        .carousel-control {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            z-index: 10;
-        }
-        .carousel-control.prev {
-            left: 0;
-        }
-        .carousel-control.next {
-            right: 0;
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
         }
         .value-card {
             background: var(--white);
@@ -251,6 +222,52 @@
             margin-bottom: 0;
             font-size: 1rem;
             line-height: 1.7;
+        }
+        /* Carousel Styles */
+        .carousel {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-item {
+            flex: 0 0 100%;
+            text-align: center;
+            padding: 1rem;
+        }
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .carousel-control.prev {
+            left: 0;
+        }
+        .carousel-control.next {
+            right: 0;
+        }
+        @media (min-width: 769px) {
+            .carousel-inner {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                transition: none;
+            }
+            .carousel-item {
+                flex: 0 0 auto;
+            }
+            .carousel-control {
+                display: none;
+            }
         }
         /* Services Section */
         .services {
@@ -520,6 +537,7 @@
             section {
                 padding: 4rem 0;
             }
+            .value-grid,
             .steps,
             .testimonials {
                 grid-template-columns: 1fr;
@@ -573,19 +591,6 @@
             border-radius: 8px;
             margin-bottom: 1rem;
         }
-        @media (min-width: 769px) {
-            .carousel-control {
-                display: none; /* Hide controls on desktop */
-            }
-            .carousel-inner {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                transition: none; /* No transition on desktop */
-            }
-            .carousel-item {
-                flex: 0 0 auto;
-            }
-        }
     </style>
 </head>
 <body>
@@ -607,7 +612,7 @@
         <div class="container">
             <h1>Your Business, Streamlined</h1>
             <p>We help small and medium-sized businesses cut through operational chaos with smart automation, AI strategy, and workflow optimization—so you can focus on growth, not grinding.</p>
-            <img src="Pictures/CE670BC3-CA4A-4449-83AC-8B39538E0DF2.jpeg" alt="Streamlined business operations illustration" class="section-image">
+            <img src="Pictures/CE670BC3-CA4A-4449-83AC-8B39538E0DF2.jpeg" alt="Team at eMobility LIVE event" class="section-image">
             <div class="hero-ctas">
                 <a href="#contact" class="cta-button">Book a Free Consultation</a>
                 <a href="#services" class="cta-button secondary">See How We Help</a>
@@ -620,20 +625,20 @@
             <h2>Built for Businesses That Don't Have Time to Waste</h2>
             <p class="value-intro">You're running a business, not an IT department. We get it. That's why we specialize in practical solutions that actually work for small and medium-sized teams—no enterprise complexity, no six-month implementations, no unnecessary overhead.</p>
            
-            <div class="carousel" id="valueCarousel">
+            <div class="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item value-card">
-                        <img src="Pictures/IMG_1162.JPG" alt="Operations workflow optimization">
+                        <img src="Pictures/IMG_1162.JPG" alt="Workshop session with team">
                         <h3>Make Operations Actually Work</h3>
                         <p>Stop wrestling with inefficient processes. We identify bottlenecks and design systems that help your team work smarter, not harder.</p>
                     </div>
                     <div class="carousel-item value-card">
-                        <img src="Pictures/IMG_1223.JPG" alt="AI implementation for businesses">
+                        <img src="Pictures/IMG_1223.JPG" alt="Group discussion in studio">
                         <h3>AI That Makes Sense</h3>
                         <p>Cut through the hype. We implement AI and automation that solves real problems—from customer service to data management—without requiring a PhD to understand.</p>
                     </div>
                     <div class="carousel-item value-card">
-                        <img src="Pictures/IMG_7080.jpeg" alt="Scalable business solutions">
+                        <img src="Pictures/IMG_7080.jpeg" alt="Team at art gallery">
                         <h3>Solutions That Scale With You</h3>
                         <p>Whether you're a team of 5 or 50, we build flexible systems that grow with your business, not against it.</p>
                     </div>
@@ -646,10 +651,10 @@
     <!-- Services Section -->
     <section class="services" id="services">
         <div class="container">
-            <h2>What We Do (And How We Do It Better</h2>
+            <h2>What We Do (And How We Do It Better)</h2>
            
             <div class="service">
-                <img src="Pictures/Screenshot%202026-01-22%20at%202.48.39%20pm.png" alt="Operations consulting service">
+                <img src="Pictures/Screenshot 2026-01-22 at 2.48.39 pm.png" alt="Operations consulting service">
                 <h3>Operations That Actually Operate</h3>
                 <p>Your business shouldn't feel like controlled chaos. We audit your current operations, identify what's slowing you down, and create streamlined processes that save time and money. Think of us as your external operations team—minus the overhead.</p>
                 <h4>What You Get:</h4>
@@ -712,7 +717,7 @@
             <h2>Working Together Is Simple</h2>
             <div class="steps">
                 <div class="step">
-                    <img src="Pictures/Screenshot%202026-01-22%20at%202.53.30%20pm.jpeg" alt="Discovery call step">
+                    <img src="Pictures/Screenshot 2026-01-22 at 2.53.30 pm.jpeg" alt="Discovery call step">
                     <div class="step-number">1</div>
                     <h3>Discovery Call</h3>
                     <p>We listen to your challenges and assess whether we're the right fit. No sales pressure, just honest conversation.</p>
@@ -741,7 +746,7 @@
             <h2>Real Businesses, Real Results</h2>
             <div class="testimonials">
                 <div class="testimonial">
-                    <img src="Pictures/Screenshot%202026-01-31%20at%206.06.31%20pm.png" alt="E-Commerce business testimonial">
+                    <img src="Pictures/Screenshot 2026-01-31 at 6.06.31 pm.png" alt="E-Commerce business testimonial">
                     <div class="testimonial-type">E-Commerce Business</div>
                     <p class="testimonial-problem">"Order processing was taking our team 3+ hours daily, with frequent errors causing customer complaints."</p>
                     <p class="testimonial-result"><span>The Result:</span> 85% reduction in processing time, zero errors in 90 days, $40K annual savings</p>
