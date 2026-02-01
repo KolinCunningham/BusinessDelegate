@@ -11,6 +11,7 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         :root {
             --navy: #0D1117;
             --teal: #2383E2;
@@ -21,6 +22,7 @@
             --border-gray: #E1E4E8;
             --white: #FFFFFF;
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
             color: var(--navy);
@@ -28,6 +30,7 @@
             background: var(--white);
             -webkit-font-smoothing: antialiased;
         }
+
         /* Typography */
         h1, h2, h3, h4, h5 {
             font-weight: 600;
@@ -35,28 +38,31 @@
             margin-bottom: 1rem;
             letter-spacing: -0.02em;
         }
-        h1 {
-            font-size: 4.5rem;
+
+        h1 { 
+            font-size: 4.5rem; 
             font-weight: 700;
             line-height: 1.1;
         }
-        h2 {
-            font-size: 3rem;
+        h2 { 
+            font-size: 3rem; 
             font-weight: 600;
         }
-        h3 {
-            font-size: 1.5rem;
+        h3 { 
+            font-size: 1.5rem; 
             font-weight: 600;
         }
-        h4 {
-            font-size: 1.125rem;
+        h4 { 
+            font-size: 1.125rem; 
             font-weight: 600;
         }
-        p {
-            margin-bottom: 1rem;
+
+        p { 
+            margin-bottom: 1rem; 
             font-size: 1.125rem;
             color: var(--soft-gray);
         }
+
         /* Navigation */
         nav {
             background: rgba(255, 255, 255, 0.8);
@@ -68,6 +74,7 @@
             z-index: 1000;
             border-bottom: 1px solid var(--border-gray);
         }
+
         .nav-container {
             max-width: 1280px;
             margin: 0 auto;
@@ -76,6 +83,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .logo {
             font-size: 1.375rem;
             font-weight: 600;
@@ -83,15 +91,18 @@
             text-decoration: none;
             letter-spacing: -0.02em;
         }
+
         .logo span {
             color: var(--teal);
         }
+
         .nav-links {
             display: flex;
             gap: 2.5rem;
             list-style: none;
             align-items: center;
         }
+
         .nav-links a {
             color: var(--soft-gray);
             text-decoration: none;
@@ -99,9 +110,11 @@
             font-size: 0.9375rem;
             transition: color 0.2s;
         }
+
         .nav-links a:hover {
             color: var(--navy);
         }
+
         .cta-button {
             background: var(--teal);
             color: var(--white);
@@ -113,28 +126,34 @@
             transition: background 0.2s, transform 0.1s;
             display: inline-block;
         }
+
         .cta-button:hover {
             background: #1a6ec7;
             transform: translateY(-1px);
         }
+
         .cta-button.secondary {
             background: transparent;
             color: var(--navy);
             border: 1px solid var(--border-gray);
         }
+
         .cta-button.secondary:hover {
             background: var(--light-gray);
             border-color: var(--soft-gray);
         }
+
         /* Container */
         .container {
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 3rem;
         }
+
         section {
             padding: 7rem 0;
         }
+
         /* Hero Section */
         .hero {
             background: var(--white);
@@ -143,6 +162,7 @@
             text-align: center;
             border-bottom: 1px solid var(--border-gray);
         }
+
         .hero h1 {
             margin-bottom: 1.5rem;
             animation: fadeInUp 0.6s ease-out;
@@ -150,6 +170,7 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         .hero p {
             font-size: 1.375rem;
             max-width: 680px;
@@ -158,16 +179,19 @@
             animation: fadeInUp 0.6s ease-out 0.1s backwards;
             line-height: 1.6;
         }
+
         .hero-ctas {
             display: flex;
             gap: 1rem;
             justify-content: center;
             animation: fadeInUp 0.6s ease-out 0.2s backwards;
         }
+
         .hero-ctas .cta-button {
             padding: 0.875rem 1.75rem;
             font-size: 1rem;
         }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -178,10 +202,12 @@
                 transform: translateY(0);
             }
         }
+
         /* Value Proposition */
         .value-prop {
             background: var(--white);
         }
+
         .value-prop h2 {
             text-align: center;
             margin-bottom: 1.5rem;
@@ -189,6 +215,7 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         .value-intro {
             text-align: center;
             max-width: 720px;
@@ -197,40 +224,48 @@
             color: var(--soft-gray);
             line-height: 1.7;
         }
+
         .value-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 3rem;
             margin-top: 4rem;
         }
+
         .value-card {
             background: var(--white);
             padding: 0;
             border-radius: 0;
             transition: transform 0.2s;
         }
+
         .value-card:hover {
             transform: translateY(-2px);
         }
+
         .value-card h3 {
             color: var(--navy);
             margin-bottom: 0.75rem;
             font-size: 1.375rem;
         }
+
         .value-card p {
             color: var(--soft-gray);
             margin-bottom: 0;
             font-size: 1rem;
             line-height: 1.7;
         }
+
         /* Services Section */
         .services {
             background: var(--light-gray);
         }
+
         .services h2 {
             text-align: center;
             margin-bottom: 5rem;
         }
+
         .service {
             background: var(--white);
             padding: 2.5rem;
@@ -239,19 +274,23 @@
             border: 1px solid var(--border-gray);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+
         .service:hover {
             border-color: var(--teal);
             box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         }
+
         .service h3 {
             color: var(--navy);
             margin-bottom: 1rem;
             font-size: 1.5rem;
         }
+
         .service p {
             font-size: 1rem;
             line-height: 1.7;
         }
+
         .service h4 {
             color: var(--navy);
             font-size: 0.875rem;
@@ -261,10 +300,12 @@
             letter-spacing: 0.05em;
             font-weight: 600;
         }
+
         .service ul {
             list-style: none;
             padding-left: 0;
         }
+
         .service li {
             padding-left: 1.5rem;
             position: relative;
@@ -272,6 +313,7 @@
             color: var(--soft-gray);
             font-size: 0.9375rem;
         }
+
         .service li::before {
             content: "✓";
             position: absolute;
@@ -279,23 +321,28 @@
             color: var(--teal);
             font-weight: 600;
         }
+
         /* How It Works */
         .how-it-works {
             background: var(--white);
         }
+
         .how-it-works h2 {
             text-align: center;
             margin-bottom: 5rem;
         }
+
         .steps {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 3rem;
         }
+
         .step {
             text-align: left;
             padding: 0;
         }
+
         .step-number {
             width: 48px;
             height: 48px;
@@ -309,42 +356,50 @@
             font-weight: 600;
             margin-bottom: 1.25rem;
         }
+
         .step h3 {
             font-size: 1.25rem;
             margin-bottom: 0.75rem;
         }
+
         .step p {
             color: var(--soft-gray);
             margin-bottom: 0;
             font-size: 0.9375rem;
             line-height: 1.7;
         }
+
         /* Social Proof */
         .social-proof {
             background: var(--white);
             border-top: 1px solid var(--border-gray);
         }
+
         .social-proof h2 {
             text-align: center;
             margin-bottom: 4rem;
         }
+
         .testimonials {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
         }
+
         .testimonial {
             background: var(--light-gray);
             padding: 2rem;
             border-radius: 8px;
             border: 1px solid var(--border-gray);
         }
+
         .testimonial-type {
             font-weight: 600;
             color: var(--navy);
             margin-bottom: 0.75rem;
             font-size: 0.875rem;
         }
+
         .testimonial-problem {
             font-style: normal;
             color: var(--soft-gray);
@@ -352,6 +407,7 @@
             font-size: 0.9375rem;
             line-height: 1.6;
         }
+
         .testimonial-result {
             font-weight: 500;
             color: var(--navy);
@@ -359,10 +415,12 @@
             font-size: 0.9375rem;
             line-height: 1.6;
         }
+
         .testimonial-result span {
             color: var(--teal);
             font-weight: 600;
         }
+
         /* Final CTA */
         .final-cta {
             background: var(--navy);
@@ -370,11 +428,13 @@
             text-align: center;
             padding: 7rem 0;
         }
+
         .final-cta h2 {
             color: var(--white);
             margin-bottom: 1rem;
             font-size: 2.5rem;
         }
+
         .final-cta p {
             font-size: 1.125rem;
             margin-bottom: 2rem;
@@ -383,23 +443,28 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         .final-cta .cta-button {
             background: var(--teal);
             font-size: 1rem;
             padding: 0.875rem 2rem;
         }
+
         .final-cta .cta-button:hover {
             background: #1a6ec7;
         }
+
         .final-cta .contact-alt {
             margin-top: 1.5rem;
             font-size: 0.9375rem;
             color: rgba(255, 255, 255, 0.7);
         }
+
         .final-cta .contact-alt a {
             color: var(--white);
             text-decoration: underline;
         }
+
         /* Footer */
         footer {
             background: var(--white);
@@ -407,12 +472,14 @@
             padding: 4rem 0 2rem;
             border-top: 1px solid var(--border-gray);
         }
+
         .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 3rem;
             margin-bottom: 3rem;
         }
+
         .footer-section h4 {
             margin-bottom: 1rem;
             color: var(--navy);
@@ -421,25 +488,31 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+
         .footer-section p {
             font-size: 0.9375rem;
             line-height: 1.6;
         }
+
         .footer-section ul {
             list-style: none;
         }
+
         .footer-section li {
             margin-bottom: 0.625rem;
         }
+
         .footer-section a {
             color: var(--soft-gray);
             text-decoration: none;
             transition: color 0.2s;
             font-size: 0.9375rem;
         }
+
         .footer-section a:hover {
             color: var(--navy);
         }
+
         .footer-bottom {
             text-align: center;
             padding-top: 2rem;
@@ -447,103 +520,82 @@
             color: var(--soft-gray);
             font-size: 0.875rem;
         }
+
         .footer-bottom a {
             color: var(--soft-gray);
             text-decoration: none;
         }
+
         .footer-bottom a:hover {
             color: var(--navy);
         }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .steps {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
         @media (max-width: 768px) {
             h1 { font-size: 2.75rem; }
             h2 { font-size: 2rem; }
-           
+            
             .container {
                 padding: 0 1.5rem;
             }
+
             .nav-container {
                 padding: 0 1.5rem;
             }
-           
+            
             .nav-links {
                 display: none;
             }
+
             .hero {
                 padding: 5rem 0 6rem;
             }
+
             .hero p {
                 font-size: 1.125rem;
             }
+
             .hero-ctas {
                 flex-direction: column;
                 align-items: stretch;
             }
+
             .hero-ctas .cta-button {
                 width: 100%;
                 text-align: center;
             }
+
             section {
                 padding: 4rem 0;
             }
+
             .value-grid,
             .steps,
             .testimonials {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
+
             .services h2,
             .how-it-works h2,
             .social-proof h2 {
                 margin-bottom: 3rem;
             }
         }
+
         @media (max-width: 480px) {
             h1 { font-size: 2.25rem; }
             h2 { font-size: 1.75rem; }
-           
+            
             .hero p {
                 font-size: 1rem;
             }
-        }
-        /* Added Styles for Images */
-        .section-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .value-card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        .service img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-        .step img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        .testimonial img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -561,50 +613,48 @@
             <a href="#contact" class="cta-button">Get Started</a>
         </div>
     </nav>
+
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1>Your Business, Streamlined</h1>
             <p>We help small and medium-sized businesses cut through operational chaos with smart automation, AI strategy, and workflow optimization—so you can focus on growth, not grinding.</p>
-            <img src="Pictures/1.png" alt="Streamlined business operations illustration" class="section-image">
             <div class="hero-ctas">
                 <a href="#contact" class="cta-button">Book a Free Consultation</a>
                 <a href="#services" class="cta-button secondary">See How We Help</a>
             </div>
         </div>
     </section>
+
     <!-- Value Proposition -->
     <section class="value-prop">
         <div class="container">
             <h2>Built for Businesses That Don't Have Time to Waste</h2>
             <p class="value-intro">You're running a business, not an IT department. We get it. That's why we specialize in practical solutions that actually work for small and medium-sized teams—no enterprise complexity, no six-month implementations, no unnecessary overhead.</p>
-           
+            
             <div class="value-grid">
                 <div class="value-card">
-                    <img src="Pictures/2.png" alt="Operations workflow optimization">
                     <h3>Make Operations Actually Work</h3>
                     <p>Stop wrestling with inefficient processes. We identify bottlenecks and design systems that help your team work smarter, not harder.</p>
                 </div>
                 <div class="value-card">
-                    <img src="Pictures/3.png" alt="AI implementation for businesses">
                     <h3>AI That Makes Sense</h3>
                     <p>Cut through the hype. We implement AI and automation that solves real problems—from customer service to data management—without requiring a PhD to understand.</p>
                 </div>
                 <div class="value-card">
-                    <img src="Pictures/4.png" alt="Scalable business solutions">
                     <h3>Solutions That Scale With You</h3>
                     <p>Whether you're a team of 5 or 50, we build flexible systems that grow with your business, not against it.</p>
                 </div>
             </div>
         </div>
     </section>
+
     <!-- Services Section -->
     <section class="services" id="services">
         <div class="container">
             <h2>What We Do (And How We Do It Better)</h2>
-           
+            
             <div class="service">
-                <img src="Pictures/5.png" alt="Operations consulting service">
                 <h3>Operations That Actually Operate</h3>
                 <p>Your business shouldn't feel like controlled chaos. We audit your current operations, identify what's slowing you down, and create streamlined processes that save time and money. Think of us as your external operations team—minus the overhead.</p>
                 <h4>What You Get:</h4>
@@ -615,8 +665,8 @@
                     <li>Implementation roadmaps you can actually follow</li>
                 </ul>
             </div>
+
             <div class="service">
-                <img src="Pictures/6.png" alt="AI consulting without hype">
                 <h3>AI Without the Snake Oil</h3>
                 <p>AI is powerful, but only if it's solving actual problems. We help you figure out where AI makes sense for your business, then implement solutions that deliver measurable results—not just impressive demos.</p>
                 <h4>What You Get:</h4>
@@ -627,8 +677,8 @@
                     <li>Training and ongoing support</li>
                 </ul>
             </div>
+
             <div class="service">
-                <img src="Pictures/7.png" alt="Workflow simplification service">
                 <h3>Fewer Steps, Better Results</h3>
                 <p>Complicated workflows kill productivity. We find the redundancies, eliminate the unnecessary steps, and design workflows that your team will actually want to use. Simple, effective, sustainable.</p>
                 <h4>What You Get:</h4>
@@ -639,8 +689,8 @@
                     <li>Change management support</li>
                 </ul>
             </div>
+
             <div class="service">
-                <img src="Pictures/8.png" alt="Custom business problem solving">
                 <h3>Your Challenge, Our Expertise</h3>
                 <p>Some problems don't fit in a box—and that's okay. We're here for the head-scratchers, the unique challenges, and the situations where you need someone who can think creatively and execute practically.</p>
                 <h4>What You Get:</h4>
@@ -651,8 +701,8 @@
                     <li>Hands-on implementation support</li>
                 </ul>
             </div>
+
             <div class="service">
-                <img src="Pictures/9.png" alt="Tailored business solutions">
                 <h3>Built for Your Business, Not Someone Else's</h3>
                 <p>Off-the-shelf solutions rarely fit perfectly. We design custom approaches tailored to your specific industry, team size, and challenges—because your business deserves better than one-size-fits-all.</p>
                 <h4>What You Get:</h4>
@@ -665,31 +715,28 @@
             </div>
         </div>
     </section>
+
     <!-- How It Works -->
     <section class="how-it-works" id="how-it-works">
         <div class="container">
             <h2>Working Together Is Simple</h2>
             <div class="steps">
                 <div class="step">
-                    <img src="Pictures/10.png" alt="Discovery call step">
                     <div class="step-number">1</div>
                     <h3>Discovery Call</h3>
                     <p>We listen to your challenges and assess whether we're the right fit. No sales pressure, just honest conversation.</p>
                 </div>
                 <div class="step">
-                    <img src="Pictures/11.png" alt="Strategy session step">
                     <div class="step-number">2</div>
                     <h3>Strategy Session</h3>
                     <p>We dive deep into your operations, identify opportunities, and create a clear roadmap with priorities and timelines.</p>
                 </div>
                 <div class="step">
-                    <img src="Pictures/12.png" alt="Implementation step">
                     <div class="step-number">3</div>
                     <h3>Implementation</h3>
                     <p>We work alongside your team to implement solutions, provide training, and ensure everything actually works in the real world.</p>
                 </div>
                 <div class="step">
-                    <img src="Pictures/13.png" alt="Optimization step">
                     <div class="step-number">4</div>
                     <h3>Optimization</h3>
                     <p>Business evolves, and so should your systems. We provide ongoing support to refine and improve as you grow.</p>
@@ -697,25 +744,23 @@
             </div>
         </div>
     </section>
+
     <!-- Social Proof -->
     <section class="social-proof" id="results">
         <div class="container">
             <h2>Real Businesses, Real Results</h2>
             <div class="testimonials">
                 <div class="testimonial">
-                    <img src="Pictures/14.png" alt="E-Commerce business testimonial">
                     <div class="testimonial-type">E-Commerce Business</div>
                     <p class="testimonial-problem">"Order processing was taking our team 3+ hours daily, with frequent errors causing customer complaints."</p>
                     <p class="testimonial-result"><span>The Result:</span> 85% reduction in processing time, zero errors in 90 days, $40K annual savings</p>
                 </div>
                 <div class="testimonial">
-                    <img src="Pictures/15.png" alt="Professional services firm testimonial">
                     <div class="testimonial-type">Professional Services Firm</div>
                     <p class="testimonial-problem">"Client onboarding required 15 separate manual steps across multiple disconnected systems."</p>
                     <p class="testimonial-result"><span>The Result:</span> Streamlined to 3 automated steps, 60% faster onboarding, 95% client satisfaction score</p>
                 </div>
                 <div class="testimonial">
-                    <img src="Pictures/16.png" alt="Manufacturing SMB testimonial">
                     <div class="testimonial-type">Manufacturing SMB</div>
                     <p class="testimonial-problem">"Inventory management was chaotic—we were constantly over or understocked."</p>
                     <p class="testimonial-result"><span>The Result:</span> AI-powered forecasting, 40% inventory cost reduction, improved cash flow by $120K</p>
@@ -723,16 +768,17 @@
             </div>
         </div>
     </section>
+
     <!-- Final CTA -->
     <section class="final-cta" id="contact">
         <div class="container">
             <h2>Ready to Stop Fighting Your Operations?</h2>
             <p>Book a free 30-minute consultation. We'll discuss your biggest challenges and explore whether we can help—no commitment required.</p>
-            <a href="/cdn-cgi/l/email-protection#30131f1e0411130430120503191e15030314151c15171104155e131f1d" class="cta-button">Schedule Your Free Consultation</a>
+            <a href="/cdn-cgi/l/email-protection#70131f1e0411130430120503191e15030314151c15171104155e131f1d" class="cta-button">Schedule Your Free Consultation</a>
             <p class="contact-alt">Prefer email? Reach us at <a href="/cdn-cgi/l/email-protection#98fbf7f6ecf9fbecd8faedebf1f6fdebebfcfdf4fdfff9ecfdb6fbf7f5"><span class="__cf_email__" data-cfemail="0e6d61607a6f6d7a4e6c7b7d67606b7d7d6a6b626b696f7a6b206d6163">[email&#160;protected]</span></a></p>
-            <img src="Pictures/17.png" alt="Call to action illustration" class="section-image">
         </div>
     </section>
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -763,7 +809,7 @@
                 <div class="footer-section">
                     <h4>Get Started</h4>
                     <ul>
-                        <li><a href="/cdn-cgi/l/email-protection#a98a86879d888a9da98b9c9a80878c9a9a8d8c858c8e889d8cc78a8684">Free Consultation</a></li>
+                        <li><a href="/cdn-cgi/l/email-protection#e98a86879d888a9da98b9c9a80878c9a9a8d8c858c8e889d8cc78a8684">Free Consultation</a></li>
                         <li><a href="#services">Our Services</a></li>
                         <li><a href="#how-it-works">Our Process</a></li>
                     </ul>
@@ -774,6 +820,7 @@
             </div>
         </div>
     </footer>
+
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -788,26 +835,20 @@
                 }
             });
         });
+
         // Add scroll-based animation for elements
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
-            
+                }
             });
         }, observerOptions);
+
         // Observe service card
-        document.querySelectorAll('.service, .value-card, .step, .testimonial').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-            observer.observe(el);
-        });
-    </script>
-</body>
-</html>
