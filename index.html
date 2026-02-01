@@ -197,11 +197,40 @@
             color: var(--soft-gray);
             line-height: 1.7;
         }
-        .value-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3rem;
-            margin-top: 4rem;
+        .carousel {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-item {
+            flex: 0 0 100%;
+            text-align: center;
+            padding: 1rem;
+        }
+        .carousel-item.active {
+            display: block;
+        }
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .carousel-control.prev {
+            left: 0;
+        }
+        .carousel-control.next {
+            right: 0;
         }
         .value-card {
             background: var(--white);
@@ -491,7 +520,6 @@
             section {
                 padding: 4rem 0;
             }
-            .value-grid,
             .steps,
             .testimonials {
                 grid-template-columns: 1fr;
@@ -545,6 +573,19 @@
             border-radius: 8px;
             margin-bottom: 1rem;
         }
+        @media (min-width: 769px) {
+            .carousel-control {
+                display: none; /* Hide controls on desktop */
+            }
+            .carousel-inner {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                transition: none; /* No transition on desktop */
+            }
+            .carousel-item {
+                flex: 0 0 auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -566,7 +607,7 @@
         <div class="container">
             <h1>Your Business, Streamlined</h1>
             <p>We help small and medium-sized businesses cut through operational chaos with smart automation, AI strategy, and workflow optimization—so you can focus on growth, not grinding.</p>
-            <img src="Pictures/7.jpeg" alt="Streamlined business operations illustration" class="section-image">
+            <img src="Pictures/CE670BC3-CA4A-4449-83AC-8B39538E0DF2.jpeg" alt="Streamlined business operations illustration" class="section-image">
             <div class="hero-ctas">
                 <a href="#contact" class="cta-button">Book a Free Consultation</a>
                 <a href="#services" class="cta-button secondary">See How We Help</a>
@@ -579,29 +620,33 @@
             <h2>Built for Businesses That Don't Have Time to Waste</h2>
             <p class="value-intro">You're running a business, not an IT department. We get it. That's why we specialize in practical solutions that actually work for small and medium-sized teams—no enterprise complexity, no six-month implementations, no unnecessary overhead.</p>
            
-            <div class="value-grid">
-                <div class="value-card">
-                    <img src="Pictures/6.png" alt="Operations workflow optimization">
-                    <h3>Make Operations Actually Work</h3>
-                    <p>Stop wrestling with inefficient processes. We identify bottlenecks and design systems that help your team work smarter, not harder.</p>
+            <div class="carousel" id="valueCarousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item value-card">
+                        <img src="Pictures/IMG_1162.JPG" alt="Operations workflow optimization">
+                        <h3>Make Operations Actually Work</h3>
+                        <p>Stop wrestling with inefficient processes. We identify bottlenecks and design systems that help your team work smarter, not harder.</p>
+                    </div>
+                    <div class="carousel-item value-card">
+                        <img src="Pictures/IMG_1223.JPG" alt="AI implementation for businesses">
+                        <h3>AI That Makes Sense</h3>
+                        <p>Cut through the hype. We implement AI and automation that solves real problems—from customer service to data management—without requiring a PhD to understand.</p>
+                    </div>
+                    <div class="carousel-item value-card">
+                        <img src="Pictures/IMG_7080.jpeg" alt="Scalable business solutions">
+                        <h3>Solutions That Scale With You</h3>
+                        <p>Whether you're a team of 5 or 50, we build flexible systems that grow with your business, not against it.</p>
+                    </div>
                 </div>
-                <div class="value-card">
-                    <img src="Pictures/8.jpeg" alt="AI implementation for businesses">
-                    <h3>AI That Makes Sense</h3>
-                    <p>Cut through the hype. We implement AI and automation that solves real problems—from customer service to data management—without requiring a PhD to understand.</p>
-                </div>
-                <div class="value-card">
-                    <img src="Pictures/1.png" alt="Scalable business solutions">
-                    <h3>Solutions That Scale With You</h3>
-                    <p>Whether you're a team of 5 or 50, we build flexible systems that grow with your business, not against it.</p>
-                </div>
+                <button class="carousel-control prev" onclick="moveSlide(-1)">&#10094;</button>
+                <button class="carousel-control next" onclick="moveSlide(1)">&#10095;</button>
             </div>
         </div>
     </section>
     <!-- Services Section -->
     <section class="services" id="services">
         <div class="container">
-            <h2>What We Do (And How We Do It Better)</h2>
+            <h2>What We Do (And How We Do It Better</h2>
            
             <div class="service">
                 <img src="Pictures/Screenshot%202026-01-22%20at%202.48.39%20pm.png" alt="Operations consulting service">
@@ -792,6 +837,24 @@
             });
         }, observerOptions);
         // Observe service card
+
+        // Carousel JS
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            if (index >= totalSlides) currentSlide = 0;
+            if (index < 0) currentSlide = totalSlides - 1;
+            document.querySelector('.carousel-inner').style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function moveSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        showSlide(currentSlide);
     </script>
 </body>
 </html>
