@@ -197,33 +197,6 @@
             color: var(--soft-gray);
             line-height: 1.7;
         }
-        .value-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3rem;
-            margin-top: 4rem;
-        }
-        .value-card {
-            background: var(--white);
-            padding: 0;
-            border-radius: 0;
-            transition: transform 0.2s;
-        }
-        .value-card:hover {
-            transform: translateY(-2px);
-        }
-        .value-card h3 {
-            color: var(--navy);
-            margin-bottom: 0.75rem;
-            font-size: 1.375rem;
-        }
-        .value-card p {
-            color: var(--soft-gray);
-            margin-bottom: 0;
-            font-size: 1rem;
-            line-height: 1.7;
-        }
-        /* Carousel Styles */
         .carousel {
             position: relative;
             max-width: 100%;
@@ -268,6 +241,26 @@
             .carousel-control {
                 display: none;
             }
+        }
+        .value-card {
+            background: var(--white);
+            padding: 0;
+            border-radius: 0;
+            transition: transform 0.2s;
+        }
+        .value-card:hover {
+            transform: translateY(-2px);
+        }
+        .value-card h3 {
+            color: var(--navy);
+            margin-bottom: 0.75rem;
+            font-size: 1.375rem;
+        }
+        .value-card p {
+            color: var(--soft-gray);
+            margin-bottom: 0;
+            font-size: 1rem;
+            line-height: 1.7;
         }
         /* Services Section */
         .services {
@@ -537,7 +530,6 @@
             section {
                 padding: 4rem 0;
             }
-            .value-grid,
             .steps,
             .testimonials {
                 grid-template-columns: 1fr;
@@ -654,7 +646,7 @@
             <h2>What We Do (And How We Do It Better)</h2>
            
             <div class="service">
-                <img src="Pictures/Screenshot 2026-01-22 at 2.48.39 pm.png" alt="Operations consulting service">
+                <img src="Pictures/Screenshot%202026-01-22%20at%202.48.39%20pm.png" alt="Operations consulting service">
                 <h3>Operations That Actually Operate</h3>
                 <p>Your business shouldn't feel like controlled chaos. We audit your current operations, identify what's slowing you down, and create streamlined processes that save time and money. Think of us as your external operations team—minus the overhead.</p>
                 <h4>What You Get:</h4>
@@ -717,7 +709,7 @@
             <h2>Working Together Is Simple</h2>
             <div class="steps">
                 <div class="step">
-                    <img src="Pictures/Screenshot 2026-01-22 at 2.53.30 pm.jpeg" alt="Discovery call step">
+                    <img src="Pictures/Screenshot%202026-01-22%20at%202.53.30%20pm.jpeg" alt="Discovery call step">
                     <div class="step-number">1</div>
                     <h3>Discovery Call</h3>
                     <p>We listen to your challenges and assess whether we're the right fit. No sales pressure, just honest conversation.</p>
@@ -746,7 +738,7 @@
             <h2>Real Businesses, Real Results</h2>
             <div class="testimonials">
                 <div class="testimonial">
-                    <img src="Pictures/Screenshot 2026-01-31 at 6.06.31 pm.png" alt="E-Commerce business testimonial">
+                    <img src="Pictures/Screenshot%202026-01-31%20at%206.06.31%20pm.png" alt="E-Commerce business testimonial">
                     <div class="testimonial-type">E-Commerce Business</div>
                     <p class="testimonial-problem">"Order processing was taking our team 3+ hours daily, with frequent errors causing customer complaints."</p>
                     <p class="testimonial-result"><span>The Result:</span> 85% reduction in processing time, zero errors in 90 days, $40K annual savings</p>
@@ -842,6 +834,12 @@
             });
         }, observerOptions);
         // Observe service card
+        document.querySelectorAll('.service, .value-card, .step, .testimonial').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+            observer.observe(el);
+        });
 
         // Carousel JS
         let currentSlide = 0;
@@ -849,14 +847,14 @@
         const totalSlides = slides.length;
 
         function showSlide(index) {
-            if (index >= totalSlides) currentSlide = 0;
-            if (index < 0) currentSlide = totalSlides - 1;
-            document.querySelector('.carousel-inner').style.transform = `translateX(-${currentSlide * 100}%)`;
+            if (index >= totalSlides) index = 0;
+            if (index < 0) index = totalSlides - 1;
+            document.querySelector('.carousel-inner').style.transform = `translateX(-${index * 100}%)`;
+            currentSlide = index;
         }
 
         function moveSlide(n) {
-            currentSlide += n;
-            showSlide(currentSlide);
+            showSlide(currentSlide + n);
         }
 
         showSlide(currentSlide);
