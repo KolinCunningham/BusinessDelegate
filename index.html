@@ -1000,6 +1000,7 @@
     </section>
     
     <!-- Image Showcase Carousel -->
+<!-- Image Showcase Carousel -->
 <section class="image-showcase">
     <style>
         .image-showcase {
@@ -1093,65 +1094,51 @@
             <button class="showcase-btn" onclick="nextShowcase()">&#10095;</button>
         </div>
     </div>
+    <script>
+        let currentIndex = 0;
+        const track = document.getElementById('showcaseTrack');
+        const slides = document.querySelectorAll('.showcase-slide');
+        const dots = document.querySelectorAll('.showcase-dot');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            if (index >= totalSlides) index = 0;
+            if (index < 0) index = totalSlides - 1;
+            track.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+            currentIndex = index;
+        }
+
+        function nextShowcase() {
+            showSlide(currentIndex + 1);
+        }
+
+        function prevShowcase() {
+            showSlide(currentIndex - 1);
+        }
+
+        function goToShowcase(index) {
+            showSlide(index);
+        }
+
+        // Auto-slide every 1.5 seconds
+        let autoSlideInterval = setInterval(nextShowcase, 1500);
+
+        // Optional: Pause auto-slide on hover
+        const carousel = document.querySelector('.showcase-carousel');
+        carousel.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+        carousel.addEventListener('mouseleave', () => autoSlideInterval = setInterval(nextShowcase, 1500));
+
+        // Optional: Reset interval on manual navigation to prevent rapid sliding
+        document.querySelectorAll('.showcase-btn, .showcase-dot').forEach(btn => {
+            btn.addEventListener('click', () => {
+                clearInterval(autoSlideInterval);
+                autoSlideInterval = setInterval(nextShowcase, 1500);
+            });
+        });
+    </script>
 </section>
-    <!-- Services Section -->
-    <section class="services" id="services">
-        <div class="container">
-            <h2>What We Do <span class="gradient-text">(And How We Do It Better)</span></h2>
-            <p class="section-subtitle">Comprehensive solutions designed specifically for small and medium-sized businesses.</p>
-           
-            <div class="services-grid">
-                <div class="service fade-in">
-                    <div class="service-icon">&#9881;</div>
-                    <h3>Operations That Actually Operate</h3>
-                    <p>Your business shouldn't feel like controlled chaos. We audit your current operations, identify what's slowing you down, and create streamlined processes that save time and money.</p>
-                    <h4>What You Get:</h4>
-                    <ul>
-                        <li>Process mapping and optimization</li>
-                        <li>Team workflow analysis</li>
-                        <li>System integration recommendations</li>
-                        <li>Implementation roadmaps you can actually follow</li>
-                    </ul>
-                </div>
-                <div class="service fade-in">
-                    <div class="service-icon">&#9889;</div>
-                    <h3>AI Without the Snake Oil</h3>
-                    <p>AI is powerful, but only if it's solving actual problems. We help you figure out where AI makes sense for your business, then implement solutions that deliver measurable results.</p>
-                    <h4>What You Get:</h4>
-                    <ul>
-                        <li>Custom AI readiness assessment</li>
-                        <li>Use-case identification and prioritization</li>
-                        <li>Tool selection and implementation</li>
-                        <li>Training and ongoing support</li>
-                    </ul>
-                </div>
-                <div class="service fade-in">
-                    <div class="service-icon">&#10004;</div>
-                    <h3>Fewer Steps, Better Results</h3>
-                    <p>Complicated workflows kill productivity. We find the redundancies, eliminate the unnecessary steps, and design workflows that your team will actually want to use.</p>
-                    <h4>What You Get:</h4>
-                    <ul>
-                        <li>Workflow audits and redesign</li>
-                        <li>Automation of repetitive tasks</li>
-                        <li>Documentation and standard operating procedures</li>
-                        <li>Change management support</li>
-                    </ul>
-                </div>
-                <div class="service fade-in">
-                    <div class="service-icon">&#128161;</div>
-                    <h3>Your Challenge, Our Expertise</h3>
-                    <p>Some problems don't fit in a box—and that's okay. We're here for the head-scratchers, the unique challenges, and the situations where you need creative thinking.</p>
-                    <h4>What You Get:</h4>
-                    <ul>
-                        <li>Custom problem analysis</li>
-                        <li>Cross-functional solution design</li>
-                        <li>Vendor research and recommendations</li>
-                        <li>Hands-on implementation support</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
     <!-- How It Works -->
     <section class="how-it-works" id="how-it-works">
         <div class="container">
@@ -1339,11 +1326,11 @@
 
         function resetShowcaseInterval() {
             clearInterval(showcaseInterval);
-            showcaseInterval = setInterval(nextShowcase, 5000);
+            showcaseInterval = setInterval(nextShowcase, 1500);
         }
 
         // Auto-advance carousel
-        showcaseInterval = setInterval(nextShowcase, 5000);
+        showcaseInterval = setInterval(nextShowcase, 1500);
 
         // Pause on hover
         const showcaseCarousel = document.querySelector('.showcase-carousel');
