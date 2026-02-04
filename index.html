@@ -1000,34 +1000,100 @@
     </section>
     
     <!-- Image Showcase Carousel -->
-    <section class="image-showcase">
-        <div class="container">
-            <h2>See Our Work in Action</h2>
-            <p class="section-subtitle">From strategy sessions to implementation, we're with you every step of the way.</p>
-            <div class="showcase-carousel">
-                <div class="showcase-track" id="showcaseTrack">
-                    <div class="showcase-slide">
-                        <img src="Pictures/1.png" alt="Business strategy and planning">
-                    </div>
-                    <div class="showcase-slide">
-                        <img src="Pictures/8.jpeg" alt="Team collaboration and workflow">
-                    </div>
-                    <div class="showcase-slide">
-                        <img src="Pictures/2.jpeg" alt="Implementation and results">
-                    </div>
+<section class="image-showcase">
+    <style>
+        .image-showcase {
+            position: relative; /* For absolute positioning of controls if needed */
+        }
+        .showcase-carousel {
+            overflow: hidden; /* Hide overflow for sliding */
+            position: relative;
+        }
+        .showcase-track {
+            display: flex; /* Horizontal layout for slides */
+            transition: transform 0.5s ease; /* Smooth slide animation */
+        }
+        .showcase-slide {
+            flex: 0 0 100%; /* Each slide takes full width */
+            height: 500px; /* Increased height to make images taller; adjust as needed (e.g., 600px) */
+        }
+        .showcase-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Fill without distortion, crop if necessary */
+            object-position: center top; /* Focus on top to avoid cutting off heads */
+        }
+        .showcase-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            bottom: 20px; /* Position controls at bottom; adjust if needed */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .showcase-btn {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+        }
+        .showcase-dots {
+            display: flex;
+            gap: 10px;
+        }
+        .showcase-dot {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0.5;
+        }
+        .showcase-dot.active {
+            opacity: 1;
+        }
+
+        /* Responsiveness: Scale height down on smaller screens */
+        @media (max-width: 768px) {
+            .showcase-slide {
+                height: 300px; /* Shorter for mobile */
+            }
+        }
+    </style>
+    <div class="container">
+        <h2>See Our Work in Action</h2>
+        <p class="section-subtitle">From strategy sessions to implementation, we're with you every step of the way.</p>
+        <div class="showcase-carousel">
+            <div class="showcase-track" id="showcaseTrack">
+                <div class="showcase-slide">
+                    <img src="Pictures/1.png" alt="Business strategy and planning">
                 </div>
-            </div>
-            <div class="showcase-controls">
-                <button class="showcase-btn" onclick="prevShowcase()">&#10094;</button>
-                <div class="showcase-dots">
-                    <button class="showcase-dot active" onclick="goToShowcase(0)"></button>
-                    <button class="showcase-dot" onclick="goToShowcase(1)"></button>
-                    <button class="showcase-dot" onclick="goToShowcase(2)"></button>
+                <div class="showcase-slide">
+                    <img src="Pictures/8.jpeg" alt="Team collaboration and workflow">
                 </div>
-                <button class="showcase-btn" onclick="nextShowcase()">&#10095;</button>
+                <div class="showcase-slide">
+                    <img src="Pictures/2.jpeg" alt="Implementation and results">
+                </div>
             </div>
         </div>
-    </section>
+        <div class="showcase-controls">
+            <button class="showcase-btn" onclick="prevShowcase()">&#10094;</button>
+            <div class="showcase-dots">
+                <button class="showcase-dot active" onclick="goToShowcase(0)"></button>
+                <button class="showcase-dot" onclick="goToShowcase(1)"></button>
+                <button class="showcase-dot" onclick="goToShowcase(2)"></button>
+            </div>
+            <button class="showcase-btn" onclick="nextShowcase()">&#10095;</button>
+        </div>
+    </div>
+</section>
     <!-- Services Section -->
     <section class="services" id="services">
         <div class="container">
