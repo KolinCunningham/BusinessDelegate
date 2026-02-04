@@ -20,6 +20,9 @@
             --soft-gray: #57606A;
             --border-gray: #E1E4E8;
             --white: #FFFFFF;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #2383E2 0%, #667eea 100%);
+            --shadow-glow: 0 0 40px rgba(35, 131, 226, 0.3);
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -27,6 +30,7 @@
             line-height: 1.7;
             background: var(--white);
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
         /* Typography */
         h1, h2, h3, h4, h5 {
@@ -57,16 +61,27 @@
             font-size: 1.125rem;
             color: var(--soft-gray);
         }
+        /* Gradient Text */
+        .gradient-text {
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
         /* Navigation */
         nav {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 1rem 0;
             position: sticky;
             top: 0;
             z-index: 1000;
             border-bottom: 1px solid var(--border-gray);
+            transition: all 0.3s ease;
+        }
+        nav.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
         .nav-container {
             max-width: 1280px;
@@ -84,7 +99,10 @@
             letter-spacing: -0.02em;
         }
         .logo span {
-            color: var(--teal);
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .nav-links {
             display: flex;
@@ -98,33 +116,49 @@
             font-weight: 500;
             font-size: 0.9375rem;
             transition: color 0.2s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-2);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
         }
         .nav-links a:hover {
             color: var(--navy);
         }
         .cta-button {
-            background: var(--teal);
+            background: var(--gradient-2);
             color: var(--white);
             padding: 0.625rem 1.25rem;
-            border-radius: 6px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9375rem;
-            transition: background 0.2s, transform 0.1s;
+            transition: all 0.3s ease;
             display: inline-block;
+            box-shadow: 0 4px 15px rgba(35, 131, 226, 0.3);
         }
         .cta-button:hover {
-            background: #1a6ec7;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(35, 131, 226, 0.4);
         }
         .cta-button.secondary {
             background: transparent;
             color: var(--navy);
-            border: 1px solid var(--border-gray);
+            border: 2px solid var(--border-gray);
+            box-shadow: none;
         }
         .cta-button.secondary:hover {
             background: var(--light-gray);
-            border-color: var(--soft-gray);
+            border-color: var(--teal);
         }
         /* Container */
         .container {
@@ -137,11 +171,30 @@
         }
         /* Hero Section */
         .hero {
-            background: var(--white);
+            background: linear-gradient(180deg, var(--white) 0%, var(--light-gray) 100%);
             color: var(--navy);
-            padding: 8rem 0 10rem;
+            padding: 6rem 0 8rem;
             text-align: center;
-            border-bottom: 1px solid var(--border-gray);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(35, 131, 226, 0.05) 0%, transparent 50%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
         .hero h1 {
             margin-bottom: 1.5rem;
@@ -158,6 +211,35 @@
             animation: fadeInUp 0.6s ease-out 0.1s backwards;
             line-height: 1.6;
         }
+        .hero-image {
+            max-width: 900px;
+            margin: 3rem auto;
+            animation: fadeInUp 0.6s ease-out 0.15s backwards;
+            position: relative;
+        }
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s ease;
+        }
+        .hero-image:hover img {
+            transform: scale(1.02);
+        }
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: var(--gradient-2);
+            border-radius: 18px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .hero-image:hover::before {
+            opacity: 1;
+        }
         .hero-ctas {
             display: flex;
             gap: 1rem;
@@ -165,22 +247,27 @@
             animation: fadeInUp 0.6s ease-out 0.2s backwards;
         }
         .hero-ctas .cta-button {
-            padding: 0.875rem 1.75rem;
+            padding: 1rem 2rem;
             font-size: 1rem;
         }
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
         /* Value Proposition */
         .value-prop {
             background: var(--white);
+            position: relative;
         }
         .value-prop h2 {
             text-align: center;
@@ -197,59 +284,50 @@
             color: var(--soft-gray);
             line-height: 1.7;
         }
-        .carousel {
-            position: relative;
-            max-width: 100%;
-            margin: auto;
-            overflow: hidden;
-        }
-        .carousel-inner {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-        .carousel-item {
-            flex: 0 0 100%;
-            text-align: center;
-            padding: 1rem;
-        }
-        .carousel-control {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            z-index: 10;
-        }
-        .carousel-control.prev {
-            left: 0;
-        }
-        .carousel-control.next {
-            right: 0;
-        }
-        @media (min-width: 769px) {
-            .carousel-inner {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                transition: none;
-            }
-            .carousel-item {
-                flex: 0 0 auto;
-            }
-            .carousel-control {
-                display: none;
-            }
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
         }
         .value-card {
             background: var(--white);
             padding: 0;
-            border-radius: 0;
-            transition: transform 0.2s;
+            border-radius: 16px;
+            transition: all 0.4s ease;
+            overflow: hidden;
+            border: 1px solid var(--border-gray);
+            position: relative;
         }
         .value-card:hover {
-            transform: translateY(-2px);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+        .value-card-image {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        .value-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .value-card:hover .value-card-image img {
+            transform: scale(1.1);
+        }
+        .value-card-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(255,255,255,0.9), transparent);
+        }
+        .value-card-content {
+            padding: 1.5rem 2rem 2rem;
         }
         .value-card h3 {
             color: var(--navy);
@@ -262,25 +340,174 @@
             font-size: 1rem;
             line-height: 1.7;
         }
+        
+        /* Featured Image Carousel */
+        .image-showcase {
+            background: var(--navy);
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .image-showcase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(35, 131, 226, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%);
+        }
+        .image-showcase h2 {
+            text-align: center;
+            color: var(--white);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        .image-showcase .section-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            font-size: 1.125rem;
+            position: relative;
+            z-index: 1;
+        }
+        .showcase-carousel {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        .showcase-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .showcase-slide {
+            flex: 0 0 100%;
+            padding: 0 1rem;
+        }
+        .showcase-slide img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+        .showcase-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        .showcase-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .showcase-btn:hover {
+            background: var(--teal);
+            border-color: var(--teal);
+            transform: scale(1.1);
+        }
+        .showcase-dots {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .showcase-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .showcase-dot.active {
+            background: var(--teal);
+            transform: scale(1.2);
+        }
         /* Services Section */
         .services {
             background: var(--light-gray);
+            position: relative;
+        }
+        .services::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--teal), transparent);
         }
         .services h2 {
             text-align: center;
-            margin-bottom: 5rem;
+            margin-bottom: 1rem;
+        }
+        .services .section-subtitle {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            color: var(--soft-gray);
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
         }
         .service {
             background: var(--white);
             padding: 2.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
+            border-radius: 16px;
             border: 1px solid var(--border-gray);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .service::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-2);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        .service:hover::before {
+            transform: scaleX(1);
         }
         .service:hover {
-            border-color: var(--teal);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border-color: transparent;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
         }
         .service h3 {
             color: var(--navy);
@@ -305,48 +532,92 @@
             padding-left: 0;
         }
         .service li {
-            padding-left: 1.5rem;
+            padding-left: 1.75rem;
             position: relative;
             margin-bottom: 0.5rem;
             color: var(--soft-gray);
             font-size: 0.9375rem;
         }
         .service li::before {
-            content: "✓";
+            content: "";
             position: absolute;
             left: 0;
-            color: var(--teal);
-            font-weight: 600;
+            top: 0.5rem;
+            width: 8px;
+            height: 8px;
+            background: var(--gradient-2);
+            border-radius: 50%;
         }
         /* How It Works */
         .how-it-works {
             background: var(--white);
+            position: relative;
         }
         .how-it-works h2 {
             text-align: center;
-            margin-bottom: 5rem;
+            margin-bottom: 1rem;
+        }
+        .how-it-works .section-subtitle {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            color: var(--soft-gray);
         }
         .steps {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 3rem;
+            gap: 2rem;
+            position: relative;
+        }
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 35px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: var(--gradient-2);
+            z-index: 0;
         }
         .step {
-            text-align: left;
-            padding: 0;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: var(--white);
+            border-radius: 16px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s ease;
+        }
+        .step:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
         }
         .step-number {
-            width: 48px;
-            height: 48px;
-            background: var(--light-gray);
-            color: var(--navy);
-            border-radius: 8px;
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-2);
+            color: var(--white);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 30px rgba(35, 131, 226, 0.3);
+            position: relative;
+        }
+        .step-number::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 2px dashed rgba(35, 131, 226, 0.3);
+            border-radius: 50%;
+            animation: spin 20s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         .step h3 {
             font-size: 1.25rem;
@@ -360,12 +631,18 @@
         }
         /* Social Proof */
         .social-proof {
-            background: var(--white);
-            border-top: 1px solid var(--border-gray);
+            background: linear-gradient(180deg, var(--white) 0%, var(--light-gray) 100%);
+            position: relative;
         }
         .social-proof h2 {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 1rem;
+        }
+        .social-proof .section-subtitle {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            color: var(--soft-gray);
         }
         .testimonials {
             display: grid;
@@ -373,23 +650,65 @@
             gap: 2rem;
         }
         .testimonial {
-            background: var(--light-gray);
+            background: var(--white);
             padding: 2rem;
-            border-radius: 8px;
+            border-radius: 16px;
             border: 1px solid var(--border-gray);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .testimonial::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            font-size: 8rem;
+            font-family: Georgia, serif;
+            color: rgba(35, 131, 226, 0.08);
+            line-height: 1;
+        }
+        .testimonial:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+            border-color: transparent;
+        }
+        .testimonial-image {
+            width: 100%;
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .testimonial-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .testimonial:hover .testimonial-image img {
+            transform: scale(1.05);
         }
         .testimonial-type {
+            display: inline-block;
             font-weight: 600;
-            color: var(--navy);
-            margin-bottom: 0.75rem;
-            font-size: 0.875rem;
+            color: var(--white);
+            background: var(--gradient-2);
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         .testimonial-problem {
-            font-style: normal;
+            font-style: italic;
             color: var(--soft-gray);
             margin-bottom: 1.25rem;
             font-size: 0.9375rem;
             line-height: 1.6;
+            position: relative;
+            z-index: 1;
         }
         .testimonial-result {
             font-weight: 500;
@@ -397,105 +716,146 @@
             margin-bottom: 0;
             font-size: 0.9375rem;
             line-height: 1.6;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-gray);
         }
         .testimonial-result span {
-            color: var(--teal);
-            font-weight: 600;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
         }
         /* Final CTA */
         .final-cta {
             background: var(--navy);
             color: var(--white);
             text-align: center;
-            padding: 7rem 0;
+            padding: 8rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(35, 131, 226, 0.2) 0%, transparent 70%);
+        }
+        .final-cta .container {
+            position: relative;
+            z-index: 1;
         }
         .final-cta h2 {
             color: var(--white);
             margin-bottom: 1rem;
-            font-size: 2.5rem;
+            font-size: 2.75rem;
         }
         .final-cta p {
-            font-size: 1.125rem;
-            margin-bottom: 2rem;
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
             color: rgba(255, 255, 255, 0.8);
-            max-width: 600px;
+            max-width: 650px;
             margin-left: auto;
             margin-right: auto;
         }
         .final-cta .cta-button {
-            background: var(--teal);
-            font-size: 1rem;
-            padding: 0.875rem 2rem;
+            background: var(--gradient-2);
+            font-size: 1.125rem;
+            padding: 1rem 2.5rem;
+            box-shadow: 0 10px 40px rgba(35, 131, 226, 0.4);
         }
         .final-cta .cta-button:hover {
-            background: #1a6ec7;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(35, 131, 226, 0.5);
         }
         .final-cta .contact-alt {
-            margin-top: 1.5rem;
-            font-size: 0.9375rem;
+            margin-top: 2rem;
+            font-size: 1rem;
             color: rgba(255, 255, 255, 0.7);
         }
         .final-cta .contact-alt a {
             color: var(--white);
-            text-decoration: underline;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            transition: border-color 0.3s ease;
+        }
+        .final-cta .contact-alt a:hover {
+            border-color: var(--white);
         }
         /* Footer */
         footer {
-            background: var(--white);
-            color: var(--soft-gray);
-            padding: 4rem 0 2rem;
-            border-top: 1px solid var(--border-gray);
+            background: var(--navy);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 5rem 0 2rem;
         }
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 2fr repeat(3, 1fr);
             gap: 3rem;
             margin-bottom: 3rem;
         }
         .footer-section h4 {
-            margin-bottom: 1rem;
-            color: var(--navy);
+            margin-bottom: 1.25rem;
+            color: var(--white);
             font-size: 0.875rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
         }
         .footer-section p {
             font-size: 0.9375rem;
-            line-height: 1.6;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.6);
         }
         .footer-section ul {
             list-style: none;
         }
         .footer-section li {
-            margin-bottom: 0.625rem;
+            margin-bottom: 0.75rem;
         }
         .footer-section a {
-            color: var(--soft-gray);
+            color: rgba(255, 255, 255, 0.6);
             text-decoration: none;
-            transition: color 0.2s;
+            transition: all 0.3s ease;
             font-size: 0.9375rem;
         }
         .footer-section a:hover {
-            color: var(--navy);
+            color: var(--white);
+            padding-left: 5px;
         }
         .footer-bottom {
             text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-gray);
-            color: var(--soft-gray);
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 0.875rem;
         }
         .footer-bottom a {
-            color: var(--soft-gray);
+            color: rgba(255, 255, 255, 0.5);
             text-decoration: none;
+            transition: color 0.3s ease;
         }
         .footer-bottom a:hover {
-            color: var(--navy);
+            color: var(--white);
         }
         /* Responsive */
         @media (max-width: 1024px) {
             .steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .steps::before {
+                display: none;
+            }
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .value-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-content {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -514,7 +874,7 @@
                 display: none;
             }
             .hero {
-                padding: 5rem 0 6rem;
+                padding: 4rem 0 5rem;
             }
             .hero p {
                 font-size: 1.125rem;
@@ -530,15 +890,18 @@
             section {
                 padding: 4rem 0;
             }
+            .value-grid,
             .steps,
             .testimonials {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
-            .services h2,
-            .how-it-works h2,
-            .social-proof h2 {
-                margin-bottom: 3rem;
+            .showcase-slide img {
+                height: 300px;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
             }
         }
         @media (max-width: 480px) {
@@ -548,40 +911,25 @@
             .hero p {
                 font-size: 1rem;
             }
+            .showcase-slide img {
+                height: 250px;
+            }
         }
-        /* Added Styles for Images */
-        .section-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+        
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
         }
-        .value-card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
-        .service img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-        .step img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        .testimonial img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+        
+        /* Glowing accent */
+        .glow {
+            box-shadow: var(--shadow-glow);
         }
     </style>
 </head>
@@ -601,10 +949,12 @@
     </nav>
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container">
-            <h1>Your Business, Streamlined</h1>
+        <div class="container hero-content">
+            <h1>Your Business, <span class="gradient-text">Streamlined</span></h1>
             <p>We help small and medium-sized businesses cut through operational chaos with smart automation, AI strategy, and workflow optimization—so you can focus on growth, not grinding.</p>
-            <img src="Pictures/CE670BC3-CA4A-4449-83AC-8B39538E0DF2.jpeg" alt="Team at eMobility LIVE event" class="section-image">
+            <div class="hero-image">
+                <img src="Pictures/1.png" alt="Business operations and team collaboration">
+            </div>
             <div class="hero-ctas">
                 <a href="#contact" class="cta-button">Book a Free Consultation</a>
                 <a href="#services" class="cta-button secondary">See How We Help</a>
@@ -614,117 +964,150 @@
     <!-- Value Proposition -->
     <section class="value-prop">
         <div class="container">
-            <h2>Built for Businesses That Don't Have Time to Waste</h2>
+            <h2>Built for Businesses That <span class="gradient-text">Don't Have Time to Waste</span></h2>
             <p class="value-intro">You're running a business, not an IT department. We get it. That's why we specialize in practical solutions that actually work for small and medium-sized teams—no enterprise complexity, no six-month implementations, no unnecessary overhead.</p>
            
-            <div class="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item value-card">
-                        <img src="Pictures/IMG_1162.JPG" alt="Workshop session with team">
+            <div class="value-grid">
+                <div class="value-card fade-in">
+                    <div class="value-card-image">
+                        <img src="Pictures/2.jpeg" alt="Workshop session with team">
+                    </div>
+                    <div class="value-card-content">
                         <h3>Make Operations Actually Work</h3>
                         <p>Stop wrestling with inefficient processes. We identify bottlenecks and design systems that help your team work smarter, not harder.</p>
                     </div>
-                    <div class="carousel-item value-card">
-                        <img src="Pictures/IMG_1223.JPG" alt="Group discussion in studio">
+                </div>
+                <div class="value-card fade-in">
+                    <div class="value-card-image">
+                        <img src="Pictures/6.png" alt="AI and automation solutions">
+                    </div>
+                    <div class="value-card-content">
                         <h3>AI That Makes Sense</h3>
                         <p>Cut through the hype. We implement AI and automation that solves real problems—from customer service to data management—without requiring a PhD to understand.</p>
                     </div>
-                    <div class="carousel-item value-card">
-                        <img src="Pictures/IMG_7080.jpeg" alt="Team at art gallery">
+                </div>
+                <div class="value-card fade-in">
+                    <div class="value-card-image">
+                        <img src="Pictures/7.jpeg" alt="Scalable business solutions">
+                    </div>
+                    <div class="value-card-content">
                         <h3>Solutions That Scale With You</h3>
                         <p>Whether you're a team of 5 or 50, we build flexible systems that grow with your business, not against it.</p>
                     </div>
                 </div>
-                <button class="carousel-control prev" onclick="moveSlide(-1)">&#10094;</button>
-                <button class="carousel-control next" onclick="moveSlide(1)">&#10095;</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Image Showcase Carousel -->
+    <section class="image-showcase">
+        <div class="container">
+            <h2>See Our Work in Action</h2>
+            <p class="section-subtitle">From strategy sessions to implementation, we're with you every step of the way.</p>
+            <div class="showcase-carousel">
+                <div class="showcase-track" id="showcaseTrack">
+                    <div class="showcase-slide">
+                        <img src="Pictures/1.png" alt="Business strategy and planning">
+                    </div>
+                    <div class="showcase-slide">
+                        <img src="Pictures/8.jpeg" alt="Team collaboration and workflow">
+                    </div>
+                    <div class="showcase-slide">
+                        <img src="Pictures/2.jpeg" alt="Implementation and results">
+                    </div>
+                </div>
+            </div>
+            <div class="showcase-controls">
+                <button class="showcase-btn" onclick="prevShowcase()">&#10094;</button>
+                <div class="showcase-dots">
+                    <button class="showcase-dot active" onclick="goToShowcase(0)"></button>
+                    <button class="showcase-dot" onclick="goToShowcase(1)"></button>
+                    <button class="showcase-dot" onclick="goToShowcase(2)"></button>
+                </div>
+                <button class="showcase-btn" onclick="nextShowcase()">&#10095;</button>
             </div>
         </div>
     </section>
     <!-- Services Section -->
     <section class="services" id="services">
         <div class="container">
-            <h2>What We Do (And How We Do It Better)</h2>
+            <h2>What We Do <span class="gradient-text">(And How We Do It Better)</span></h2>
+            <p class="section-subtitle">Comprehensive solutions designed specifically for small and medium-sized businesses.</p>
            
-            <div class="service">
-                <img src="Pictures/Screenshot%202026-01-22%20at%202.48.39%20pm.png" alt="Operations consulting service">
-                <h3>Operations That Actually Operate</h3>
-                <p>Your business shouldn't feel like controlled chaos. We audit your current operations, identify what's slowing you down, and create streamlined processes that save time and money. Think of us as your external operations team—minus the overhead.</p>
-                <h4>What You Get:</h4>
-                <ul>
-                    <li>Process mapping and optimization</li>
-                    <li>Team workflow analysis</li>
-                    <li>System integration recommendations</li>
-                    <li>Implementation roadmaps you can actually follow</li>
-                </ul>
-            </div>
-            <div class="service">
-                <h3>AI Without the Snake Oil</h3>
-                <p>AI is powerful, but only if it's solving actual problems. We help you figure out where AI makes sense for your business, then implement solutions that deliver measurable results—not just impressive demos.</p>
-                <h4>What You Get:</h4>
-                <ul>
-                    <li>Custom AI readiness assessment</li>
-                    <li>Use-case identification and prioritization</li>
-                    <li>Tool selection and implementation</li>
-                    <li>Training and ongoing support</li>
-                </ul>
-            </div>
-            <div class="service">
-                <h3>Fewer Steps, Better Results</h3>
-                <p>Complicated workflows kill productivity. We find the redundancies, eliminate the unnecessary steps, and design workflows that your team will actually want to use. Simple, effective, sustainable.</p>
-                <h4>What You Get:</h4>
-                <ul>
-                    <li>Workflow audits and redesign</li>
-                    <li>Automation of repetitive tasks</li>
-                    <li>Documentation and standard operating procedures</li>
-                    <li>Change management support</li>
-                </ul>
-            </div>
-            <div class="service">
-                <h3>Your Challenge, Our Expertise</h3>
-                <p>Some problems don't fit in a box—and that's okay. We're here for the head-scratchers, the unique challenges, and the situations where you need someone who can think creatively and execute practically.</p>
-                <h4>What You Get:</h4>
-                <ul>
-                    <li>Custom problem analysis</li>
-                    <li>Cross-functional solution design</li>
-                    <li>Vendor research and recommendations</li>
-                    <li>Hands-on implementation support</li>
-                </ul>
-            </div>
-            <div class="service">
-                <h3>Built for Your Business, Not Someone Else's</h3>
-                <p>Off-the-shelf solutions rarely fit perfectly. We design custom approaches tailored to your specific industry, team size, and challenges—because your business deserves better than one-size-fits-all.</p>
-                <h4>What You Get:</h4>
-                <ul>
-                    <li>Tailored solution architecture</li>
-                    <li>Flexible implementation timelines</li>
-                    <li>Scalable systems design</li>
-                    <li>Ongoing optimization and support</li>
-                </ul>
+            <div class="services-grid">
+                <div class="service fade-in">
+                    <div class="service-icon">&#9881;</div>
+                    <h3>Operations That Actually Operate</h3>
+                    <p>Your business shouldn't feel like controlled chaos. We audit your current operations, identify what's slowing you down, and create streamlined processes that save time and money.</p>
+                    <h4>What You Get:</h4>
+                    <ul>
+                        <li>Process mapping and optimization</li>
+                        <li>Team workflow analysis</li>
+                        <li>System integration recommendations</li>
+                        <li>Implementation roadmaps you can actually follow</li>
+                    </ul>
+                </div>
+                <div class="service fade-in">
+                    <div class="service-icon">&#9889;</div>
+                    <h3>AI Without the Snake Oil</h3>
+                    <p>AI is powerful, but only if it's solving actual problems. We help you figure out where AI makes sense for your business, then implement solutions that deliver measurable results.</p>
+                    <h4>What You Get:</h4>
+                    <ul>
+                        <li>Custom AI readiness assessment</li>
+                        <li>Use-case identification and prioritization</li>
+                        <li>Tool selection and implementation</li>
+                        <li>Training and ongoing support</li>
+                    </ul>
+                </div>
+                <div class="service fade-in">
+                    <div class="service-icon">&#10004;</div>
+                    <h3>Fewer Steps, Better Results</h3>
+                    <p>Complicated workflows kill productivity. We find the redundancies, eliminate the unnecessary steps, and design workflows that your team will actually want to use.</p>
+                    <h4>What You Get:</h4>
+                    <ul>
+                        <li>Workflow audits and redesign</li>
+                        <li>Automation of repetitive tasks</li>
+                        <li>Documentation and standard operating procedures</li>
+                        <li>Change management support</li>
+                    </ul>
+                </div>
+                <div class="service fade-in">
+                    <div class="service-icon">&#128161;</div>
+                    <h3>Your Challenge, Our Expertise</h3>
+                    <p>Some problems don't fit in a box—and that's okay. We're here for the head-scratchers, the unique challenges, and the situations where you need creative thinking.</p>
+                    <h4>What You Get:</h4>
+                    <ul>
+                        <li>Custom problem analysis</li>
+                        <li>Cross-functional solution design</li>
+                        <li>Vendor research and recommendations</li>
+                        <li>Hands-on implementation support</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
     <!-- How It Works -->
     <section class="how-it-works" id="how-it-works">
         <div class="container">
-            <h2>Working Together Is Simple</h2>
+            <h2>Working Together Is <span class="gradient-text">Simple</span></h2>
+            <p class="section-subtitle">A straightforward process designed to get you results without the complexity.</p>
             <div class="steps">
-                <div class="step">
-                    <img src="Pictures/Screenshot%202026-01-22%20at%202.53.30%20pm.jpeg" alt="Discovery call step">
+                <div class="step fade-in">
                     <div class="step-number">1</div>
                     <h3>Discovery Call</h3>
                     <p>We listen to your challenges and assess whether we're the right fit. No sales pressure, just honest conversation.</p>
                 </div>
-                <div class="step">
+                <div class="step fade-in">
                     <div class="step-number">2</div>
                     <h3>Strategy Session</h3>
                     <p>We dive deep into your operations, identify opportunities, and create a clear roadmap with priorities and timelines.</p>
                 </div>
-                <div class="step">
+                <div class="step fade-in">
                     <div class="step-number">3</div>
                     <h3>Implementation</h3>
                     <p>We work alongside your team to implement solutions, provide training, and ensure everything actually works in the real world.</p>
                 </div>
-                <div class="step">
+                <div class="step fade-in">
                     <div class="step-number">4</div>
                     <h3>Optimization</h3>
                     <p>Business evolves, and so should your systems. We provide ongoing support to refine and improve as you grow.</p>
@@ -735,20 +1118,29 @@
     <!-- Social Proof -->
     <section class="social-proof" id="results">
         <div class="container">
-            <h2>Real Businesses, Real Results</h2>
+            <h2>Real Businesses, <span class="gradient-text">Real Results</span></h2>
+            <p class="section-subtitle">See how we've helped businesses like yours achieve measurable improvements.</p>
             <div class="testimonials">
-                <div class="testimonial">
-                    <img src="Pictures/Screenshot%202026-01-31%20at%206.06.31%20pm.png" alt="E-Commerce business testimonial">
+                <div class="testimonial fade-in">
+                    <div class="testimonial-image">
+                        <img src="Pictures/6.png" alt="E-Commerce business success">
+                    </div>
                     <div class="testimonial-type">E-Commerce Business</div>
                     <p class="testimonial-problem">"Order processing was taking our team 3+ hours daily, with frequent errors causing customer complaints."</p>
                     <p class="testimonial-result"><span>The Result:</span> 85% reduction in processing time, zero errors in 90 days, $40K annual savings</p>
                 </div>
-                <div class="testimonial">
+                <div class="testimonial fade-in">
+                    <div class="testimonial-image">
+                        <img src="Pictures/7.jpeg" alt="Professional services transformation">
+                    </div>
                     <div class="testimonial-type">Professional Services Firm</div>
                     <p class="testimonial-problem">"Client onboarding required 15 separate manual steps across multiple disconnected systems."</p>
                     <p class="testimonial-result"><span>The Result:</span> Streamlined to 3 automated steps, 60% faster onboarding, 95% client satisfaction score</p>
                 </div>
-                <div class="testimonial">
+                <div class="testimonial fade-in">
+                    <div class="testimonial-image">
+                        <img src="Pictures/8.jpeg" alt="Manufacturing efficiency gains">
+                    </div>
                     <div class="testimonial-type">Manufacturing SMB</div>
                     <p class="testimonial-problem">"Inventory management was chaotic—we were constantly over or understocked."</p>
                     <p class="testimonial-result"><span>The Result:</span> AI-powered forecasting, 40% inventory cost reduction, improved cash flow by $120K</p>
@@ -761,8 +1153,8 @@
         <div class="container">
             <h2>Ready to Stop Fighting Your Operations?</h2>
             <p>Book a free 30-minute consultation. We'll discuss your biggest challenges and explore whether we can help—no commitment required.</p>
-            <a href="/cdn-cgi/l/email-protection#30131f1e0411130430120503191e15030314151c15171104155e131f1d" class="cta-button">Schedule Your Free Consultation</a>
-            <p class="contact-alt">Prefer email? Reach us at <a href="/cdn-cgi/l/email-protection#98fbf7f6ecf9fbecd8faedebf1f6fdebebfcfdf4fdfff9ecfdb6fbf7f5"><span class="__cf_email__" data-cfemail="0e6d61607a6f6d7a4e6c7b7d67606b7d7d6a6b626b696f7a6b206d6163">[email&#160;protected]</span></a></p>
+            <a href="mailto:hello@businessdelegate.com" class="cta-button">Schedule Your Free Consultation</a>
+            <p class="contact-alt">Prefer email? Reach us at <a href="mailto:hello@businessdelegate.com">hello@businessdelegate.com</a></p>
         </div>
     </section>
     <!-- Footer -->
@@ -795,7 +1187,7 @@
                 <div class="footer-section">
                     <h4>Get Started</h4>
                     <ul>
-                        <li><a href="/cdn-cgi/l/email-protection#a98a86879d888a9da98b9c9a80878c9a9a8d8c858c8e889d8cc78a8684">Free Consultation</a></li>
+                        <li><a href="mailto:hello@businessdelegate.com">Free Consultation</a></li>
                         <li><a href="#services">Our Services</a></li>
                         <li><a href="#how-it-works">Our Process</a></li>
                     </ul>
@@ -806,7 +1198,7 @@
             </div>
         </div>
     </footer>
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -820,44 +1212,98 @@
                 }
             });
         });
-        // Add scroll-based animation for elements
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-            
-            });
-        }, observerOptions);
-        // Observe service card
-        document.querySelectorAll('.service, .value-card, .step, .testimonial').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-            observer.observe(el);
+
+        // Navigation scroll effect
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
         });
 
-        // Carousel JS
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.carousel-item');
-        const totalSlides = slides.length;
+        // Fade-in animation on scroll
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
 
-        function showSlide(index) {
-            if (index >= totalSlides) index = 0;
-            if (index < 0) index = totalSlides - 1;
-            document.querySelector('.carousel-inner').style.transform = `translateX(-${index * 100}%)`;
-            currentSlide = index;
+        document.querySelectorAll('.fade-in').forEach(el => {
+            fadeObserver.observe(el);
+        });
+
+        // Image Showcase Carousel
+        let showcaseIndex = 0;
+        const showcaseTrack = document.getElementById('showcaseTrack');
+        const showcaseDots = document.querySelectorAll('.showcase-dot');
+        const totalShowcaseSlides = 3;
+        let showcaseInterval;
+
+        function updateShowcase() {
+            showcaseTrack.style.transform = `translateX(-${showcaseIndex * 100}%)`;
+            showcaseDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === showcaseIndex);
+            });
         }
 
-        function moveSlide(n) {
-            showSlide(currentSlide + n);
+        function nextShowcase() {
+            showcaseIndex = (showcaseIndex + 1) % totalShowcaseSlides;
+            updateShowcase();
+            resetShowcaseInterval();
         }
 
-        showSlide(currentSlide);
+        function prevShowcase() {
+            showcaseIndex = (showcaseIndex - 1 + totalShowcaseSlides) % totalShowcaseSlides;
+            updateShowcase();
+            resetShowcaseInterval();
+        }
+
+        function goToShowcase(index) {
+            showcaseIndex = index;
+            updateShowcase();
+            resetShowcaseInterval();
+        }
+
+        function resetShowcaseInterval() {
+            clearInterval(showcaseInterval);
+            showcaseInterval = setInterval(nextShowcase, 5000);
+        }
+
+        // Auto-advance carousel
+        showcaseInterval = setInterval(nextShowcase, 5000);
+
+        // Pause on hover
+        const showcaseCarousel = document.querySelector('.showcase-carousel');
+        showcaseCarousel.addEventListener('mouseenter', () => {
+            clearInterval(showcaseInterval);
+        });
+        showcaseCarousel.addEventListener('mouseleave', () => {
+            showcaseInterval = setInterval(nextShowcase, 5000);
+        });
+
+        // Touch/swipe support for carousel
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        showcaseCarousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        showcaseCarousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) {
+                nextShowcase();
+            } else if (touchEndX - touchStartX > 50) {
+                prevShowcase();
+            }
+        });
     </script>
 </body>
 </html>
