@@ -4,6 +4,8 @@
 
 > "Kids climb here. Every photo and route is reviewed." — CragTrails Trust & Safety banner
 
+**🚀 [Live Demo on Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKolinCunningham%2Fcragtrails)** — One click to deploy your own instance
+
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![Leaflet](https://img.shields.io/badge/Leaflet-1.9-green?style=flat&logo=leaflet)](https://leafletjs.com/)
@@ -13,13 +15,20 @@
 
 ---
 
-## Live Demo
+## 🚀 Live Demo
 
-**One-click deploy (recommended):**
+**Deploy your own instance in one click:**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKolinCunningham%2Fcragtrails)
 
-The project is a standard Next.js 16 app and deploys to Vercel with zero configuration.
+After you click the button and deploy:
+- Vercel will give you a live URL (usually `https://your-project-name.vercel.app`)
+- Copy that URL and replace the placeholder in this README, then commit & push.
+
+**Current recommended live link** (update this after you deploy):
+→ [Deploy CragTrails to Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKolinCunningham%2Fcragtrails)
+
+The project is 100% compatible with Vercel (Next.js 16 + zero config).
 
 **Local development:**
 
