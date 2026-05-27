@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import type { Route as LegacyRoute, Tick, ConditionReport } from '@/lib/types';
 import { seedData, formatAttribution, getSourceBadge, getAttributionLine } from '@/lib/data/index';
 import type { Route as CanonicalRoute, ConditionReport as CanonicalConditionReport, SourceAttribution } from '@/lib/types/climbing';
+import { SPONSORS } from '@/lib/seed-data';
 import dynamic from 'next/dynamic';
 
 const CragMap = dynamic(() => import('./components/CragMap'), {
@@ -505,7 +506,7 @@ export default function ClimbTrailsLogbook() {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-2xl bg-[#22C55E] flex items-center justify-center"><Send className="text-[#0A0C0A]" size={20}/></div>
-              <div><div className="font-bold tracking-[-1.5px] text-3xl">ClimbTrails</div><div className="text-[10px] text-[#A3A8A0] -mt-1 font-mono">LOG • GROW • CRUSH DAILY</div></div>
+              <div><div className="font-bold tracking-[-1.5px] text-3xl">CragTrails</div><div className="text-[10px] text-[#A3A8A0] -mt-1 font-mono">LOG • GROW • CRUSH DAILY</div></div>
             </div>
             <div className="hidden md:block px-3 py-1 rounded-full bg-[#161B17] border border-[#2A3328] text-xs text-[#A3A8A0]">The logbook that turns browsers into crushers</div>
           </div>
@@ -778,6 +779,36 @@ export default function ClimbTrailsLogbook() {
                   <div className="text-[10px] text-[#6B7280] mt-2 text-center">Captions are built from your actual logged tick data. Family-friendly options included.</div>
                 </div>
               </div>
+            </div>
+
+            {/* PARTNERS KEEPING IT FREE — strictly Me tab only (no primary flow clutter).
+                Uses the exact existing SPONSORS data from lib/seed-data.ts (prepared in revenue research).
+                Matches dark theme + card patterns already in this tab. Tasteful, transparent, reinforces the non-negotiable "core always free" promise. */}
+            <div className="pt-8 border-t border-[#2A3328]">
+              <div className="text-[10px] tracking-[2px] text-[#A3A8A0] mb-2">PARTNERS KEEPING IT FREE</div>
+              <div className="text-sm text-[#A3A8A0] mb-4 leading-snug">
+                CragTrails core — maps, routes, logbook, community beta — is and always will be 100% free. 
+                These climber-first brands help fund servers, moderation, and OpenBeta contributions so every new climber and family can send without paywalls.
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {SPONSORS.map((s) => (
+                  <a
+                    key={s.name}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 bg-[#161B17] border border-[#2A3328] hover:border-[#4ADE80] active:scale-[0.985] rounded-2xl px-4 py-3 transition-all text-sm"
+                    title={s.blurb}
+                  >
+                    <span className="text-xl flex-shrink-0">{s.logo}</span>
+                    <div className="min-w-0">
+                      <div className="font-semibold text-[#F5F5F3] truncate">{s.name}</div>
+                      <div className="text-[10px] text-[#A3A8A0] truncate">{s.tier}</div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+              <div className="mt-3 text-[10px] text-center text-[#6B7280]">No pay-to-play. No tracking. Just partners who believe in open climbing tools.</div>
             </div>
           </div>
         )}
