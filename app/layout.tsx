@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cragtrails.app"),
+  metadataBase: new URL("https://businessdelegate.com"),
   title: {
     default: "CragTrails • The Free Climbing Guide Climbers Actually Trust",
     template: "%s • CragTrails",
@@ -36,17 +36,17 @@ export const metadata: Metadata = {
     "community climbing guide",
     "skeptical climbing moderation",
   ],
-  authors: [{ name: "CragTrails Community", url: "https://cragtrails.app" }],
+  authors: [{ name: "CragTrails Community", url: "https://businessdelegate.com" }],
   creator: "Climbers, for climbers",
   publisher: "CragTrails",
   openGraph: {
     title: "CragTrails • The Free, Open Climbing Guide Built Like Your Favorite Partner",
     description: "Open. Simple. Kid-friendly. Offline when it matters. Powered by OpenBeta's open data + real human oversight so families and serious climbers can trust every photo and beta. No corporate nonsense.",
-    url: "https://cragtrails.app",
+    url: "https://businessdelegate.com",
     siteName: "CragTrails",
     images: [
       {
-        url: "https://cragtrails.app/og-default.png",
+        url: "https://businessdelegate.com/og-default.png",
         width: 1200,
         height: 630,
         alt: "CragTrails — The free climbing guide that feels like it was made by your favorite climbing partner, not a corporation",
@@ -126,7 +126,7 @@ export default function RootLayout({
                   "@type": "Organization",
                   "@id": "https://cragtrails.app/#organization",
                   name: "CragTrails",
-                  url: "https://cragtrails.app",
+                  url: "https://businessdelegate.com",
                   logo: "https://cragtrails.app/logo.png",
                   description: "The free, open climbing guide built by climbers for climbers. Powered by OpenBeta open data with human-reviewed, kid-friendly moderation.",
                   sameAs: [
@@ -139,7 +139,7 @@ export default function RootLayout({
                 {
                   "@type": "WebSite",
                   "@id": "https://cragtrails.app/#website",
-                  url: "https://cragtrails.app",
+                  url: "https://businessdelegate.com",
                   name: "CragTrails",
                   description: "The free climbing guide that feels like it was made by your favorite climbing partner, not a corporation.",
                   publisher: { "@id": "https://cragtrails.app/#organization" },

@@ -4,7 +4,7 @@
 
 > "Kids climb here. Every photo and route is reviewed." — CragTrails Trust & Safety banner
 
-**🚀 [Live Demo](https://cragtrails.vercel.app)** — Try it now | [Deploy your own](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKolinCunningham%2Fcragtrails)**
+**🚀 [Live Demo](https://businessdelegate.com)** — Try it now (CragTrails on custom domain) | [Deploy your own](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKolinCunningham%2Fcragtrails)**
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
@@ -19,7 +19,7 @@
 
 **Live Demo (recommended):**
 
-→ **[https://cragtrails.vercel.app](https://cragtrails.vercel.app)**
+→ **[https://businessdelegate.com](https://businessdelegate.com)** (custom domain on Vercel)
 
 (Deployed by the project owner on Vercel)
 
@@ -80,7 +80,7 @@ The project is in an active multi-agent refinement phase under Skeptical CEO ove
 - Minimal tasteful partners section in Me tab ("core always free").
 
 **Live Demo**
-→ **[https://cragtrails.vercel.app](https://cragtrails.vercel.app)**
+→ **[https://businessdelegate.com](https://businessdelegate.com)** (custom domain on Vercel)
 
 The prototype is rapidly moving from phone-first dark app → premium light-themed website that works beautifully on both desktop and mobile.
 

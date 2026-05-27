@@ -575,7 +575,7 @@ export default function ClimbTrailsLogbook() {
 
     ctx.fillStyle = '#4ADE80';
     ctx.font = '700 28px system-ui';
-    ctx.fillText('#CragTrails  •  cragtrails.app', 80, 1020);
+    ctx.fillText('#CragTrails  •  businessdelegate.com', 80, 1020);
 
     ctx.fillStyle = '#6B7280';
     ctx.font = '400 20px system-ui';
@@ -597,9 +597,9 @@ export default function ClimbTrailsLogbook() {
     const base = `Just sent ${tick.routeName} (${tick.grade}) at ${tick.areaName}!`;
     const style = tick.sendStyle || 'Redpoint';
     return [
-      `${base} ${style} 🔥 Who's next? #CragTrails cragtrails.app`,
+      `${base} ${style} 🔥 Who's next? #CragTrails businessdelegate.com`,
       `${base} One of those days that reminds me why I climb. Grateful. #CragTrails`,
-      `Send day with the crew! ${base} The stoke is real. cragtrails.app #CragTrails`
+      `Send day with the crew! ${base} The stoke is real. businessdelegate.com #CragTrails`
     ];
   };
 
