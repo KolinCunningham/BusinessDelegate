@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send, BookOpen, Target, MapPin, X, Star, Heart, 
@@ -12,7 +12,7 @@ import { seedData, formatAttribution, getSourceBadge, getAttributionLine, getGra
 import type { Route as CanonicalRoute, ConditionReport as CanonicalConditionReport, SourceAttribution, Tick as CanonicalTick } from '@/lib/types/climbing';
 import { SPONSORS } from '@/lib/seed-data';
 import dynamic from 'next/dynamic';
-import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
+import { SignInButton, SignUpButton, UserButton, useUser, useClerk } from '@clerk/nextjs';
 import { loadPersonalData, persistTick, persistUserProfile } from './actions/persistence';
 
 const CragMap = dynamic(() => import('./components/CragMap'), {
@@ -168,6 +168,7 @@ const DEMO_PROFILES = [
 
 export default function ClimbTrailsLogbook() {
   const { user, isLoaded: isUserLoaded } = useUser();
+  const { openUserProfile } = useClerk();
   const isRealSignedIn = isUserLoaded && !!user;
 
   const [ticks, setTicks] = useState<Tick[]>([]);
@@ -225,6 +226,14 @@ export default function ClimbTrailsLogbook() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationLoading, setLocationLoading] = useState(false);
 
+  // Track if we've already tried auto-locating this session (prevents repeated prompts)
+  const hasAttemptedAutoLocation = useRef(false);
+
+  // Stable center tuple for CragMap — prevents identity churn that would spam flyTo on every render
+  const mapCenter = useMemo<[number, number] | undefined>(() => {
+    return userLocation ? [userLocation.lat, userLocation.lng] : undefined;
+  }, [userLocation?.lat, userLocation?.lng]);
+
   // Get user's location for personalized "Near You" recommendations
   const getUserLocation = () => {
     if (!navigator.geolocation) {
@@ -240,12 +249,56 @@ export default function ClimbTrailsLogbook() {
       },
       (err) => {
         setLocationLoading(false);
-        toast.error("Could not get your location. Using a demo location instead.");
-        // Fallback to a nice climbing area (Boulder, CO area)
-        setUserLocation({ lat: 40.015, lng: -105.2705 });
+        // Differentiated, honest feedback. Never lie about "found" or pollute Near You / blue dot with fake data.
+        // PERMISSION_DENIED keeps button available for easy retry after user fixes browser settings.
+        if (err.code === 1) {
+          toast.error("Location blocked in browser settings. Enable it and tap again for climbs near you.");
+        } else if (err.code === 3) {
+          toast.error("Location request timed out. Check connection and try again.");
+        } else {
+          toast.error("Couldn't get your location right now. Tap to retry.");
+        }
+        // Intentionally do NOT set any fallback location. "Near You" and map dot must reflect reality only.
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000, // 5 minutes
       }
     );
   };
+
+  // Auto-fetch location as default behavior (on mount + when opening Map tab)
+  useEffect(() => {
+    if (hasAttemptedAutoLocation.current) return;
+
+    const shouldAutoLocate = !userLocation && !locationLoading;
+
+    if (shouldAutoLocate) {
+      hasAttemptedAutoLocation.current = true;
+      // Small delay for better perceived performance
+      const timer = setTimeout(() => {
+        getUserLocation();
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, []); // Run once on mount
+
+  // Also ensure it triggers when user manually switches to the Map tab later
+  useEffect(() => {
+    if (
+      activeTab === 'map' &&
+      !userLocation &&
+      !locationLoading &&
+      hasAttemptedAutoLocation.current // already attempted globally, but allow re-prompt if user cleared it somehow
+    ) {
+      // If we reach here on tab switch and still have no location, gently try again
+      const timer = setTimeout(() => {
+        if (!userLocation) getUserLocation();
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab]);
 
   // Haversine formula to calculate distance in miles between two lat/lng points
   const getDistanceMiles = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
@@ -818,7 +871,7 @@ export default function ClimbTrailsLogbook() {
                 selectedRouteId={null}
                 onMarkerClick={handleMapMarkerClick}
                 userLocation={userLocation}
-                center={userLocation ? [userLocation.lat, userLocation.lng] : undefined}
+                center={mapCenter}
                 zoom={userLocation ? 10 : 7}
               />
             </div>
@@ -969,34 +1022,47 @@ export default function ClimbTrailsLogbook() {
           <div className="max-w-xl mx-auto space-y-8">
             {/* REAL AUTH via Clerk - Apple, Google, Facebook, Email */}
             <div>
-              {isRealSignedIn ? (
+              {isRealSignedIn && user ? (
                 <>
                   <div className="text-center">
                     <div className="text-5xl mb-2">🧗</div>
-                    <div className="text-3xl font-bold">Welcome back!</div>
-                    <p className="text-[#5C6666] mt-1">You're signed in with real authentication</p>
+                    <div className="text-3xl font-bold">{user.fullName || user.firstName || 'Climber'}</div>
+                    <div className="text-[#5C6666] mt-1 text-sm">
+                      {user.primaryEmailAddress?.emailAddress}
+                    </div>
+                    <div className="text-[10px] text-[#5C6666] mt-2">
+                      Member since {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '—'}
+                    </div>
                   </div>
-                  {/* Smooth transition helper (Skeptical CEO: explicit, user-controlled, zero surprise). 
-                      Only shown for real users who still have local/demo sends not yet in their cloud account. */}
-                  {ticks.length > 0 && (
+
+                  <div className="flex flex-col gap-2 mt-4">
                     <button
-                      onClick={async () => {
-                        try {
-                          // Persist whatever is currently in state (demo or otherwise) to this Clerk user's record
-                          for (const t of ticks) {
-                            await persistTick(t);
-                          }
-                          await persistUserProfile({ wishlist, goals: userGoals });
-                          toast.success('Demo data migrated to your real account!', { description: 'Future sends will sync automatically.' });
-                        } catch {
-                          toast.error('Migration had a hiccup — your new sends are still safe.');
-                        }
-                      }}
-                      className="mt-3 text-xs px-3 py-1.5 rounded-2xl border border-[#166534] text-[#166534] active:bg-[#DCFCE7]"
+                      onClick={() => openUserProfile()}
+                      className="w-full py-3 rounded-3xl border border-[#166534] text-[#166534] font-semibold active:bg-[#F1F5F0]"
                     >
-                      📤 Copy current sends + wishlist to my real account
+                      Manage Profile & Security
                     </button>
-                  )}
+
+                    {/* Smooth transition helper */}
+                    {ticks.length > 0 && (
+                      <button
+                        onClick={async () => {
+                          try {
+                            for (const t of ticks) {
+                              await persistTick(t);
+                            }
+                            await persistUserProfile({ wishlist, goals: userGoals });
+                            toast.success('Demo data migrated to your real account!');
+                          } catch {
+                            toast.error('Migration had a hiccup — your new sends are still safe.');
+                          }
+                        }}
+                        className="w-full py-3 rounded-3xl bg-[#166534] text-white font-semibold active:bg-[#14532D]"
+                      >
+                        📤 Migrate current sends to this account
+                      </button>
+                    )}
+                  </div>
                 </>
               ) : (
                 /* DEMO PROFILE SWITCHER — fallback when not signed in */

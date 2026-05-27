@@ -217,12 +217,12 @@ export default function CragMap({
         {userLocation && (
           <CircleMarker
             center={[userLocation.lat, userLocation.lng]}
-            radius={11}
+            radius={13}
             pathOptions={{
-              color: '#1e40af',      // Strong blue border
-              weight: 3,
+              color: '#1e3a8a',      // Deep blue border for strong contrast
+              weight: 4,
               fillColor: '#3b82f6',  // Bright friendly blue
-              fillOpacity: 0.9,
+              fillOpacity: 0.92,
             }}
           >
             <Tooltip direction="top" offset={[0, -8]} opacity={0.95} className="font-sans text-xs">
