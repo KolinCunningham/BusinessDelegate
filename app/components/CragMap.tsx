@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { getGradeColor } from '@/lib/data/index';
 
 // Self-contained Route type (also duplicated in page for simplicity)
 export interface Route {
@@ -39,17 +40,6 @@ export interface CragMapProps {
   center?: [number, number];
   zoom?: number;
   onMapReady?: (map: L.Map) => void;
-}
-
-// Grade to color (difficulty)
-function getGradeColor(grade: string): string {
-  const g = grade.toUpperCase();
-  // V-scale bouldering or YDS sport simplified
-  if (g.includes('V0') || g.includes('V1') || g.includes('5.6') || g.includes('5.7') || g.includes('5.8') || g.includes('5.9')) return '#22c55e'; // green easy
-  if (g.includes('V2') || g.includes('V3') || g.includes('V4') || g.includes('5.10')) return '#eab308'; // yellow moderate
-  if (g.includes('V5') || g.includes('V6') || g.includes('5.11')) return '#f97316'; // orange hard
-  if (g.includes('V7') || g.includes('V8') || g.includes('V9') || g.includes('5.12') || g.includes('5.13')) return '#ef4444'; // red very hard
-  return '#8b5cf6'; // purple expert+
 }
 
 // Popularity -> radius (heatmap-ish)

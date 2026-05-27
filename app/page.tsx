@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Route as LegacyRoute, Tick, ConditionReport } from '@/lib/types';
-import { seedData, formatAttribution, getSourceBadge, getAttributionLine } from '@/lib/data/index';
+import { seedData, formatAttribution, getSourceBadge, getAttributionLine, getGradeColor } from '@/lib/data/index';
 import type { Route as CanonicalRoute, ConditionReport as CanonicalConditionReport, SourceAttribution } from '@/lib/types/climbing';
 import { SPONSORS } from '@/lib/seed-data';
 import dynamic from 'next/dynamic';
@@ -59,7 +59,8 @@ seedData.ticks.forEach(t => {
 // Adapter: canonical Route -> LegacyRoute shape (required only for existing logbook/send code paths)
 function mapToAppRoute(r: CanonicalRoute): LegacyRoute {
   const area = areasById.get(r.areaId);
-  const primaryGrade = r.grades.yds || r.grades.vScale || r.grades.french || '5.10';
+  // Prefer local system grade when available (especially useful for Australian climbs on the map)
+  const primaryGrade = r.grades.australian || r.grades.yds || r.grades.vScale || r.grades.french || '5.10';
   const style = r.styles[0] || 'sport';
   const type = (style === 'boulder' ? 'Boulder' : style === 'trad' ? 'Trad' : 'Sport') as any;
   const routePhotos = photosByRouteId.get(r.id) || [];
@@ -113,15 +114,28 @@ function mapCanonicalReport(cr: CanonicalConditionReport): ConditionReport {
 }
 const SAMPLE_REPORTS: ConditionReport[] = seedData.conditionReports.map(mapCanonicalReport);
 
+// Use the robust shared implementation (handles Australian Ewbank grades correctly for the map legend)
 function gradeToBand(grade: string): string {
+  // Lightweight band label for the map filter chips (still YDS/V biased for the current UI labels)
   const g = grade.toUpperCase().replace(/\s/g, '');
-  if (g.startsWith('V')) { const n = parseInt(g.slice(1)) || 0; if (n<=1) return 'V0-1'; if (n<=3) return 'V2-3'; if (n<=5) return 'V4-5'; if (n<=7) return 'V6-7'; if (n<=9) return 'V8-9'; return 'V10+'; }
-  if (g.includes('5.6')||g.includes('5.7')||g.includes('5.8')||g.includes('5.9')) return '5.6-5.9';
-  if (g.includes('5.10')) return '5.10'; if (g.includes('5.11')) return '5.11'; if (g.includes('5.12')) return '5.12';
-  if (g.includes('5.13')||g.includes('5.14')) return '5.13+'; return 'Other';
-}
-function getGradeColor(grade: string): string {
-  const b = gradeToBand(grade); if (b.includes('V0')||b.includes('5.6')) return '#22c55e'; if (b.includes('V2')||b.includes('5.10')) return '#eab308'; if (b.includes('V6')||b.includes('5.11')) return '#f97316'; return '#ef4444';
+  if (g.startsWith('V')) {
+    const n = parseInt(g.slice(1)) || 0;
+    if (n <= 2) return 'V0-2'; if (n <= 5) return 'V3-5'; if (n <= 8) return 'V6-8'; return 'V9+';
+  }
+  if (g.includes('5.6') || g.includes('5.7') || g.includes('5.8') || g.includes('5.9')) return '5.6-5.9';
+  if (g.includes('5.10')) return '5.10';
+  if (g.includes('5.11')) return '5.11';
+  if (g.includes('5.12')) return '5.12';
+  if (g.includes('5.13') || g.includes('5.14')) return '5.13+';
+  // Australian Ewbank support for filters
+  const num = parseInt(g);
+  if (num) {
+    if (num <= 14) return 'easy-au';
+    if (num <= 20) return 'mod-au';
+    if (num <= 25) return 'hard-au';
+    return 'expert-au';
+  }
+  return 'Other';
 }
 function formatDate(iso: string) { return new Date(iso).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
 
@@ -372,9 +386,10 @@ export default function ClimbTrailsLogbook() {
     if (mapGradeFilter !== 'All') {
       res = res.filter(r => {
         const b = gradeToBand(r.grade);
-        if (mapGradeFilter === 'Easy') return /V0|V2|5\.[6-9]/.test(b);
-        if (mapGradeFilter === 'Moderate') return /V4|V5|5\.10|5\.11/.test(b);
-        if (mapGradeFilter === 'Hard') return /V6|V7|V8|5\.12|5\.13/.test(b);
+        const color = getGradeColor(r.grade); // use the accurate multi-system color
+        if (mapGradeFilter === 'Easy') return color === '#22c55e' || /easy|5\.[6-9]|V0|V1|V2/.test(b);
+        if (mapGradeFilter === 'Moderate') return color === '#eab308' || /mod|5\.10|5\.11|V[3-5]/.test(b);
+        if (mapGradeFilter === 'Hard') return color === '#f97316' || /hard|5\.12|5\.13|V[6-8]/.test(b);
         return true;
       });
     }

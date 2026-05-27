@@ -97,7 +97,9 @@ export interface GradeSet {
   vScale?: string; // "V8" for boulders
   aid?: string; // "C2"
   uiaa?: string;
-  /** Primary display grade for the app (usually YDS or French) */
+  /** Australian Ewbank grade (e.g. "18", "22", "25") — used for accurate local coloring */
+  australian?: string;
+  /** Primary display grade for the app (usually YDS or French, or local system) */
   primary: string;
 }
 
