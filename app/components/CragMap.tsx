@@ -168,6 +168,23 @@ function MapController({ center, zoom, onMapReady }: {
     if (onMapReady) onMapReady(map);
   }, [map, onMapReady]);
 
+  // Critical fix for maps rendered inside tabs or conditionally:
+  // Leaflet often initializes with wrong size, which locks the ability to zoom out.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
+
+    // Also invalidate when the map is interacted with after mount (helps with tab switches)
+    const handleResize = () => map.invalidateSize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [map]);
+
   useEffect(() => {
     if (center) {
       map.flyTo(center, zoom ?? map.getZoom(), { duration: 0.8, easeLinearity: 0.25 });
@@ -198,6 +215,8 @@ export default function CragMap({
         style={{ background: '#F8F7F4' }}
         zoomControl={true}
         attributionControl={true}
+        minZoom={3}
+        maxZoom={18}
       >
         {/* OpenStreetMap tiles - free, no key required */}
         <TileLayer

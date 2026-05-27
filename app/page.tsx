@@ -1283,11 +1283,11 @@ export default function ClimbTrailsLogbook() {
         </div>
       </div>
 
-      <button onClick={()=>openSendModal()} className="fixed bottom-20 right-6 md:hidden z-[95] h-16 w-16 rounded-full bg-[#22C55E] text-[#0A0C0A] flex items-center justify-center shadow-2xl"><Send size={28}/></button>
+      <button onClick={()=>openSendModal()} className="fixed bottom-20 right-6 md:hidden z-[9999] h-16 w-16 rounded-full bg-[#22C55E] text-[#0A0C0A] flex items-center justify-center shadow-2xl"><Send size={28}/></button>
 
       <AnimatePresence>
         {isSendModalOpen && currentClimb && (
-          <div className="fixed inset-0 z-[95] bg-black/80 flex items-end md:items-center justify-center p-0 md:p-6" onClick={closeSendModal}>
+          <div className="fixed inset-0 z-[9999] bg-black/80 flex items-end md:items-center justify-center p-0 md:p-6" onClick={closeSendModal}>
             <motion.div initial={{y:70,opacity:0}} animate={{y:0,opacity:1}} exit={{y:50,opacity:0}} className="send-modal w-full md:max-w-lg" onClick={e=>e.stopPropagation()}>
               <div className="modal-header flex justify-between">
                 <div>
