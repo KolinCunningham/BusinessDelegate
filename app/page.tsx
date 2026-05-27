@@ -592,16 +592,54 @@ export default function ClimbTrailsLogbook() {
   const pyramidFiltered = pyramidData.filter(p=>p.count>0);
 
   return (
-    <div className="climb-app bg-[#0A0C0A] text-[#F5F5F3] min-h-screen pb-20">
-      <header className="climb-header px-4 md:px-8 py-4 sticky top-0 z-50">
-        <div className="max-w-[1080px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-[#22C55E] flex items-center justify-center"><Send className="text-[#0A0C0A]" size={20}/></div>
-              <div><div className="font-bold tracking-[-1.5px] text-3xl">CragTrails</div><div className="text-[10px] text-[#A3A8A0] -mt-1 font-mono">LOG • GROW • CRUSH DAILY</div></div>
+    <div className="climb-app bg-[#F8F7F4] text-[#1F2525] min-h-screen pb-20">
+      {/* Desktop Top Navigation - Website experience */}
+      <header className="hidden lg:block climb-header border-b border-[#E5E2D9] bg-white/95 backdrop-blur sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-8 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-10">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-2xl bg-[#166534] flex items-center justify-center"><Send className="text-white" size={20}/></div>
+              <div className="font-bold tracking-[-1.5px] text-3xl text-[#1F2525]">CragTrails</div>
             </div>
-            <div className="hidden md:block px-3 py-1 rounded-full bg-[#161B17] border border-[#2A3328] text-xs text-[#A3A8A0]">The logbook that turns browsers into crushers</div>
+            
+            <nav className="flex items-center gap-7 text-[15px] font-medium">
+              <button onClick={() => setActiveTab('discover')} className={`hover:text-[#166534] transition-colors ${activeTab === 'discover' ? 'text-[#166534] font-semibold' : 'text-[#5C6666]'}`}>Discover</button>
+              <button onClick={() => setActiveTab('map')} className={`hover:text-[#166534] transition-colors ${activeTab === 'map' ? 'text-[#166534] font-semibold' : 'text-[#5C6666]'}`}>Explore Map</button>
+              <button onClick={() => setActiveTab('logbook')} className={`hover:text-[#166534] transition-colors ${activeTab === 'logbook' ? 'text-[#166534] font-semibold' : 'text-[#5C6666]'}`}>My Logbook</button>
+            </nav>
           </div>
+
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-[#5C6666]">{userStats.totalSends} sends logged</div>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="px-6 py-2 rounded-2xl bg-[#166534] text-white text-sm font-semibold hover:bg-[#14532D]">Log in</button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton appearance={{elements: {avatarBox: "w-8 h-8"}}} />
+            </SignedIn>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Header */}
+      <header className="lg:hidden climb-header px-4 py-4 sticky top-0 z-50 bg-white border-b border-[#E5E2D9]">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-2xl bg-[#166534] flex items-center justify-center"><Send className="text-white" size={20}/></div>
+            <div className="font-bold tracking-[-1.5px] text-2xl text-[#1F2525]">CragTrails</div>
+          </div>
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="px-4 py-1.5 text-sm rounded-2xl bg-[#166534] text-white font-semibold">Log in</button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton appearance={{elements: {avatarBox: "w-8 h-8"}}} />
+          </SignedIn>
+        </div>
+      </header>
           <div className="flex items-center gap-4">
             <div className="flex flex-wrap gap-2 text-sm">
               <div className="stat-pill"><Award size={15} className="text-[#166534]"/> <span className="stat-number">{userStats.totalSends}</span> sends</div>
@@ -630,7 +668,7 @@ export default function ClimbTrailsLogbook() {
         </div>
       </header>
 
-      <div className="max-w-[1080px] mx-auto px-4 md:px-8 pt-6 pb-24">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-6 pb-24">
         {/* MAP - Full map focus (now wired to real CragMap + synced filters + direct send modal) */}
         {activeTab === 'map' && (
           <div>
@@ -731,7 +769,7 @@ export default function ClimbTrailsLogbook() {
               <div>
                 <div className="font-bold text-xl mb-3 flex items-center gap-2">📍 Near You</div>
                 <div className="text-sm text-[#A3A8A0] mb-3">Climbs within ~100 miles of your location</div>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                   {nearbyRoutes.map(c => (
                     <div key={c.id} className="rec-card">
                       <div className="font-bold">{c.name} <span className="font-normal text-[#A3A8A0]">({c.grade})</span></div>
@@ -756,7 +794,7 @@ export default function ClimbTrailsLogbook() {
             <div>
               <div className="font-bold text-xl mb-3 flex items-center gap-2">✨ Recommended for you</div>
               <div className="text-sm text-[#A3A8A0] mb-3">Based on climbs you've already logged</div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 {personalRecommendations.map(c => (
                   <div key={c.id} className="rec-card">
                     <div className="font-bold">{c.name} <span className="font-normal text-[#A3A8A0]">({c.grade})</span></div>
@@ -768,7 +806,7 @@ export default function ClimbTrailsLogbook() {
 
             <div>
               <div className="font-bold text-xl mb-3 flex items-center gap-2"><Users /> Climbers who sent your routes also loved…</div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                 {recommendations.map(c => (
                   <div key={c.id} className="rec-card">
                     <div className="font-bold">{c.name} <span className="font-normal text-[#A3A8A0]">({c.grade})</span></div>
@@ -788,7 +826,7 @@ export default function ClimbTrailsLogbook() {
                 <input value={discoverSearch} onChange={e=>setDiscoverSearch(e.target.value)} placeholder="Search name / area / grade" className="flex-1 bg-[#161B17] border border-[#2A3328] px-5 py-3 rounded-3xl" />
                 {['All','Boulder','Sport','Trad'].map(t=><button key={t} onClick={()=>setDiscoverType(t as any)} className={`filter-chip ${discoverType===t?'active':''}`}>{t}</button>)}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 {discoverClimbs.map(c => {
                   const wish = wishlist.includes(c.id);
                   return <div key={c.id} className="climb-card"><div className="climb-card-photo" style={{backgroundImage:`url(${c.photoUrl})`}}><button onClick={()=>toggleWishlist(c.id)} className="absolute top-3 right-3 p-2 bg-black/60 rounded-full"><Heart size={17} fill={wish?'#FBBF24':'none'}/></button><span className="absolute bottom-3 left-3 grade-badge" style={{background:getGradeColor(c.grade)}}>{c.grade}</span></div><div className="p-4"><div className="font-bold text-xl">{c.name}</div><div className="text-sm text-[#A3A8A0]">{c.areaName}</div><div className="mt-1"><span className="text-[10px] px-2 py-0.5 rounded-full bg-[#052E16] text-[#4ADE80] font-medium tracking-tight inline-block">{getSourceBadge(c.sources)}</span></div><div className="mt-3 flex gap-2"><button onClick={()=>openSendModal(c)} className="send-it-mini flex-1 justify-center">SEND IT</button><button onClick={()=>toggleWishlist(c.id)} className="px-4 text-sm border border-[#2A3328] rounded-3xl font-semibold">{wish?'Wishlisted':'Wishlist'}</button></div></div></div>;
@@ -1008,10 +1046,9 @@ export default function ClimbTrailsLogbook() {
         )}
       </div>
 
-      {/* CLEAN ALLTRAILS-STYLE 4-TAB BOTTOM NAV — 10yo friendly, thumb-first, fixed, no scroll, no confusion.
-          Large tap targets, clear icons + full labels, active state unmistakable. Matches the delightful dark palette. */}
-      <div className="fixed bottom-0 left-0 right-0 z-[90] bg-[#161B17] border-t border-[#2A3328] pb-[env(safe-area-inset-bottom)]">
-        <div className="max-w-[1080px] mx-auto flex">
+      {/* CLEAN ALLTRAILS-STYLE 4-TAB BOTTOM NAV — Mobile only (hidden on desktop) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white border-t border-[#E5E2D9] pb-[env(safe-area-inset-bottom)]">
+        <div className="max-w-[1280px] mx-auto flex">
           {([
             { key: 'discover' as const, label: 'Discover', Icon: MapPin },
             { key: 'map' as const, label: 'Map', Icon: Target },
@@ -1021,7 +1058,7 @@ export default function ClimbTrailsLogbook() {
             <button
               key={key}
               onClick={() => setActiveTab(key)}
-              className={`flex-1 flex flex-col items-center justify-center py-3 active:scale-[0.96] transition-all ${activeTab === key ? 'text-[#22C55E]' : 'text-[#A3A8A0]'}`}
+              className={`flex-1 flex flex-col items-center justify-center py-3 active:scale-[0.96] transition-all ${activeTab === key ? 'text-[#166534]' : 'text-[#5C6666]'}`}
               aria-current={activeTab === key ? 'page' : undefined}
             >
               <Icon size={22} />

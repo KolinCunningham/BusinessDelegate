@@ -5,24 +5,25 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* ClimbTrails — Dark earthy crag palette (daily use delight) */
-  --bg: #0A0C0A;
-  --bg-elev: #161B17;
-  --bg-card: #1C211D;
-  --text: #F5F5F3;
-  --text-muted: #A3A8A0;
-  --border: #2A3328;
-  --green: #22C55E;       /* Send / success */
-  --green-dark: #16A34A;
-  --orange: #F97316;      /* Mid / beta */
-  --red: #EF4444;         /* Hard / pump */
-  --amber: #FBBF24;       /* Stars / goals */
-  --cream: #EDEDE8;
-  --hold-green: #4ADE80;
-  --hold-orange: #FB923C;
-  --hold-red: #F87171;
-  --hold-blue: #60A5FA;
-  --accent: #F97316;
+  /* ClimbTrails — Light, clean, Mountain Project / TheCrag inspired */
+  --bg: #F8F7F4;
+  --bg-elev: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --text: #1F2525;
+  --text-muted: #5C6666;
+  --border: #E5E2D9;
+  --green: #166534;       /* Deep forest green - primary */
+  --green-dark: #14532D;
+  --green-light: #4ADE80;
+  --orange: #C2410C;      /* Warm accent */
+  --red: #B91C1C;
+  --amber: #B45309;
+  --cream: #F5F1E6;
+  --hold-green: #166534;
+  --hold-orange: #C2410C;
+  --hold-red: #B91C1C;
+  --hold-blue: #1E40AF;
+  --accent: #166534;
 }
 
 @theme inline {
@@ -39,9 +40,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Force dark delightful climbing aesthetic */
+/* Light, clean climbing aesthetic (Mountain Project / TheCrag inspired) */
 .dark {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 /* ============ CRAGTRAILS DELIGHT STYLES ============ */
@@ -86,12 +87,12 @@ body {
   box-shadow: 0 4px 12px -2px rgb(22 163 74 / 0.25);
 }
 
-/* Beautiful Route Card */
+/* Beautiful Route Card - Light theme */
 .route-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.06);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08), 0 10px 15px -3px rgb(0 0 0 / 0.06);
   border: 1px solid var(--border);
   transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), 
               box-shadow 0.2s cubic-bezier(0.23, 1, 0.32, 1);
@@ -768,7 +769,7 @@ h1, .text-hero {
 /* App shell — mobile first but beautiful on desktop too */
 .climb-app {
   min-height: 100dvh;
-  max-width: 1080px;
+  max-width: 1280px;
   margin: 0 auto;
   position: relative;
 }
@@ -1179,4 +1180,150 @@ button, .clickable {
 @media (min-width: 768px) {
   .log-entry { padding-left: 64px; }
   .timeline::before { left: 31px; }
+}
+
+/* =====================================================
+   LIGHT TRUST THEME — Admin + Auth + Error surfaces
+   Warm cream-forest palette (Mountain Project / TheCrag inspired)
+   for premium, intentional desktop experience.
+
+   Previously these classes (admin-*, trust-*, safety-*) were
+   referenced 50+ times but undefined — light theme felt incomplete.
+   This block makes the Trust Console (core product feature)
+   cohesive, trustworthy, and excellent on large screens (1480px+).
+
+   Design tokens / patterns documented here (no new vars added
+   to :root to keep bloat zero; reuses existing warm neutrals
+   already in admin/layout.tsx and .ct- light remnants).
+
+   - admin-card: clean white cards with subtle border + shadow
+   - admin-btn variants: primary (forest), secondary, danger, ghost
+   - admin-input: warm focus states, consistent with 10yo+ friendly sizing
+   - trust-banner / safety-callout: the non-negotiable trust messaging surfaces
+   - Supporting: .flag-item, .status-badge, .modal refinements for light
+
+   Desktop: generous padding, clear hierarchy, excellent on wide viewports.
+   Mobile/main dark tabs: 100% unaffected. No 10yo impact.
+   ===================================================== */
+
+.admin-card {
+  background: #ffffff;
+  border: 1px solid #e5e2d9;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.02);
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+.admin-card:hover {
+  box-shadow: 0 8px 20px -8px rgb(0 0 0 / 0.08), 0 2px 6px rgb(0 0 0 / 0.04);
+}
+
+.admin-input {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e2d9;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 15px;
+  color: #1f2525;
+  transition: border-color 0.1s ease, box-shadow 0.1s ease;
+}
+.admin-input:focus {
+  outline: none;
+  border-color: #2f5d3d;
+  box-shadow: 0 0 0 3px rgba(47, 93, 61, 0.12);
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 16px;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  transition: all 0.1s ease;
+  cursor: pointer;
+}
+.admin-btn:active {
+  transform: scale(0.985);
+}
+.admin-btn-primary {
+  background: #2f5d3d;
+  color: white;
+  border-color: #2f5d3d;
+}
+.admin-btn-primary:hover {
+  background: #264d33;
+}
+.admin-btn-secondary {
+  background: #f8f7f4;
+  color: #1f2525;
+  border-color: #e5e2d9;
+}
+.admin-btn-secondary:hover {
+  background: #f0f4f0;
+  border-color: #2f5d3d;
+}
+.admin-btn-danger {
+  background: #9f3a3a;
+  color: white;
+  border-color: #9f3a3a;
+}
+.admin-btn-danger:hover {
+  background: #7f2f2f;
+}
+.admin-btn-ghost {
+  background: transparent;
+  color: #5c6666;
+  border-color: #e5e2d9;
+}
+.admin-btn-ghost:hover {
+  background: #f8f7f4;
+  color: #1f2525;
+}
+
+.trust-banner {
+  background: linear-gradient(90deg, #2f5d3d 0%, #264d33 100%);
+  color: white;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.safety-callout {
+  background: #f0f4f0;
+  border: 1px solid #c5d9c5;
+  color: #1f2525;
+}
+
+.flag-item {
+  transition: all 0.1s ease;
+}
+.flag-item:hover {
+  border-color: #2f5d3d;
+  box-shadow: 0 4px 12px -4px rgb(0 0 0 / 0.08);
+}
+
+.status-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+.badge-flagged { background: #fef3c7; color: #92400e; }
+
+.modal.admin-card {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgb(0 0 0 / 0.35);
+}
+
+/* Desktop polish for light surfaces (admin 1480px+ benefits immediately) */
+@media (min-width: 1024px) {
+  .admin-card { border-radius: 18px; }
+  .admin-input { padding: 12px 16px; font-size: 15px; }
 }
