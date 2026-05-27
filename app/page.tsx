@@ -72,6 +72,7 @@ function mapToAppRoute(r: CanonicalRoute): LegacyRoute {
     areaId: r.areaId,
     areaName: area?.name || 'Unknown Area',
     grade: primaryGrade,
+    grades: r.grades, // carry all systems for location-aware display
     type,
     lat: area?.lat ?? 0,
     lng: area?.lng ?? 0,
@@ -540,6 +541,7 @@ export default function ClimbTrailsLogbook() {
         lat: coords.lat,
         lng: coords.lng,
         grade: r.grade,
+        grades: (r as any).grades, // carry full grade systems for location-aware display
         difficulty: Math.round(r.stars || 3),
         popularity: r.ticks || 120,
         type: r.type as 'Boulder' | 'Sport' | 'Trad',
