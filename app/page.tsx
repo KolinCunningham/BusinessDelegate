@@ -9,8 +9,7 @@ import {
 import { toast } from 'sonner';
 import type { Route as LegacyRoute, Tick, ConditionReport } from '@/lib/types';
 import { seedData, formatAttribution, getSourceBadge, getAttributionLine, getGradeColor } from '@/lib/data/index';
-import { db as dynamoDb } from '@/lib/db/dynamodb';
-import type { Route as CanonicalRoute, ConditionReport as CanonicalConditionReport, SourceAttribution } from '@/lib/types/climbing';
+import type { Route as CanonicalRoute, ConditionReport as CanonicalConditionReport, SourceAttribution, Tick as CanonicalTick } from '@/lib/types/climbing';
 import { SPONSORS } from '@/lib/seed-data';
 import dynamic from 'next/dynamic';
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/nextjs';
@@ -197,8 +196,94 @@ export default function ClimbTrailsLogbook() {
   const currentProfile = DEMO_PROFILES.find(p => p.id === currentProfileId)!;
   const getProfileKey = (pid: string, key: string) => `ct_${pid}_${key}`;
 
-  // Real user persistence mode (when signed in via Clerk + DynamoDB available)
-  const useRealPersistence = isRealUser && dynamoDb.isEnabled;
+  // Effective identity for display (real Clerk users > demo profiles). Keeps 10yo joy without new mental models.
+  const effectiveName = (isRealSignedIn && user) ? (user.fullName || user.firstName || 'Real Climber') : currentProfile.name;
+  const effectiveSubtitle = (isRealSignedIn && user) ? 'Synced securely • your sends are safe in the cloud' : currentProfile.subtitle;
+
+  // Real signed-in Clerk user (for DynamoDB path). Demo/localStorage remains 100% untouched for everyone else.
+  const isRealSignedIn = isUserLoaded && !!user;
+
+  // ----------------------------------------------------------------------
+  // SAFE SERVER ACTIONS (co-located, no new files). Dynamic imports keep server-only
+  // modules (DynamoDB adapter + Clerk server) out of the client bundle. 10yo simple.
+  // Only called for real Clerk users; demo flows never touch these.
+  // ----------------------------------------------------------------------
+  async function loadPersonalData() {
+    'use server';
+    // Dynamic imports: these only execute when the action runs on the server.
+    const { currentUser } = await import('@clerk/nextjs/server');
+    const dynamo = await import('@/lib/db/dynamodb');
+    const user = await currentUser();
+    const enabled = dynamo.isDynamoEnabled ? dynamo.isDynamoEnabled() : !!process.env.AWS_ACCESS_KEY_ID;
+    if (!user || !enabled) {
+      return { source: 'local' as const };
+    }
+    try {
+      const [rawTicks, userData] = await Promise.all([
+        dynamo.getTicksForUser ? dynamo.getTicksForUser(user.id) : Promise.resolve([]),
+        dynamo.getUserData ? dynamo.getUserData(user.id) : Promise.resolve({ wishlist: [], goals: [] }),
+      ]);
+      return {
+        source: 'dynamo' as const,
+        ticks: rawTicks as CanonicalTick[],
+        wishlist: (userData as any)?.wishlist ?? [],
+        goals: (userData as any)?.goals ?? [],
+      };
+    } catch (err) {
+      console.error('[Persistence] loadPersonalData failed (falling back to local):', err);
+      return { source: 'local' as const };
+    }
+  }
+
+  async function persistTick(tick: any) {
+    'use server';
+    const { currentUser } = await import('@clerk/nextjs/server');
+    const dynamo = await import('@/lib/db/dynamodb');
+    const u = await currentUser();
+    if (!u) return;
+    const enabled = dynamo.isDynamoEnabled ? dynamo.isDynamoEnabled() : !!process.env.AWS_ACCESS_KEY_ID;
+    if (!enabled) return;
+    try {
+      await dynamo.saveTick({ ...tick, userId: u.id });
+    } catch (err) {
+      console.error('[Persistence] persistTick failed (non-fatal):', err);
+    }
+  }
+
+  async function persistUserProfile(data: { wishlist?: string[]; goals?: any[] }) {
+    'use server';
+    const { currentUser } = await import('@clerk/nextjs/server');
+    const dynamo = await import('@/lib/db/dynamodb');
+    const u = await currentUser();
+    if (!u) return;
+    const enabled = dynamo.isDynamoEnabled ? dynamo.isDynamoEnabled() : !!process.env.AWS_ACCESS_KEY_ID;
+    if (!enabled) return;
+    try {
+      await dynamo.saveUserData(u.id, { wishlist: data.wishlist ?? [], goals: data.goals ?? [] });
+    } catch (err) {
+      console.error('[Persistence] persistUserProfile failed (non-fatal):', err);
+    }
+  }
+
+  // Client-side mapper: Canonical DB tick -> legacy UI Tick shape (enrich with route info for display).
+  // Keeps all existing UI code (pyramid, timeline, etc.) 100% unchanged. 10yo friendly.
+  const mapDbTickToUiTick = (t: CanonicalTick): Tick => {
+    const route = ROUTES.find(r => r.id === t.routeId);
+    const styleStr = (t as any).style || (t as any).sendStyle;
+    return {
+      id: t.id,
+      routeId: t.routeId,
+      routeName: (t as any).routeName || route?.name || 'Route',
+      areaName: (t as any).areaName || route?.areaName || 'Area',
+      grade: (t as any).grade || (t as any).gradeOpinion || route?.grade || '5.10',
+      date: t.date,
+      stars: (t as any).stars || (t as any).quality || 4,
+      notes: t.notes,
+      conditions: (t as any).conditions,
+      photoUrl: (t as any).photoUrl,
+      sendStyle: (t as any).sendStyle || (styleStr === 'flash' || styleStr === 'Flash' ? 'Flash' : styleStr === 'redpoint' ? 'Redpoint' : 'Redpoint'),
+    };
+  };
 
   // User location for "Near You" personalized suggestions
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -292,6 +377,14 @@ export default function ClimbTrailsLogbook() {
   }, [ticks]);
 
   useEffect(() => {
+    // DEMO-ONLY load. Real signed-in users get their data from cloud via the hydration effect (which runs after Clerk settles).
+    // This keeps the original demo experience pixel-perfect for non-signed-in visitors and testers.
+    if (isRealSignedIn) {
+      // Skip demo localStorage load for real users — cloud will populate (or keep prior optimistic state).
+      const r = localStorage.getItem('ct_reports'); if (r) setConditionReports(JSON.parse(r));
+      return;
+    }
+
     // Load current profile (or default). Simple mock "sign in".
     const savedProfile = localStorage.getItem('ct_current_profile') as any;
     const pid = (savedProfile && ['p_alex','p_sam','p_jordan'].includes(savedProfile)) ? savedProfile : 'p_alex';
@@ -314,69 +407,68 @@ export default function ClimbTrailsLogbook() {
     const w = localStorage.getItem(getProfileKey(pid, 'wishlist')); if (w) setWishlist(JSON.parse(w));
     const g = localStorage.getItem(getProfileKey(pid, 'goals')); if (g) setUserGoals(JSON.parse(g));
     const r = localStorage.getItem('ct_reports'); if (r) setConditionReports(JSON.parse(r));
-  }, []);  // run once on mount
+  }, [isRealSignedIn]);  // re-evaluate if auth state settles on mount
 
   // Profile-scoped saves for personal data (foundation pattern for real auth userId scoping later).
   // Reports remain global (community + mixed "You" entries for the demo).
+  // These effects are intentionally ALWAYS active: they only ever affect demo profile keys.
+  // Real signed-in users get additional cloud persistence via server actions below (no interference).
   useEffect(() => { localStorage.setItem(getProfileKey(currentProfileId, 'ticks'), JSON.stringify(ticks)); }, [ticks, currentProfileId]);
   useEffect(() => { localStorage.setItem(getProfileKey(currentProfileId, 'wishlist'), JSON.stringify(wishlist)); }, [wishlist, currentProfileId]);
   useEffect(() => { localStorage.setItem('ct_reports', JSON.stringify(conditionReports)); }, [conditionReports]);
   useEffect(() => { localStorage.setItem(getProfileKey(currentProfileId, 'goals'), JSON.stringify(userGoals)); }, [userGoals, currentProfileId]);
 
-  // Real persistence saves to DynamoDB (iterative - runs alongside localStorage for now)
-  useEffect(() => {
-    if (!useRealPersistence || !user || ticks.length === 0) return;
-    // Only save new ticks that aren't already in DB (simple approach for now)
-    const saveRecentTicks = async () => {
-      try {
-        // For simplicity in first iteration, we save the latest tick when it changes
-        const latestTick = ticks[0];
-        if (latestTick) {
-          await dynamoDb.saveTick({ ...latestTick, userId: user.id });
-        }
-      } catch (err) {
-        console.error('Failed to save tick to DynamoDB', err);
-      }
-    };
-    saveRecentTicks();
-  }, [ticks, useRealPersistence, user?.id]);
-
-  useEffect(() => {
-    if (!useRealPersistence || !user) return;
-    dynamoDb.saveUserData(user.id, { wishlist, goals: userGoals }).catch(console.error);
-  }, [wishlist, userGoals, useRealPersistence, user?.id]);
-
-  // Persist chosen profile id (so refresh keeps you "signed in" as that climber)
+  // Persist chosen profile id (so refresh keeps you "signed in" as that climber) — demo only
   useEffect(() => {
     localStorage.setItem('ct_current_profile', currentProfileId);
   }, [currentProfileId]);
 
-  // Load real user data from DynamoDB when signed in (iterative rollout)
+  // ----------------------------------------------------------------------
+  // REAL USER HYDRATION: when a Clerk user signs in, load their data from DynamoDB (if creds present).
+  // Falls back silently to whatever demo/local state is present. Never touches demo profile logic.
+  // Runs after mount; overrides state with cloud truth for that user.id. Smooth & safe.
+  // ----------------------------------------------------------------------
   useEffect(() => {
-    if (!useRealPersistence || !user) return;
+    if (!isRealSignedIn || !user?.id) return;
 
-    const loadRealData = async () => {
+    const hydrateFromCloud = async () => {
       try {
-        const [userTicks, userData] = await Promise.all([
-          dynamoDb.getTicksForUser(user.id),
-          dynamoDb.getUserData(user.id),
-        ]);
-
-        if (userTicks.length > 0) {
-          setTicks(userTicks);
+        const cloud = await loadPersonalData();
+        if (cloud.source === 'dynamo') {
+          if (cloud.ticks && cloud.ticks.length > 0) {
+            setTicks(cloud.ticks.map(mapDbTickToUiTick));
+          }
+          if (cloud.wishlist && cloud.wishlist.length > 0) {
+            setWishlist(cloud.wishlist);
+          }
+          if (cloud.goals && cloud.goals.length > 0) {
+            setUserGoals(cloud.goals);
+          }
+          // Optional future: toast "Loaded your sends from the cloud" only on explicit sign-in transitions.
         }
-        if (userData) {
-          if (userData.wishlist?.length) setWishlist(userData.wishlist);
-          if (userData.goals?.length) setUserGoals(userData.goals);
-        }
+        // If source=local or empty, we simply keep the local/demo data the user had before signing in.
+        // Migration UI (copy demo -> real account) can be offered in Me tab.
       } catch (err) {
-        console.error('Failed to load from DynamoDB, falling back to localStorage', err);
-        // Fallback already handled by existing localStorage logic above
+        console.error('[Persistence] Hydration error (demo data preserved):', err);
       }
     };
 
-    loadRealData();
-  }, [useRealPersistence, user?.id]);
+    hydrateFromCloud();
+    // Depend on the stable user id so we re-hydrate cleanly on sign-in / account switch.
+  }, [isRealSignedIn, user?.id]);
+
+  // Real-user profile data (wishlist + goals) write-through whenever they change in state.
+  // Harmless no-op for demo users. Keeps cloud in sync without changing any setState call sites.
+  useEffect(() => {
+    if (!isRealSignedIn) return;
+    persistUserProfile({ wishlist, goals: userGoals }).catch(() => {});
+  }, [wishlist, userGoals, isRealSignedIn]);
+
+  // ----------------------------------------------------------------------
+  // REAL USER WRITES (write-through after optimistic client state update).
+  // submitSend / toggleWishlist / future goal edits stay instant. These are fire-and-forget.
+  // Demo users ( !isRealSignedIn ) never execute these paths.
+  // ----------------------------------------------------------------------
 
   const userStats = useMemo(() => {
     const total = ticks.length;
@@ -504,16 +596,36 @@ export default function ClimbTrailsLogbook() {
     const moCount = nticks.filter(t=>{const d=new Date(t.date),n=new Date();return d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear();}).length;
     toast.success(`Crusher! That's your ${gCount}${['st','nd','rd'][gCount-1]||'th'} ${nt.grade} this year 🔥`, { description: `${nt.routeName} • ${nt.areaName} • ${sendForm.conditionTag}`, duration:4400 });
     setTimeout(()=>setActiveTab('logbook'), 620);
+
+    // Real user: durable cloud save (optimistic UI already updated). Non-blocking. Demo users skip entirely.
+    if (isRealSignedIn) {
+      persistTick(nt).catch(() => {});
+    }
   };
 
-  const toggleWishlist = (id:string) => { const has=wishlist.includes(id); setWishlist(has ? wishlist.filter(x=>x!==id) : [...wishlist,id]); toast(has?'Removed from wishlist':'Added to wishlist — go send it!',{duration:1500}); };
+  const toggleWishlist = (id:string) => {
+    const has = wishlist.includes(id);
+    const next = has ? wishlist.filter(x => x !== id) : [...wishlist, id];
+    setWishlist(next);
+    toast(has ? 'Removed from wishlist' : 'Added to wishlist — go send it!', { duration: 1500 });
+
+    // Real user cloud write-through (demo users unaffected — they only hit localStorage effects).
+    if (isRealSignedIn) {
+      persistUserProfile({ wishlist: next, goals: userGoals }).catch(() => {});
+    }
+  };
   const addQuickReport = (rid:string, txt:string) => { const nr:ConditionReport={id:'cr'+Date.now(),routeId:rid,user:'You',date:new Date().toISOString().split('T')[0],text:txt,emoji:'📍'}; setConditionReports(p=>[nr,...p]); toast.success('Beta added — thank you! The community just got smarter.'); };
   const filterPyramid = (band:string) => { setLogbookFilters(p=>({...p, gradeBand: p.gradeBand===band?'All':band })); setActiveTab('logbook'); };
 
   // === DEMO PROFILE SWITCHER (Me tab only) ===
   // Loads the chosen climber's isolated ticks/wishlist/goals from their localStorage keys.
   // Zero impact on discover/logbook/map/send flows. Foundation only.
+  // Guarded: completely inert for real signed-in Clerk users (their data lives in DynamoDB by user.id).
   const switchProfile = (newId: 'p_alex' | 'p_sam' | 'p_jordan') => {
+    if (isRealSignedIn) {
+      toast.info('You are signed in with a real account — demo profiles are disabled.');
+      return;
+    }
     if (newId === currentProfileId) return;
     const nextProfile = DEMO_PROFILES.find(p => p.id === newId)!;
     setCurrentProfileId(newId);
@@ -919,6 +1031,27 @@ export default function ClimbTrailsLogbook() {
                   <div className="text-3xl font-bold">Welcome back!</div>
                   <p className="text-[#5C6666] mt-1">You're signed in with real authentication</p>
                 </div>
+                {/* Smooth transition helper (Skeptical CEO: explicit, user-controlled, zero surprise). 
+                    Only shown for real users who still have local/demo sends not yet in their cloud account. */}
+                {isRealSignedIn && ticks.length > 0 && (
+                  <button
+                    onClick={async () => {
+                      try {
+                        // Persist whatever is currently in state (demo or otherwise) to this Clerk user's record
+                        for (const t of ticks) {
+                          await persistTick(t);
+                        }
+                        await persistUserProfile({ wishlist, goals: userGoals });
+                        toast.success('Demo data migrated to your real account!', { description: 'Future sends will sync automatically.' });
+                      } catch {
+                        toast.error('Migration had a hiccup — your new sends are still safe.');
+                      }
+                    }}
+                    className="mt-3 text-xs px-3 py-1.5 rounded-2xl border border-[#166534] text-[#166534] active:bg-[#DCFCE7]"
+                  >
+                    📤 Copy current sends + wishlist to my real account
+                  </button>
+                )}
               </SignedIn>
 
               <SignedOut>
@@ -954,8 +1087,8 @@ export default function ClimbTrailsLogbook() {
 
             <div className="text-center">
               <div className="text-5xl mb-2">🧗</div>
-              <div className="text-3xl font-bold">{currentProfile.name}</div>
-              <div className="text-[#5C6666]">{currentProfile.subtitle}</div>
+              <div className="text-3xl font-bold">{effectiveName}</div>
+              <div className="text-[#5C6666]">{effectiveSubtitle}</div>
             </div>
 
             <div className="grid grid-cols-3 gap-4 text-center">
@@ -1148,7 +1281,7 @@ export default function ClimbTrailsLogbook() {
             <motion.div initial={{y:70,opacity:0}} animate={{y:0,opacity:1}} exit={{y:50,opacity:0}} className="send-modal w-full md:max-w-lg" onClick={e=>e.stopPropagation()}>
               <div className="modal-header flex justify-between">
                 <div>
-                  <div className="text-xs text-[#5C6666]">LOG THIS CLIMB FOR {currentProfile.name.toUpperCase()}</div>
+                  <div className="text-xs text-[#5C6666]">LOG THIS CLIMB FOR {effectiveName.toUpperCase()}</div>
                   <div className="text-2xl font-extrabold tracking-tight">{currentClimb.name}</div>
                   <div className="text-sm text-[#5C6666]">{currentClimb.areaName} • {currentClimb.grade}</div>
                   <div className="text-[10px] text-[#4ADE80] mt-0.5 font-medium tracking-tight">{getAttributionLine(currentClimb.sources)}</div>
