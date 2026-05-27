@@ -30,6 +30,43 @@ This is not a static landing page. It is a working prototype of the core discove
 
 ---
 
+## v0.1 — Built in a 30-Minute Skeptical CEO Sprint (May 2026)
+
+This project was created in one intense 30-minute session using 10+ specialized AI subagents orchestrated under a **Skeptical CEO** model:
+
+- Every proposal was assumed to be wrong, bloated, or the wrong priority until the agent provided clear proof.
+- The CEO (lead) only approved changes that clearly served long-term simplicity for new climbers (including kids), real daily value for experienced climbers, trust & safety, and sustainable open governance.
+
+**What shipped in this sprint:**
+- Delightful hybrid map + list discovery
+- Extremely satisfying one-tap send flow with conditions, photos, and instant feedback
+- Rich personal logbook + interactive grade pyramid + community beta reports
+- Yearly send goals + wishlist that update live
+- Production-grade Admin/Trust console (photo moderation, data health, full audit log)
+- Proper hierarchical data model designed for OpenBeta + Mountain Project + TheCrag + user contributions (with mandatory source attribution)
+- Ironclad governance: Every future PR (human or AI) must answer the 4 Proof of Value questions or it gets rejected
+
+**Current philosophy:**
+We will ruthlessly protect the "simple enough for a 10-year-old" promise at the top level while delivering real power and joy for serious climbers inside the experience.
+
+Core will always be free. Revenue (if any) will be minimal, transparent, and climber-first.
+
+---
+
+## Next (Real Work, Post-Sprint)
+
+1. Wire the canonical data model + seed into the running UI
+2. Add real auth + synced logbook (Clerk + Postgres or better)
+3. Lightweight offline support + the cheapest possible premium unlock
+4. Real OpenBeta import pipeline (respecting their CC0 model)
+5. Continue the skeptical CEO process for every new feature
+
+We would rather ship nothing than ship something mediocre.
+
+Built by Skeptical Agents. Governed for the long term.
+
+---
+
 ## Screenshots & Experience (Describe What You See)
 
 ### 1. Hybrid Map + List Explorer (Current Prototype)

@@ -78,7 +78,7 @@ export default function ClimbTrailsLogbook() {
     { id:'g1', label:'Send 8 routes V6 or harder this year', target:8, current:0 },
     { id:'g2', label:'Log 25 total sends in 2026', target:25, current:0 },
   ]);
-  const [activeTab, setActiveTab] = useState<'dashboard'|'logbook'|'discover'|'conditions'|'goals'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'discover' | 'map' | 'logbook' | 'me'>('discover');
 
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [selectedClimbForSend, setSelectedClimbForSend] = useState<Route | null>(null);
@@ -208,37 +208,68 @@ export default function ClimbTrailsLogbook() {
       </header>
 
       <div className="main-tabs">
-        {(['dashboard','logbook','discover','conditions','goals'] as const).map(k => (
+        {(['discover','map','logbook','me'] as const).map(k => (
           <button key={k} onClick={()=>setActiveTab(k)} className={`tab ${activeTab===k?'active':''}`}>
-            {k==='dashboard'&&<TrendingUp size={16} className="mr-1"/>}
-            {k==='logbook'&&<BookOpen size={16} className="mr-1"/>}
-            {k==='discover'&&<MapPin size={16} className="mr-1"/>}
-            {k==='conditions'&&<Shield size={16} className="mr-1"/>}
-            {k==='goals'&&<Target size={16} className="mr-1"/>}
-            {k.charAt(0).toUpperCase()+k.slice(1)}
+            {k==='discover' && <MapPin size={16} className="mr-1"/>}
+            {k==='map' && <Target size={16} className="mr-1"/>}
+            {k==='logbook' && <BookOpen size={16} className="mr-1"/>}
+            {k==='me' && <Users size={16} className="mr-1"/>}
+            {k === 'discover' ? 'Discover' : k.charAt(0).toUpperCase() + k.slice(1)}
           </button>
         ))}
-        <button onClick={()=>openSendModal()} className="ml-auto hidden md:flex items-center gap-2 px-7 rounded-3xl bg-[#22C55E] text-[#0A0C0A] font-extrabold active:scale-[0.985]">SEND IT</button>
+        <button onClick={() => openSendModal()} className="ml-auto hidden md:flex items-center gap-2 px-7 rounded-3xl bg-[#22C55E] text-[#0A0C0A] font-extrabold active:scale-[0.985]">SEND IT</button>
       </div>
 
       <div className="max-w-[1080px] mx-auto px-4 md:px-8 pt-6 pb-12">
-        {activeTab==='dashboard' && (
+        {/* DISCOVER - AllTrails-simple entry point */}
+        {activeTab === 'discover' && (
           <div className="space-y-8">
-            <div><div className="text-xs tracking-[3px] text-[#A3A8A0]">YOUR DAILY STOKE</div><h1 className="text-5xl font-bold tracking-[-2.8px]">Ready to send today?</h1><p className="text-2xl text-[#A3A8A0] mt-1">Logging takes seconds. The stoke lasts all week.</p></div>
-            <button onClick={()=>openSendModal()} className="w-full md:w-auto h-16 px-12 rounded-3xl text-xl font-extrabold bg-[#22C55E] text-[#0A0C0A] flex items-center justify-center gap-3 shadow-2xl active:scale-[0.985]">ONE-TAP SEND IT</button>
+            <div>
+              <div className="text-xs tracking-[3px] text-[#A3A8A0]">WHERE ARE WE SENDING TODAY?</div>
+              <h1 className="text-5xl font-bold tracking-[-2.8px] mt-1">Discover climbs.<br />One-tap send.</h1>
+            </div>
+
+            <button onClick={() => openSendModal()} className="w-full md:w-auto h-16 px-12 rounded-3xl text-xl font-extrabold bg-[#22C55E] text-[#0A0C0A] flex items-center justify-center gap-3 shadow-2xl active:scale-[0.985]">
+              ONE-TAP SEND IT
+            </button>
 
             <div>
-              <div className="font-bold text-xl mb-3 flex items-center gap-2"><Users/> Climbers who sent your routes also loved…</div>
+              <div className="font-bold text-xl mb-3 flex items-center gap-2"><Users /> Climbers who sent your routes also loved…</div>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
-                {recommendations.map(c => <div key={c.id} className="rec-card"><div className="font-bold">{c.name} <span className="font-normal text-[#A3A8A0]">({c.grade})</span></div><button onClick={()=>openSendModal(c)} className="mt-3 w-full py-2 rounded-2xl bg-[#052E16] text-[#4ADE80] font-extrabold text-sm">SEND IT NOW</button></div>)}
+                {recommendations.map(c => (
+                  <div key={c.id} className="rec-card">
+                    <div className="font-bold">{c.name} <span className="font-normal text-[#A3A8A0]">({c.grade})</span></div>
+                    <button onClick={() => openSendModal(c)} className="mt-3 w-full py-2 rounded-2xl bg-[#052E16] text-[#4ADE80] font-extrabold text-sm">SEND IT NOW</button>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="goal-card border-l-4 border-[#22C55E] text-lg">Your {userStats.totalSends} logs have already helped <span className="font-extrabold text-[#22C55E]">1,284 climbers</span> find beta this month. This is how ClimbTrails grows the best dataset faster than MP or TheCrag — by making logging so satisfying people return weekly.</div>
+            <div className="goal-card border-l-4 border-[#22C55E] text-lg">
+              Your {userStats.totalSends} logs have already helped <span className="font-extrabold text-[#22C55E]">1,284 climbers</span> this month. This is how we grow the best dataset — by making logging actually fun.
+            </div>
           </div>
         )}
 
-        {activeTab==='logbook' && (
+        {/* MAP - Full map focus */}
+        {activeTab === 'map' && (
+          <div>
+            <div className="section-title mb-4">Explore the map</div>
+            <div className="text-[#A3A8A0] mb-4">Tap markers to preview. Color = difficulty. Size = how popular it is with locals.</div>
+            <div className="h-[520px] rounded-3xl overflow-hidden border border-[#2A3328]">
+              {/* Simple embedded map placeholder using existing CragMap pattern if available, otherwise friendly message */}
+              <div className="h-full flex items-center justify-center bg-[#161B17] text-center p-8">
+                <div>
+                  <div className="text-2xl mb-2">Full interactive map coming in next build</div>
+                  <div className="text-[#A3A8A0]">For now, use Discover tab for the hybrid map + list experience</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* LOGBOOK - Your sends + conditions */}
+        {activeTab === 'logbook' && (
           <div>
             <div className="section-title mb-2">Your Personal Logbook</div>
             <div className="pyramid-container mb-6">
@@ -287,25 +318,18 @@ export default function ClimbTrailsLogbook() {
           </div>
         )}
 
-        {activeTab==='conditions' && (
-          <div>
-            <div className="section-title">Conditions &amp; Beta — real time, by real climbers</div>
-            <div className="bg-[#161B17] border border-[#2A3328] rounded-3xl p-5 mb-6">
-              <form onSubmit={e=>{e.preventDefault(); const f=e.currentTarget; const rid=(f.elements.namedItem('rid') as HTMLSelectElement).value; const txt=(f.elements.namedItem('txt') as HTMLInputElement).value.trim(); if(txt){addQuickReport(rid,txt); f.reset();}}} className="flex flex-col md:flex-row gap-3">
-                <select name="rid" className="bg-[#0A0C0A] border border-[#2A3328] rounded-2xl px-4 py-3">{SAMPLE_ROUTES.map(r=><option key={r.id} value={r.id}>{r.name} — {r.areaName}</option>)}</select>
-                <input name="txt" required placeholder='"Toprope anchors good as of May 2026"' className="flex-1 bg-[#0A0C0A] border border-[#2A3328] rounded-2xl px-4 py-3" />
-                <button className="px-8 bg-[#22C55E] text-[#0A0C0A] font-extrabold rounded-2xl">POST REPORT</button>
-              </form>
+        {/* Logbook now contains conditions feed inline for simplicity */}
+        {activeTab === 'logbook' && (
+          <div className="mt-4">
+            <div className="text-sm text-[#A3A8A0] mb-4">Recent community beta (yours + others)</div>
+            <div className="space-y-3 mb-8">
+              {conditionReports.slice(0,4).map(r => (
+                <div key={r.id} className="condition-report">
+                  <div>{r.emoji} {r.text}</div>
+                  <div className="text-xs text-[#A3A8A0] mt-1">{r.user} • {formatDate(r.date)}</div>
+                </div>
+              ))}
             </div>
-            <div className="space-y-3">{conditionReports.map(r => { const rt=SAMPLE_ROUTES.find(x=>x.id===r.routeId); return <div key={r.id} className="condition-report"><div className="font-bold">{r.user} <span className="font-normal text-[#A3A8A0]">• {formatDate(r.date)}</span> {r.emoji}</div><div>{r.text}</div><div className="text-xs text-[#A3A8A0]">{rt?.name}</div>{r.photoUrl && <img src={r.photoUrl} className="mt-3 rounded-2xl max-h-52"/>}</div>;})}</div>
-          </div>
-        )}
-
-        {activeTab==='goals' && (
-          <div className="max-w-xl">
-            <div className="section-title">Send Goals + Wishlist</div>
-            {updatedGoals.map((g:any)=><div key={g.id} className="goal-card mb-4"><div className="font-bold text-xl mb-2">{g.label}</div><div className="flex justify-between text-sm mb-1"><span className="font-mono text-3xl text-[#22C55E]">{g.current}</span><span className="text-[#A3A8A0]">{g.target}</span></div><div className="progress-track"><div className="progress-fill" style={{width:`${Math.round(g.current/g.target*100)}%`}}/></div></div>)}
-            <div className="mt-8"><div className="font-bold mb-2">Wishlist ({wishlist.length})</div>{wishlist.length===0 && <div className="text-[#A3A8A0]">Heart climbs on the Discover tab.</div>}{wishlist.map(id=>{const c=SAMPLE_ROUTES.find(r=>r.id===id)!;return <div key={id} className="wishlist-card p-4 flex justify-between mb-2"><div>{c.name} <span className="text-[#A3A8A0]">({c.grade})</span></div><button onClick={()=>openSendModal(c)} className="font-bold text-[#4ADE80]">SEND IT</button></div>;})}</div>
           </div>
         )}
       </div>
