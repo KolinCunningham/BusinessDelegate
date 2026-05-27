@@ -94,6 +94,79 @@ function launchConfetti(container: HTMLElement | null, count = 42) {
   }
 }
 
+// Viral Growth Feature - Clean Instagram card generator
+function generateShareCard() {
+  const latestTick = [...ticks].sort((a,b) => b.date.localeCompare(a.date))[0];
+  if (!latestTick) {
+    toast.error("Log a send first to generate a card!");
+    return;
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1350;
+  const ctx = canvas.getContext('2d')!;
+
+  // Background gradient (crag vibe)
+  const grad = ctx.createLinearGradient(0, 0, 0, 1350);
+  grad.addColorStop(0, '#1a2520');
+  grad.addColorStop(1, '#0a0f0d');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1080, 1350);
+
+  // Big grade badge
+  ctx.fillStyle = '#22c55e';
+  ctx.font = 'bold 120px system-ui';
+  ctx.fillText(latestTick.grade, 80, 220);
+
+  // Route name
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 72px system-ui';
+  ctx.fillText(latestTick.routeName, 80, 340);
+
+  // Area
+  ctx.fillStyle = '#a3a8a0';
+  ctx.font = '48px system-ui';
+  ctx.fillText(latestTick.areaName, 80, 410);
+
+  // Stars
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = '64px system-ui';
+  ctx.fillText('★'.repeat(latestTick.stars), 80, 520);
+
+  // Send style
+  ctx.fillStyle = '#22c55e';
+  ctx.font = 'bold 52px system-ui';
+  ctx.fillText(latestTick.sendStyle || 'Redpoint', 80, 620);
+
+  // Notes
+  if (latestTick.notes) {
+    ctx.fillStyle = '#d1d5db';
+    ctx.font = '42px system-ui';
+    const lines = latestTick.notes.match(/.{1,38}/g) || [];
+    lines.slice(0, 4).forEach((line, i) => {
+      ctx.fillText(line, 80, 740 + i * 58);
+    });
+  }
+
+  // Bottom branding
+  ctx.fillStyle = '#4ade80';
+  ctx.font = 'bold 38px system-ui';
+  ctx.fillText('CRAGTRAILS', 80, 1220);
+  ctx.fillStyle = '#a3a8a0';
+  ctx.font = '32px system-ui';
+  ctx.fillText('The free climbing guide climbers actually trust', 80, 1270);
+  ctx.fillText('#CragTrails  •  cragtrails.app', 80, 1315);
+
+  // Download
+  const link = document.createElement('a');
+  link.download = `cragtrails-${latestTick.routeName.replace(/\s+/g, '-')}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+
+  toast.success("Instagram card downloaded! Post it with #CragTrails");
+}
+
 export default function ClimbTrailsLogbook() {
   const [ticks, setTicks] = useState<Tick[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
