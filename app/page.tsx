@@ -7,7 +7,9 @@ import {
   Award, Shield, TrendingUp, Users, Camera
 } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Route, Tick, ConditionReport } from '@/lib/types';
+import type { Route as LegacyRoute, Tick, ConditionReport } from '@/lib/types';
+import { seedData } from '@/lib/data/seed-data';
+import type { Route as CanonicalRoute } from '@/lib/types/climbing';
 
 // Full implementation of the 5 core value props as specified by the task.
 // One-tap SEND IT (with photo, stars, beta notes, Pumped/Flashed/Dogged/Wet).
@@ -18,18 +20,40 @@ import type { Route, Tick, ConditionReport } from '@/lib/types';
 // All persists in localStorage. Extremely satisfying (confetti + smart toasts).
 // Proves the engagement thesis.
 
-const SAMPLE_ROUTES: Route[] = [
-  { id: "r1", name: "The Mandala", areaId: "a1", areaName: "The Buttermilks", grade: "V8", type: "Boulder", lat: 37.353, lng: -118.451, stars: 4.9, starVotes: 312, ticks: 184, difficultyColor: "red", description: "Perfect crimps on one of the most beautiful boulders on Earth.", photoUrl: "https://picsum.photos/id/1016/800/600", photoUrls: [], fa: "Chris Sharma 2000", bestConditions: "Cool & dry", sources: ["demo"], lastUpdated: "2026-05-01" },
-  { id: "r2", name: "Big Happy", areaId: "a2", areaName: "Happy Boulders", grade: "V7", type: "Boulder", lat: 37.415, lng: -118.552, stars: 4.6, starVotes: 147, ticks: 96, difficultyColor: "orange", description: "Steep powerful classic with amazing movement.", photoUrl: "https://picsum.photos/id/1005/800/600", photoUrls: [], fa: "Local 1998", bestConditions: "Cold mornings", sources: ["demo"], lastUpdated: "2026-04-20" },
-  { id: "r3", name: "The Angler", areaId: "a3", areaName: "Joe's Valley", grade: "V6", type: "Boulder", lat: 39.295, lng: -110.92, stars: 4.3, starVotes: 88, ticks: 71, difficultyColor: "orange", description: "Technical masterpiece on incredible patina.", photoUrl: "https://picsum.photos/id/1033/800/600", photoUrls: [], fa: "Unknown", bestConditions: "Desert air", sources: ["demo"], lastUpdated: "2026-05-10" },
-  { id: "r4", name: "Full Monty", areaId: "a4", areaName: "Hueco Tanks", grade: "V8", type: "Boulder", lat: 31.922, lng: -106.045, stars: 4.8, starVotes: 203, ticks: 129, difficultyColor: "red", description: "Signature Hueco roof compression testpiece.", photoUrl: "https://picsum.photos/id/106/800/600", photoUrls: [], fa: "Fred Nicole", bestConditions: "Winter", sources: ["demo"], lastUpdated: "2026-02-14" },
-  { id: "r5", name: "Morning Glory Wall", areaId: "a5", areaName: "Smith Rock", grade: "5.10d", type: "Sport", lat: 44.368, lng: -121.142, stars: 4.4, starVotes: 421, ticks: 312, difficultyColor: "orange", description: "The best moderate sport climbing at Smith.", photoUrl: "https://picsum.photos/id/160/800/600", photoUrls: [], fa: "Alan Watts", bestConditions: "Spring/Fall", sources: ["demo"], lastUpdated: "2026-05-22" },
-  { id: "r6", name: "Tactical Nuclear Penguin", areaId: "a5", areaName: "Smith Rock", grade: "5.13c", type: "Sport", lat: 44.365, lng: -121.145, stars: 4.8, starVotes: 76, ticks: 38, difficultyColor: "red", description: "Technical tuff masterpiece.", photoUrl: "https://picsum.photos/id/201/800/600", photoUrls: [], fa: "J.B.", bestConditions: "Cool temps", sources: ["demo"], lastUpdated: "2026-05-18" },
-  { id: "r7", name: "Separate Reality", areaId: "a6", areaName: "Yosemite Valley", grade: "5.12a", type: "Sport", lat: 37.745, lng: -119.58, stars: 4.7, starVotes: 165, ticks: 94, difficultyColor: "red", description: "Iconic roof crack with huge exposure.", photoUrl: "https://picsum.photos/id/251/800/600", photoUrls: [], fa: "Ron Kauk", bestConditions: "Late spring", sources: ["demo"], lastUpdated: "2026-04-02" },
-  { id: "r8", name: "Lonesome Dove", areaId: "a1", areaName: "The Buttermilks", grade: "V2", type: "Boulder", lat: 37.354, lng: -118.449, stars: 4.2, starVotes: 98, ticks: 156, difficultyColor: "green", description: "Friendly high quality slab for newer climbers.", photoUrl: "https://picsum.photos/id/29/800/600", photoUrls: [], fa: "Unknown", bestConditions: "Anytime", sources: ["demo"], lastUpdated: "2026-05-01" },
-  { id: "r9", name: "Crimson Chrysalis", areaId: "a7", areaName: "Red Rock Canyon", grade: "5.8", type: "Trad", lat: 36.158, lng: -115.432, stars: 4.6, starVotes: 289, ticks: 201, difficultyColor: "green", description: "Classic splitter multipitch intro to Red Rock.", photoUrl: "https://picsum.photos/id/133/800/600", photoUrls: [], fa: "Unknown", bestConditions: "Spring/Fall", sources: ["demo"], lastUpdated: "2026-03-11" },
-  { id: "r10", name: "Planet of the Apes", areaId: "a4", areaName: "Hueco Tanks", grade: "V5", type: "Boulder", lat: 31.924, lng: -106.043, stars: 4.4, starVotes: 112, ticks: 84, difficultyColor: "orange", description: "Powerful roof with a wild unforgettable throw.", photoUrl: "https://picsum.photos/id/180/800/600", photoUrls: [], fa: "Unknown", bestConditions: "Winter", sources: ["demo"], lastUpdated: "2026-01-30" },
-];
+// Use canonical seed data from the proper merged model (Data Architect deliverable)
+const CANONICAL_ROUTES = seedData.routes;
+
+function mapToLegacyRoute(r: CanonicalRoute): LegacyRoute {
+  const primaryGrade = r.grades.yds || r.grades.vScale || r.grades.french || '5.10';
+  const style = r.styles[0] || 'sport';
+  const type = (style === 'boulder' ? 'Boulder' : style === 'trad' ? 'Trad' : 'Sport') as any;
+
+  return {
+    id: r.id,
+    name: r.name,
+    areaId: r.areaId,
+    areaName: r.areaName || 'Unknown Area',
+    grade: primaryGrade,
+    type,
+    lat: r.lat,
+    lng: r.lng,
+    stars: r.quality,
+    starVotes: 120,
+    ticks: r.metadata?.tickCount || 50,
+    difficultyColor: (r.quality > 4.5 ? 'red' : r.quality > 4.0 ? 'orange' : 'yellow') as any,
+    description: r.description || '',
+    photoUrl: r.photos?.[0]?.url || 'https://picsum.photos/id/1016/800/600',
+    photoUrls: r.photos?.map(p => p.url) || [],
+    fa: r.fa || 'Unknown',
+    bestConditions: r.bestSeason?.join(', ') || '',
+    sources: r.metadata?.sources?.map(s => s.provider) || ['manual'],
+    lastUpdated: r.metadata?.updatedAt || new Date().toISOString(),
+    lengthFt: r.lengthMeters ? Math.round(r.lengthMeters * 3.28) : undefined,
+    protection: r.protection,
+  };
+}
+
+const SAMPLE_ROUTES: LegacyRoute[] = CANONICAL_ROUTES.map(mapToLegacyRoute);
 
 const CONDITION_TAGS = ["Pumped", "Flashed", "Dogged", "Wet"] as const;
 type ConditionTag = typeof CONDITION_TAGS[number];
