@@ -101,40 +101,57 @@ Once your custom domain is live and verified, you can leave it as-is (or update 
 
 ## Free "For Life" Database on AWS (Optional but Recommended for Real Users)
 
-The app currently uses localStorage for user data (ticks, wishlist, goals). For real persistence across devices + real Clerk users, you can add a backend database.
+The app currently uses localStorage + demo profiles for user data (ticks, wishlist, goals, condition reports). For real persistence across devices + real Clerk-authenticated users (userId as ownership key), add a backend.
 
-**Strongly recommended free option on AWS (stays free within reasonable usage):**
+**Strongly recommended (and the only realistic "free for life") option:**
 
-- **Database**: Amazon DynamoDB (Always Free Tier)
-  - 25 GB storage
-  - 25 read + 25 write capacity units
-  - 200 million requests per month
-  - This is more than enough for a healthy personal/small community climbing app for years.
+- **Amazon DynamoDB** (AWS Always Free Tier — **not** the 12-month new-account tier)
+  - 25 GB of storage
+  - 200 million read/write requests per month
+  - 25 RCU + 25 WCU provisioned (fallback)
+  - More than enough for years of a healthy small climbing community app.
 
-- **No extra server needed**: Use Vercel Serverless Functions (Next.js API routes) to talk to DynamoDB. This keeps everything serverless and within free tiers.
+- Everything else stays on Vercel (Server Actions / serverless functions call DynamoDB directly). **Zero always-on servers, zero EC2/ECS/Lambda cold-start costs.**
 
-### Quick Setup
+- Tables follow the canonical model in `lib/types/climbing.ts` (Ticks, Photos, ConditionReport + user wishlist/goals).
 
-1. Run the provided setup script:
+**Your Account ID for all policies and Terraform: `140023298371`**
+
+### Recommended Setup Path (Security + Reproducibility First)
+
+1. **Preferred: Use Terraform** (see `infra/terraform/main.tf` + `docs/AWS-FREE-SETUP.md`)
+   ```bash
+   cd infra/terraform
+   terraform init
+   terraform apply -var="aws_account_id=140023298371"
+   ```
+   This creates the exact 4 tables with correct keys, tags, and PAY_PER_REQUEST billing. It also prints the ready-to-use least-privilege IAM policy.
+
+2. **Alternative (quick & dirty)**: Run the personalized script
    ```bash
    ./scripts/setup-aws-dynamodb.sh
    ```
+   It now hard-codes your Account ID (140023298371) and prints the exact policy.
 
-2. Create a very locked-down IAM user (least privilege — only access to the 4 tables the script creates).
+3. Create a **least-privilege IAM User** (or Role) in AWS IAM using the policy output by Terraform/script. Example policy is also reproduced in `docs/AWS-FREE-SETUP.md`.
 
-3. Add these to Vercel Environment Variables:
+4. Add these **exact** environment variables in Vercel (Project → Settings → Environment Variables, apply to Production + Preview):
    ```
-   AWS_ACCESS_KEY_ID=...
+   AWS_ACCESS_KEY_ID=AKIA...
    AWS_SECRET_ACCESS_KEY=...
    AWS_REGION=us-east-1
-   DYNAMODB_TABLE_PREFIX=cragtrails   # optional
+   DYNAMODB_TABLE_PREFIX=cragtrails   # optional but recommended
    ```
 
-4. The foundation adapter already exists at `lib/db/dynamodb.ts`. You can gradually wire real user data (from Clerk `user.id`) into it while keeping localStorage as a fallback for demo mode.
+5. The production-ready adapter lives at `lib/db/dynamodb.ts` (fully typed against climbing.ts, proper error handling, all missing methods for Photos + ConditionReports, batch helpers, and migration guidance).
 
-This setup is intentionally "free for life" within the documented AWS Always Free limits. No EC2, no RDS (those expire after 12 months).
+**This architecture is production-viable today at small scale and scales cleanly later** (add GSIs, TTL, global tables, or DAX only when metrics prove you need them — all still cheap).
 
-See `scripts/setup-aws-dynamodb.sh` for the exact table creation commands and a copy-paste IAM policy.
+**Long-term auth note (Skeptical CEO):** Long-lived access keys are a smell. Plan to migrate to OIDC-assumable IAM Role (Vercel + AWS federation) within 6–12 months.
+
+See the full step-by-step, exact IAM policy for 140023298371, Terraform usage, table design rationale, photo storage options, and the localStorage → real DB migration plan (with Clerk userId wiring + optimistic UI patterns) in:
+
+**`docs/AWS-FREE-SETUP.md`** (the single source of truth for this setup).
 
 ### Quick Test After Adding Domain
 Visit `https://yourdomain.com` — it should load the same site as the vercel.app URL.
