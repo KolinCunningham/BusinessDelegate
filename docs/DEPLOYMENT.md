@@ -46,11 +46,61 @@ For future features you will likely need:
 
 Add these in the Vercel dashboard under **Settings → Environment Variables**.
 
-## Custom Domain
+## Custom Domain (Recommended for Production)
 
-1. Go to your Vercel project → **Settings → Domains**
-2. Add your domain (e.g. `cragtrails.app` or `app.cragtrails.app`)
-3. Follow Vercel's DNS instructions (usually just add a `CNAME` record)
+The project is already prepared for a custom domain (see `metadataBase` in `app/layout.tsx` which points at `https://cragtrails.app`).
+
+### Recommended Domain
+- `cragtrails.app` (clean and brandable)
+- Or `app.cragtrails.app` if you want to keep the apex for something else
+
+### Step-by-step
+
+1. **Buy the domain**
+   - Recommended registrars: Namecheap, Cloudflare, or Porkbun (good prices + easy DNS).
+   - Get `cragtrails.app` if available.
+
+2. **Add the domain in Vercel**
+   - Go to your Vercel project → **Settings → Domains**
+   - Enter your domain (e.g. `cragtrails.app` or `www.cragtrails.app`)
+   - Click **Add**
+
+3. **Configure DNS**
+   Vercel will show you exactly what to add. Common options:
+   - **For apex domain** (`cragtrails.app`): Use Vercel’s nameservers (best) **or** add the A records they provide.
+   - **For subdomain** (`app.cragtrails.app`): Usually just one `CNAME` record pointing to `cname.vercel-dns.com`.
+
+4. **Wait for propagation** (usually 5–30 minutes, sometimes up to a few hours).
+
+5. **Vercel will automatically provision HTTPS** (no extra work needed).
+
+### Project-Specific Gotchas
+
+**1. Update environment variables (important)**
+In Vercel → **Settings → Environment Variables**, set:
+```
+NEXT_PUBLIC_APP_URL=https://cragtrails.app
+```
+(Replace with your actual domain)
+
+**2. Clerk Authentication**
+Since you’re using Clerk (Apple, Google, Facebook, Email login):
+- Go to your Clerk dashboard → **Settings → Domains**
+- Add your production domain (e.g. `https://cragtrails.app`)
+- Also add it under **Allowed origins** / **Redirect URLs** if prompted.
+
+**3. Metadata & SEO**
+The app already has `metadataBase: new URL("https://cragtrails.app")` in `app/layout.tsx`.  
+Once your custom domain is live and verified, you can leave it as-is (or update it if you chose a different domain).
+
+**4. Update references (after domain is live)**
+- Update the live link in `README.md`
+- Update any social/og image URLs if you have custom ones
+
+### Quick Test After Adding Domain
+Visit `https://yourdomain.com` — it should load the same site as the vercel.app URL.
+
+If Clerk login buttons break after the domain change, the most common fix is adding the new domain in the Clerk dashboard (step 2 above).
 
 ## Updating the Live URL in README
 
