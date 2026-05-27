@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { getGradeColor } from '@/lib/data/index';
+import { getGradeColor, getDisplayGrade } from '@/lib/data/index';
 
 // Self-contained Route type (also duplicated in page for simplicity)
 export interface Route {
@@ -26,34 +26,6 @@ export interface Route {
   description: string;
   height?: number;
   stars: number;
-}
-
-// Simple location-based grade system preference
-function getPreferredGradeSystem(lat?: number, lng?: number): 'yds' | 'french' | 'australian' | 'yds' {
-  if (!lat || !lng) return 'yds';
-
-  // Australia / NZ / nearby
-  if (lat < -10 && lng > 110 && lng < 180) return 'australian';
-  // Western/Central Europe
-  if (lat > 35 && lat < 72 && lng > -10 && lng < 30) return 'french';
-  // USA / Canada
-  if (lat > 24 && lat < 50 && lng > -130 && lng < -60) return 'yds';
-
-  return 'yds';
-}
-
-function getDisplayGrade(grades: any, lat?: number, lng?: number): string {
-  if (!grades) return '5.10';
-
-  const system = getPreferredGradeSystem(lat, lng);
-
-  if (system === 'australian' && grades.australian) return grades.australian;
-  if (system === 'french' && grades.french) return grades.french;
-  if (grades.yds) return grades.yds;
-  if (grades.french) return grades.french;
-  if (grades.australian) return grades.australian;
-  if (grades.vScale) return grades.vScale;
-  return '5.10';
 }
 
 // Fix for default icons (not used since we use CircleMarker, but safe)

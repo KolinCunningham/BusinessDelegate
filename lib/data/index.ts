@@ -127,3 +127,94 @@ export function getGradeColor(grade: string): string {
 
 // Backwards-compatible alias for any old call sites
 export { getGradeColor as getDifficultyColor };
+
+/**
+ * Location-aware climbing grade system
+ *
+ * Given a user's lat/lng (or a climb's location), returns the most appropriate
+ * primary grade system for that region.
+ *
+ * Uses a simplified but practical mapping based on real-world usage.
+ */
+export function getPreferredGradeSystem(
+  lat?: number,
+  lng?: number
+): 'yds' | 'french' | 'australian' | 'uiaa' | 'british' {
+  if (lat === undefined || lng === undefined) return 'yds';
+
+  // Australia & New Zealand
+  if (lat < -10 && lng > 110 && lng < 180) return 'australian';
+
+  // South Africa
+  if (lat < -22 && lat > -35 && lng > 16 && lng < 33) return 'australian';
+
+  // United States & Canada
+  if (lat > 24 && lat < 50 && lng > -130 && lng < -60) return 'yds';
+
+  // Western & Southern Europe (France, Spain, Italy, Greece, etc.)
+  if (lat > 35 && lat < 72 && lng > -10 && lng < 30) return 'french';
+
+  // UK & Ireland
+  if (lat > 49 && lat < 61 && lng > -11 && lng < 2) return 'british';
+
+  // Central/Eastern Europe (Germany, Austria, Switzerland, Poland, Czechia, etc.)
+  if (lat > 45 && lat < 55 && lng > 5 && lng < 25) return 'uiaa';
+
+  // Scandinavia
+  if (lat > 55 && lat < 72 && lng > 4 && lng < 32) return 'uiaa';
+
+  // Default to YDS for most other places (very common internationally)
+  return 'yds';
+}
+
+/**
+ * Returns the best grade string to display for a climb, based on the user's location.
+ *
+ * Prefers the locally common system when data is available.
+ * Falls back gracefully.
+ */
+export function getDisplayGrade(
+  grades: {
+    yds?: string;
+    french?: string;
+    australian?: string;
+    vScale?: string;
+    uiaa?: string;
+    british?: string;
+  } | undefined,
+  lat?: number,
+  lng?: number
+): string {
+  if (!grades) return '5.10';
+
+  const system = getPreferredGradeSystem(lat, lng);
+
+  switch (system) {
+    case 'australian':
+      if (grades.australian) return grades.australian;
+      break;
+    case 'french':
+      if (grades.french) return grades.french;
+      break;
+    case 'uiaa':
+      if ((grades as any).uiaa) return (grades as any).uiaa;
+      if (grades.french) return grades.french; // French is very common fallback
+      break;
+    case 'british':
+      if ((grades as any).british) return (grades as any).british;
+      if (grades.french) return grades.french;
+      break;
+    case 'yds':
+    default:
+      if (grades.yds) return grades.yds;
+      break;
+  }
+
+  // Final fallbacks
+  if (grades.yds) return grades.yds;
+  if (grades.french) return grades.french;
+  if (grades.australian) return grades.australian;
+  if (grades.vScale) return grades.vScale;
+
+  return '5.10';
+}
