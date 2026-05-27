@@ -140,11 +140,11 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
             }}
             eventHandlers={{
               click: () => {
-                if (item.isCluster && item.allRoutes) {
+                if (item.isCluster && (item as any).allRoutes) {
                   // On cluster click: zoom in + center on representative
                   map.flyTo([item.lat, item.lng], Math.min(13, zoom + 2.5), { duration: 0.6 });
                   // Select the most popular in cluster
-                  const best = [...item.allRoutes].sort((a, b) => b.popularity - a.popularity)[0];
+                  const best = [...(item as any).allRoutes].sort((a, b) => b.popularity - a.popularity)[0];
                   onMarkerClick(best);
                 } else {
                   onMarkerClick(item.route);
@@ -227,15 +227,15 @@ export default function CragMap({
         />
       </MapContainer>
 
-      {/* Zoom / cluster legend + offline hint */}
-      <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 dark:bg-zinc-900/95 backdrop-blur px-3 py-1.5 rounded-lg text-[10px] font-mono border border-zinc-200 dark:border-zinc-700 shadow text-zinc-600 dark:text-zinc-400 flex flex-col gap-0.5">
-        <div className="flex items-center gap-1.5">
-          <span className="inline-block w-2 h-2 rounded-full bg-green-500" /> Easy
-          <span className="inline-block w-2 h-2 rounded-full bg-yellow-500 ml-1" /> Mod
-          <span className="inline-block w-2 h-2 rounded-full bg-orange-500" /> Hard
-          <span className="inline-block w-2 h-2 rounded-full bg-red-500" /> Expert
+      {/* Zoom / cluster legend + offline hint — NOW BIG + KID FRIENDLY */}
+      <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 dark:bg-zinc-900/95 backdrop-blur px-4 py-2 rounded-xl text-sm font-medium border border-zinc-200 dark:border-zinc-700 shadow text-zinc-700 dark:text-zinc-300 flex flex-col gap-1">
+        <div className="flex items-center gap-2 text-[13px]">
+          <span className="inline-block w-3 h-3 rounded-full bg-green-500" /> Easy-peasy
+          <span className="inline-block w-3 h-3 rounded-full bg-yellow-500 ml-1" /> Getting fun
+          <span className="inline-block w-3 h-3 rounded-full bg-orange-500" /> Pretty hard
+          <span className="inline-block w-3 h-3 rounded-full bg-red-500" /> Super strong!
         </div>
-        <div className="text-[9px] opacity-70">Larger = more popular • Clusters at low zoom</div>
+        <div className="text-[12px] opacity-80">Big circles = super popular climbs. Tap the big colored dots!</div>
       </div>
 
       {/* Bonus: offline map hint */}

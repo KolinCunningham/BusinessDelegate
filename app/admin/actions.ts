@@ -34,10 +34,11 @@ export async function loginAction(formData: FormData) {
       path: "/",
     });
 
-    return { success: true };
+    redirect("/admin"); // success path
   }
 
-  return { success: false, error: "Invalid credentials. Use the demo login exactly." };
+  // On failure, re-render the login gate (the page will show error via search param or we can use a simple cookie flash in future)
+  redirect("/admin?error=1");
 }
 
 export async function logoutAction() {

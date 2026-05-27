@@ -1,18 +1,23 @@
 import { getAdminSession, loginAction } from "./actions";
-import AdminDashboard from "./_components/AdminDashboard";
+import { Users, TrendingUp, Mail, DollarSign } from "lucide-react";
 
-export default async function AdminPage() {
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
   const session = await getAdminSession();
+  const params = await searchParams;
 
   if (!session) {
-    return <LoginGate />;
+    return <LoginGate error={!!params.error} />;
   }
 
-  return <AdminDashboard />;
+  return <SponsorshipPipelineDashboard />;
 }
 
 /* ---------------- Login Gate (Server-rendered, posts to Server Action) ---------------- */
-function LoginGate() {
+function LoginGate({ error }: { error?: boolean }) {
   return (
     <div className="flex items-center justify-center min-h-[72vh] py-12">
       <div className="w-full max-w-md">
@@ -56,6 +61,9 @@ function LoginGate() {
               />
             </div>
 
+            {error && (
+              <p className="text-red-600 text-sm font-medium -mt-1">Invalid credentials. Use admin@cragtrails.app / demo</p>
+            )}
             <button
               type="submit"
               className="admin-btn admin-btn-primary w-full h-12 text-base mt-2"
