@@ -30,6 +30,9 @@ After you click the button and deploy:
 
 The project is 100% compatible with Vercel (Next.js 16 + zero config).
 
+For complete deployment instructions (CLI, env vars, custom domains, troubleshooting), see:
+→ [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
+
 **Local development:**
 
 ```bash
