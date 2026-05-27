@@ -17,16 +17,17 @@
 
 ## 🚀 Live Demo
 
-**Deploy your own instance in one click:**
+**Deployed version (recommended):**
+
+→ **[https://cragtrails-kolins-projects.vercel.app](https://cragtrails-kolins-projects.vercel.app)**
+
+(Deployed by the project owner on Vercel)
+
+**One-click deploy your own instance:**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKolinCunningham%2Fcragtrails)
 
-After you click the button and deploy:
-- Vercel will give you a live URL (usually `https://your-project-name.vercel.app`)
-- Copy that URL and replace the placeholder in this README, then commit & push.
-
-**Current recommended live link** (update this after you deploy):
-→ [Deploy CragTrails to Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKolinCunningham%2Fcragtrails)
+After deploying your own copy, update the link above in this README and push.
 
 The project is 100% compatible with Vercel (Next.js 16 + zero config).
 
