@@ -97,6 +97,45 @@ Once your custom domain is live and verified, you can leave it as-is (or update 
 - Update the live link in `README.md`
 - Update any social/og image URLs if you have custom ones
 
+---
+
+## Free "For Life" Database on AWS (Optional but Recommended for Real Users)
+
+The app currently uses localStorage for user data (ticks, wishlist, goals). For real persistence across devices + real Clerk users, you can add a backend database.
+
+**Strongly recommended free option on AWS (stays free within reasonable usage):**
+
+- **Database**: Amazon DynamoDB (Always Free Tier)
+  - 25 GB storage
+  - 25 read + 25 write capacity units
+  - 200 million requests per month
+  - This is more than enough for a healthy personal/small community climbing app for years.
+
+- **No extra server needed**: Use Vercel Serverless Functions (Next.js API routes) to talk to DynamoDB. This keeps everything serverless and within free tiers.
+
+### Quick Setup
+
+1. Run the provided setup script:
+   ```bash
+   ./scripts/setup-aws-dynamodb.sh
+   ```
+
+2. Create a very locked-down IAM user (least privilege — only access to the 4 tables the script creates).
+
+3. Add these to Vercel Environment Variables:
+   ```
+   AWS_ACCESS_KEY_ID=...
+   AWS_SECRET_ACCESS_KEY=...
+   AWS_REGION=us-east-1
+   DYNAMODB_TABLE_PREFIX=cragtrails   # optional
+   ```
+
+4. The foundation adapter already exists at `lib/db/dynamodb.ts`. You can gradually wire real user data (from Clerk `user.id`) into it while keeping localStorage as a fallback for demo mode.
+
+This setup is intentionally "free for life" within the documented AWS Always Free limits. No EC2, no RDS (those expire after 12 months).
+
+See `scripts/setup-aws-dynamodb.sh` for the exact table creation commands and a copy-paste IAM policy.
+
 ### Quick Test After Adding Domain
 Visit `https://yourdomain.com` — it should load the same site as the vercel.app URL.
 
