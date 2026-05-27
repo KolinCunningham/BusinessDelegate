@@ -12,7 +12,8 @@ import { seedData, formatAttribution, getSourceBadge, getAttributionLine, getGra
 import type { Route as CanonicalRoute, ConditionReport as CanonicalConditionReport, SourceAttribution, Tick as CanonicalTick } from '@/lib/types/climbing';
 import { SPONSORS } from '@/lib/seed-data';
 import dynamic from 'next/dynamic';
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/nextjs';
+import { SignInButton, UserButton, useUser } from '@clerk/nextjs';
+import { loadPersonalData, persistTick, persistUserProfile } from './actions/persistence';
 
 const CragMap = dynamic(() => import('./components/CragMap'), {
   ssr: false,
@@ -167,7 +168,7 @@ const DEMO_PROFILES = [
 
 export default function ClimbTrailsLogbook() {
   const { user, isLoaded: isUserLoaded } = useUser();
-  const isRealUser = isUserLoaded && !!user;
+  const isRealSignedIn = isUserLoaded && !!user;
 
   const [ticks, setTicks] = useState<Tick[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
@@ -199,71 +200,6 @@ export default function ClimbTrailsLogbook() {
   // Effective identity for display (real Clerk users > demo profiles). Keeps 10yo joy without new mental models.
   const effectiveName = (isRealSignedIn && user) ? (user.fullName || user.firstName || 'Real Climber') : currentProfile.name;
   const effectiveSubtitle = (isRealSignedIn && user) ? 'Synced securely • your sends are safe in the cloud' : currentProfile.subtitle;
-
-  // Real signed-in Clerk user (for DynamoDB path). Demo/localStorage remains 100% untouched for everyone else.
-  const isRealSignedIn = isUserLoaded && !!user;
-
-  // ----------------------------------------------------------------------
-  // SAFE SERVER ACTIONS (co-located, no new files). Dynamic imports keep server-only
-  // modules (DynamoDB adapter + Clerk server) out of the client bundle. 10yo simple.
-  // Only called for real Clerk users; demo flows never touch these.
-  // ----------------------------------------------------------------------
-  async function loadPersonalData() {
-    'use server';
-    // Dynamic imports: these only execute when the action runs on the server.
-    const { currentUser } = await import('@clerk/nextjs/server');
-    const dynamo = await import('@/lib/db/dynamodb');
-    const user = await currentUser();
-    const enabled = dynamo.isDynamoEnabled ? dynamo.isDynamoEnabled() : !!process.env.AWS_ACCESS_KEY_ID;
-    if (!user || !enabled) {
-      return { source: 'local' as const };
-    }
-    try {
-      const [rawTicks, userData] = await Promise.all([
-        dynamo.getTicksForUser ? dynamo.getTicksForUser(user.id) : Promise.resolve([]),
-        dynamo.getUserData ? dynamo.getUserData(user.id) : Promise.resolve({ wishlist: [], goals: [] }),
-      ]);
-      return {
-        source: 'dynamo' as const,
-        ticks: rawTicks as CanonicalTick[],
-        wishlist: (userData as any)?.wishlist ?? [],
-        goals: (userData as any)?.goals ?? [],
-      };
-    } catch (err) {
-      console.error('[Persistence] loadPersonalData failed (falling back to local):', err);
-      return { source: 'local' as const };
-    }
-  }
-
-  async function persistTick(tick: any) {
-    'use server';
-    const { currentUser } = await import('@clerk/nextjs/server');
-    const dynamo = await import('@/lib/db/dynamodb');
-    const u = await currentUser();
-    if (!u) return;
-    const enabled = dynamo.isDynamoEnabled ? dynamo.isDynamoEnabled() : !!process.env.AWS_ACCESS_KEY_ID;
-    if (!enabled) return;
-    try {
-      await dynamo.saveTick({ ...tick, userId: u.id });
-    } catch (err) {
-      console.error('[Persistence] persistTick failed (non-fatal):', err);
-    }
-  }
-
-  async function persistUserProfile(data: { wishlist?: string[]; goals?: any[] }) {
-    'use server';
-    const { currentUser } = await import('@clerk/nextjs/server');
-    const dynamo = await import('@/lib/db/dynamodb');
-    const u = await currentUser();
-    if (!u) return;
-    const enabled = dynamo.isDynamoEnabled ? dynamo.isDynamoEnabled() : !!process.env.AWS_ACCESS_KEY_ID;
-    if (!enabled) return;
-    try {
-      await dynamo.saveUserData(u.id, { wishlist: data.wishlist ?? [], goals: data.goals ?? [] });
-    } catch (err) {
-      console.error('[Persistence] persistUserProfile failed (non-fatal):', err);
-    }
-  }
 
   // Client-side mapper: Canonical DB tick -> legacy UI Tick shape (enrich with route info for display).
   // Keeps all existing UI code (pyramid, timeline, etc.) 100% unchanged. 10yo friendly.
@@ -795,14 +731,13 @@ export default function ClimbTrailsLogbook() {
 
           <div className="flex items-center gap-4">
             <div className="text-sm text-[#5C6666]">{userStats.totalSends} sends logged</div>
-            <SignedOut>
+            {!isRealSignedIn ? (
               <SignInButton mode="modal">
                 <button className="px-6 py-2 rounded-2xl bg-[#166534] text-white text-sm font-semibold hover:bg-[#14532D]">Log in</button>
               </SignInButton>
-            </SignedOut>
-            <SignedIn>
+            ) : (
               <UserButton appearance={{elements: {avatarBox: "w-8 h-8"}}} />
-            </SignedIn>
+            )}
           </div>
         </div>
       </header>
@@ -814,14 +749,13 @@ export default function ClimbTrailsLogbook() {
             <div className="w-9 h-9 rounded-2xl bg-[#166534] flex items-center justify-center"><Send className="text-white" size={20}/></div>
             <div className="font-bold tracking-[-1.5px] text-2xl text-[#1F2525]">CragTrails</div>
           </div>
-          <SignedOut>
+          {!isRealSignedIn ? (
             <SignInButton mode="modal">
               <button className="px-4 py-1.5 text-sm rounded-2xl bg-[#166534] text-white font-semibold">Log in</button>
             </SignInButton>
-          </SignedOut>
-          <SignedIn>
+          ) : (
             <UserButton appearance={{elements: {avatarBox: "w-8 h-8"}}} />
-          </SignedIn>
+          )}
         </div>
       </header>
 
@@ -1025,37 +959,37 @@ export default function ClimbTrailsLogbook() {
           <div className="max-w-xl mx-auto space-y-8">
             {/* REAL AUTH via Clerk - Apple, Google, Facebook, Email */}
             <div>
-              <SignedIn>
-                <div className="text-center">
-                  <div className="text-5xl mb-2">🧗</div>
-                  <div className="text-3xl font-bold">Welcome back!</div>
-                  <p className="text-[#5C6666] mt-1">You're signed in with real authentication</p>
-                </div>
-                {/* Smooth transition helper (Skeptical CEO: explicit, user-controlled, zero surprise). 
-                    Only shown for real users who still have local/demo sends not yet in their cloud account. */}
-                {isRealSignedIn && ticks.length > 0 && (
-                  <button
-                    onClick={async () => {
-                      try {
-                        // Persist whatever is currently in state (demo or otherwise) to this Clerk user's record
-                        for (const t of ticks) {
-                          await persistTick(t);
+              {isRealSignedIn ? (
+                <>
+                  <div className="text-center">
+                    <div className="text-5xl mb-2">🧗</div>
+                    <div className="text-3xl font-bold">Welcome back!</div>
+                    <p className="text-[#5C6666] mt-1">You're signed in with real authentication</p>
+                  </div>
+                  {/* Smooth transition helper (Skeptical CEO: explicit, user-controlled, zero surprise). 
+                      Only shown for real users who still have local/demo sends not yet in their cloud account. */}
+                  {ticks.length > 0 && (
+                    <button
+                      onClick={async () => {
+                        try {
+                          // Persist whatever is currently in state (demo or otherwise) to this Clerk user's record
+                          for (const t of ticks) {
+                            await persistTick(t);
+                          }
+                          await persistUserProfile({ wishlist, goals: userGoals });
+                          toast.success('Demo data migrated to your real account!', { description: 'Future sends will sync automatically.' });
+                        } catch {
+                          toast.error('Migration had a hiccup — your new sends are still safe.');
                         }
-                        await persistUserProfile({ wishlist, goals: userGoals });
-                        toast.success('Demo data migrated to your real account!', { description: 'Future sends will sync automatically.' });
-                      } catch {
-                        toast.error('Migration had a hiccup — your new sends are still safe.');
-                      }
-                    }}
-                    className="mt-3 text-xs px-3 py-1.5 rounded-2xl border border-[#166534] text-[#166534] active:bg-[#DCFCE7]"
-                  >
-                    📤 Copy current sends + wishlist to my real account
-                  </button>
-                )}
-              </SignedIn>
-
-              <SignedOut>
-                {/* DEMO PROFILE SWITCHER — fallback when not signed in */}
+                      }}
+                      className="mt-3 text-xs px-3 py-1.5 rounded-2xl border border-[#166534] text-[#166534] active:bg-[#DCFCE7]"
+                    >
+                      📤 Copy current sends + wishlist to my real account
+                    </button>
+                  )}
+                </>
+              ) : (
+                /* DEMO PROFILE SWITCHER — fallback when not signed in */
                 <div>
                   <div className="text-[10px] tracking-[2px] text-[#5C6666] text-center mb-2">DEMO PROFILES (Sign in above for real auth)</div>
                   <div className="flex flex-col gap-2">
@@ -1082,7 +1016,7 @@ export default function ClimbTrailsLogbook() {
                   </div>
                   <div className="text-center text-[10px] text-[#5C6666] mt-1.5">Demo mode • <SignInButton mode="modal"><span className="text-[#166534] underline cursor-pointer">Sign in with Apple, Google, Facebook or Email</span></SignInButton></div>
                 </div>
-              </SignedOut>
+              )}
             </div>
 
             <div className="text-center">
