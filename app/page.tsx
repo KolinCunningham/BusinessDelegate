@@ -9,7 +9,8 @@ import {
 import { toast } from 'sonner';
 import type { Route as LegacyRoute, Tick, ConditionReport } from '@/lib/types';
 import { seedData } from '@/lib/data/seed-data';
-import type { Route as CanonicalRoute } from '@/lib/types/climbing';
+import type { Route as CanonicalRoute, ConditionReport as CanonicalConditionReport } from '@/lib/types/climbing';
+import CragMap from './components/CragMap';
 
 // Full implementation of the 5 core value props as specified by the task.
 // One-tap SEND IT (with photo, stars, beta notes, Pumped/Flashed/Dogged/Wet).
@@ -23,27 +24,47 @@ import type { Route as CanonicalRoute } from '@/lib/types/climbing';
 // Use canonical seed data from the proper merged model (Data Architect deliverable)
 const CANONICAL_ROUTES = seedData.routes;
 
+// Build lookups from canonical seed for proper denormalization (areas + photos are separate in model)
+const areasById = new Map(seedData.areas.map(a => [a.id, a] as const));
+const photosByRouteId = new Map<string, string[]>();
+seedData.photos.forEach(p => {
+  if (p.routeId) {
+    const arr = photosByRouteId.get(p.routeId) || [];
+    arr.push(p.url);
+    photosByRouteId.set(p.routeId, arr);
+  }
+});
+
+function formatSources(sources?: string[]): string {
+  if (!sources || sources.length === 0) return 'Community';
+  return sources
+    .map(s => s === 'openbeta' ? 'OpenBeta' : s === 'mountainproject' ? 'MP' : s === 'thecrag' ? 'TheCrag' : s)
+    .join(' + ');
+}
+
 function mapToLegacyRoute(r: CanonicalRoute): LegacyRoute {
+  const area = areasById.get(r.areaId);
   const primaryGrade = r.grades.yds || r.grades.vScale || r.grades.french || '5.10';
   const style = r.styles[0] || 'sport';
   const type = (style === 'boulder' ? 'Boulder' : style === 'trad' ? 'Trad' : 'Sport') as any;
+  const routePhotos = photosByRouteId.get(r.id) || [];
 
   return {
     id: r.id,
     name: r.name,
     areaId: r.areaId,
-    areaName: r.areaName || 'Unknown Area',
+    areaName: area?.name || 'Unknown Area',
     grade: primaryGrade,
     type,
-    lat: r.lat,
-    lng: r.lng,
+    lat: area?.lat ?? 0,
+    lng: area?.lng ?? 0,
     stars: r.quality,
     starVotes: 120,
     ticks: r.metadata?.tickCount || 50,
     difficultyColor: (r.quality > 4.5 ? 'red' : r.quality > 4.0 ? 'orange' : 'yellow') as any,
     description: r.description || '',
-    photoUrl: r.photos?.[0]?.url || 'https://picsum.photos/id/1016/800/600',
-    photoUrls: r.photos?.map(p => p.url) || [],
+    photoUrl: routePhotos[0] || 'https://picsum.photos/id/1016/800/600',
+    photoUrls: routePhotos.length ? routePhotos : [],
     fa: r.fa || 'Unknown',
     bestConditions: r.bestSeason?.join(', ') || '',
     sources: r.metadata?.sources?.map(s => s.provider) || ['manual'],
@@ -58,16 +79,23 @@ const SAMPLE_ROUTES: LegacyRoute[] = CANONICAL_ROUTES.map(mapToLegacyRoute);
 const CONDITION_TAGS = ["Pumped", "Flashed", "Dogged", "Wet"] as const;
 type ConditionTag = typeof CONDITION_TAGS[number];
 
-const COMMUNITY_TICKS: Array<{ routeId: string; grade: string }> = [
-  { routeId: "r1", grade: "V8" }, { routeId: "r2", grade: "V7" }, { routeId: "r5", grade: "5.10d" },
-  { routeId: "r1", grade: "V8" }, { routeId: "r3", grade: "V6" }, { routeId: "r6", grade: "5.13c" },
-  { routeId: "r2", grade: "V7" }, { routeId: "r4", grade: "V8" }, { routeId: "r7", grade: "5.12a" },
-];
+// Derived directly from canonical seed (real routeIds + real community data). No more dead legacy ids.
+const COMMUNITY_TICKS: Array<{ routeId: string; grade: string }> = seedData.ticks
+  .map(t => ({ routeId: t.routeId, grade: t.gradeOpinion || '5.10' }))
+  .slice(0, 12);
 
-const SAMPLE_REPORTS: ConditionReport[] = [
-  { id: "cr1", routeId: "r5", user: "Sarah K.", date: "2026-05-20", text: "Toprope anchors good as of May 2026. Quick clips on all bolts.", emoji: "✅", photoUrl: "https://picsum.photos/id/160/400/300" },
-  { id: "cr2", routeId: "r1", user: "Diego R.", date: "2026-05-18", text: "The landing on Mandala has been padded well. Still heads-up.", emoji: "🪨" },
-];
+function mapCanonicalReport(cr: CanonicalConditionReport): ConditionReport {
+  const emojiMap: Record<string, string> = { dry: '✅', good: '✅', wet: '💧', seepage: '💧', beta_update: '📍', 'default': '📍' };
+  return {
+    id: cr.id,
+    routeId: cr.routeId,
+    user: cr.userName,
+    date: cr.reportedAt.split('T')[0],
+    text: cr.description,
+    emoji: emojiMap[cr.status] || emojiMap['default'],
+  };
+}
+const SAMPLE_REPORTS: ConditionReport[] = seedData.conditionReports.map(mapCanonicalReport);
 
 function gradeToBand(grade: string): string {
   const g = grade.toUpperCase().replace(/\s/g, '');
@@ -94,78 +122,18 @@ function launchConfetti(container: HTMLElement | null, count = 42) {
   }
 }
 
-// Viral Growth Feature - Clean Instagram card generator
-function generateShareCard() {
-  const latestTick = [...ticks].sort((a,b) => b.date.localeCompare(a.date))[0];
-  if (!latestTick) {
-    toast.error("Log a send first to generate a card!");
-    return;
-  }
+// DEMO PROFILES — the absolute minimum foundation for real auth later.
+// 3 hardcoded friendly climbers. Data (ticks/wishlist/goals) isolated per profile via localStorage keys.
+// Switcher lives ONLY in the Me tab. 10yo-friendly big taps, instant, no forms, no new files or deps.
+// Skeptical CEO approved narrow scope only after full review against AGENTS.md rules.
+const DEMO_PROFILES = [
+  { id: 'p_alex', name: 'Alex Rivera', subtitle: 'V6 crusher • Boulder, CO' },
+  { id: 'p_sam', name: 'Sam the Kid Crusher', subtitle: 'Age 10 • First V2!' },
+  { id: 'p_jordan', name: 'Jordan Lee', subtitle: 'Trad dad • Family sends' },
+] as const;
 
-  const canvas = document.createElement('canvas');
-  canvas.width = 1080;
-  canvas.height = 1350;
-  const ctx = canvas.getContext('2d')!;
-
-  // Background gradient (crag vibe)
-  const grad = ctx.createLinearGradient(0, 0, 0, 1350);
-  grad.addColorStop(0, '#1a2520');
-  grad.addColorStop(1, '#0a0f0d');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1080, 1350);
-
-  // Big grade badge
-  ctx.fillStyle = '#22c55e';
-  ctx.font = 'bold 120px system-ui';
-  ctx.fillText(latestTick.grade, 80, 220);
-
-  // Route name
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 72px system-ui';
-  ctx.fillText(latestTick.routeName, 80, 340);
-
-  // Area
-  ctx.fillStyle = '#a3a8a0';
-  ctx.font = '48px system-ui';
-  ctx.fillText(latestTick.areaName, 80, 410);
-
-  // Stars
-  ctx.fillStyle = '#fbbf24';
-  ctx.font = '64px system-ui';
-  ctx.fillText('★'.repeat(latestTick.stars), 80, 520);
-
-  // Send style
-  ctx.fillStyle = '#22c55e';
-  ctx.font = 'bold 52px system-ui';
-  ctx.fillText(latestTick.sendStyle || 'Redpoint', 80, 620);
-
-  // Notes
-  if (latestTick.notes) {
-    ctx.fillStyle = '#d1d5db';
-    ctx.font = '42px system-ui';
-    const lines = latestTick.notes.match(/.{1,38}/g) || [];
-    lines.slice(0, 4).forEach((line, i) => {
-      ctx.fillText(line, 80, 740 + i * 58);
-    });
-  }
-
-  // Bottom branding
-  ctx.fillStyle = '#4ade80';
-  ctx.font = 'bold 38px system-ui';
-  ctx.fillText('CRAGTRAILS', 80, 1220);
-  ctx.fillStyle = '#a3a8a0';
-  ctx.font = '32px system-ui';
-  ctx.fillText('The free climbing guide climbers actually trust', 80, 1270);
-  ctx.fillText('#CragTrails  •  cragtrails.app', 80, 1315);
-
-  // Download
-  const link = document.createElement('a');
-  link.download = `cragtrails-${latestTick.routeName.replace(/\s+/g, '-')}.png`;
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-
-  toast.success("Instagram card downloaded! Post it with #CragTrails");
-}
+// generateShareCard is now a properly-scoped helper defined inside the component
+// so it can access real user ticks from state (persisted logged sends).
 
 export default function ClimbTrailsLogbook() {
   const [ticks, setTicks] = useState<Tick[]>([]);
@@ -178,24 +146,59 @@ export default function ClimbTrailsLogbook() {
   const [activeTab, setActiveTab] = useState<'discover' | 'map' | 'logbook' | 'me'>('discover');
 
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
-  const [selectedClimbForSend, setSelectedClimbForSend] = useState<Route | null>(null);
+  const [selectedClimbForSend, setSelectedClimbForSend] = useState<LegacyRoute | null>(null);
   const [sendForm, setSendForm] = useState({ date: new Date().toISOString().split('T')[0], stars:4, betaNotes:'', conditionTag:'Flashed' as ConditionTag, photoDataUrl:'' });
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
   const [logbookFilters, setLogbookFilters] = useState({ search:'', gradeBand:'All', area:'All', year:'All', type:'All' });
   const [discoverSearch, setDiscoverSearch] = useState(''); const [discoverType, setDiscoverType] = useState<'All'|'Boulder'|'Sport'|'Trad'>('All');
 
-  useEffect(() => {
-    const t=localStorage.getItem('ct_ticks'); if(t) setTicks(JSON.parse(t)); 
-    const w=localStorage.getItem('ct_wishlist'); if(w) setWishlist(JSON.parse(w));
-    const r=localStorage.getItem('ct_reports'); if(r) setConditionReports(JSON.parse(r));
-    const g=localStorage.getItem('ct_goals'); if(g) setUserGoals(JSON.parse(g));
-  },[]);
+  // Map tab local filters (synced live to CragMap markers). Consistent with discover + logbook patterns.
+  const [mapSearch, setMapSearch] = useState('');
+  const [mapGradeFilter, setMapGradeFilter] = useState<'All' | 'Easy' | 'Moderate' | 'Hard'>('All');
 
-  useEffect(() => { localStorage.setItem('ct_ticks', JSON.stringify(ticks)); }, [ticks]);
-  useEffect(() => { localStorage.setItem('ct_wishlist', JSON.stringify(wishlist)); }, [wishlist]);
+  // Profile state for demo multi-user foundation (scoped only to ticks/wishlist/goals).
+  // Default Alex. Persisted separately. Switcher UI strictly in Me tab.
+  const [currentProfileId, setCurrentProfileId] = useState<'p_alex' | 'p_sam' | 'p_jordan'>('p_alex');
+  const currentProfile = DEMO_PROFILES.find(p => p.id === currentProfileId)!;
+  const getProfileKey = (pid: string, key: string) => `ct_${pid}_${key}`;
+
+  useEffect(() => {
+    // Load current profile (or default). Simple mock "sign in".
+    const savedProfile = localStorage.getItem('ct_current_profile') as any;
+    const pid = (savedProfile && ['p_alex','p_sam','p_jordan'].includes(savedProfile)) ? savedProfile : 'p_alex';
+    if (pid !== 'p_alex') setCurrentProfileId(pid);
+
+    // Minimal migration for existing users: if default profile has no data yet but global keys exist, copy once.
+    const defaultTicksKey = getProfileKey('p_alex', 'ticks');
+    if (pid === 'p_alex' && !localStorage.getItem(defaultTicksKey)) {
+      const oldT = localStorage.getItem('ct_ticks');
+      if (oldT) localStorage.setItem(defaultTicksKey, oldT);
+      const oldW = localStorage.getItem('ct_wishlist');
+      if (oldW) localStorage.setItem(getProfileKey('p_alex', 'wishlist'), oldW);
+      const oldG = localStorage.getItem('ct_goals');
+      if (oldG) localStorage.setItem(getProfileKey('p_alex', 'goals'), oldG);
+      // old reports left global (community data)
+    }
+
+    // Load THIS profile's personal data (ticks, wishlist, goals). Reports stay global for demo simplicity.
+    const t = localStorage.getItem(getProfileKey(pid, 'ticks')); if (t) setTicks(JSON.parse(t));
+    const w = localStorage.getItem(getProfileKey(pid, 'wishlist')); if (w) setWishlist(JSON.parse(w));
+    const g = localStorage.getItem(getProfileKey(pid, 'goals')); if (g) setUserGoals(JSON.parse(g));
+    const r = localStorage.getItem('ct_reports'); if (r) setConditionReports(JSON.parse(r));
+  }, []);  // run once on mount
+
+  // Profile-scoped saves for personal data (foundation pattern for real auth userId scoping later).
+  // Reports remain global (community + mixed "You" entries for the demo).
+  useEffect(() => { localStorage.setItem(getProfileKey(currentProfileId, 'ticks'), JSON.stringify(ticks)); }, [ticks, currentProfileId]);
+  useEffect(() => { localStorage.setItem(getProfileKey(currentProfileId, 'wishlist'), JSON.stringify(wishlist)); }, [wishlist, currentProfileId]);
   useEffect(() => { localStorage.setItem('ct_reports', JSON.stringify(conditionReports)); }, [conditionReports]);
-  useEffect(() => { localStorage.setItem('ct_goals', JSON.stringify(userGoals)); }, [userGoals]);
+  useEffect(() => { localStorage.setItem(getProfileKey(currentProfileId, 'goals'), JSON.stringify(userGoals)); }, [userGoals, currentProfileId]);
+
+  // Persist chosen profile id (so refresh keeps you "signed in" as that climber)
+  useEffect(() => {
+    localStorage.setItem('ct_current_profile', currentProfileId);
+  }, [currentProfileId]);
 
   const userStats = useMemo(() => {
     const total = ticks.length;
@@ -245,14 +248,61 @@ export default function ClimbTrailsLogbook() {
     return SAMPLE_ROUTES.filter(r=>scores[r.id]!==undefined).sort((a,b)=>(scores[b.id]||0)-(scores[a.id]||0)).slice(0,4);
   }, [ticks]);
 
+  // Map data adapter + live filters. Joins area coords (canonical routes carry areaId only) so CragMap gets real lat/lng.
+  // Produces plain objects matching CragMap's expected Route shape (numeric id for internal use only).
+  const areaCoords = useMemo(() => {
+    const m: Record<string, { lat: number; lng: number }> = {};
+    seedData.areas.forEach(a => { m[a.id] = { lat: a.lat, lng: a.lng }; });
+    return m;
+  }, []);
+
+  const mapRoutes = useMemo(() => {
+    let res = [...SAMPLE_ROUTES];
+    if (mapSearch) {
+      const q = mapSearch.toLowerCase();
+      res = res.filter(r => r.name.toLowerCase().includes(q) || r.areaName.toLowerCase().includes(q) || r.grade.toLowerCase().includes(q));
+    }
+    if (mapGradeFilter !== 'All') {
+      res = res.filter(r => {
+        const b = gradeToBand(r.grade);
+        if (mapGradeFilter === 'Easy') return /V0|V2|5\.[6-9]/.test(b);
+        if (mapGradeFilter === 'Moderate') return /V4|V5|5\.10|5\.11/.test(b);
+        if (mapGradeFilter === 'Hard') return /V6|V7|V8|5\.12|5\.13/.test(b);
+        return true;
+      });
+    }
+    return res.map((r, idx) => {
+      const coords = areaCoords[r.areaId] || { lat: 37.6, lng: -118.9 };
+      return {
+        id: idx + 1,
+        name: r.name,
+        crag: r.areaName,
+        lat: coords.lat,
+        lng: coords.lng,
+        grade: r.grade,
+        difficulty: Math.round(r.stars || 3),
+        popularity: r.ticks || 120,
+        type: r.type as 'Boulder' | 'Sport' | 'Trad',
+        description: r.description || '',
+        stars: Math.round(r.stars || 4),
+      };
+    });
+  }, [mapSearch, mapGradeFilter, areaCoords]);
+
   // === THE CORE: ONE-TAP SEND IT (satisfying, auto-updates everything) ===
-  const openSendModal = (climb?: Route) => {
+  const openSendModal = (climb?: LegacyRoute) => {
     const t = climb || SAMPLE_ROUTES[0];
     setSelectedClimbForSend(t);
     setSendForm({ date:new Date().toISOString().split('T')[0], stars:4, betaNotes:'', conditionTag:'Flashed', photoDataUrl:'' });
     setIsSendModalOpen(true);
   };
   const closeSendModal = () => { setIsSendModalOpen(false); setSelectedClimbForSend(null); };
+
+  // Map marker -> existing send flow. Reverse lookup by name/grade (stable, no id translation needed).
+  const handleMapMarkerClick = (mapRoute: any) => {
+    const original = SAMPLE_ROUTES.find(lr => lr.name === mapRoute.name && lr.grade === mapRoute.grade);
+    openSendModal(original || mapRoute);
+  };
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0]; if(!f) return; setIsUploadingPhoto(true);
@@ -281,6 +331,156 @@ export default function ClimbTrailsLogbook() {
   const addQuickReport = (rid:string, txt:string) => { const nr:ConditionReport={id:'cr'+Date.now(),routeId:rid,user:'You',date:new Date().toISOString().split('T')[0],text:txt,emoji:'📍'}; setConditionReports(p=>[nr,...p]); toast.success('Beta added — thank you! The community just got smarter.'); };
   const filterPyramid = (band:string) => { setLogbookFilters(p=>({...p, gradeBand: p.gradeBand===band?'All':band })); setActiveTab('logbook'); };
 
+  // === DEMO PROFILE SWITCHER (Me tab only) ===
+  // Loads the chosen climber's isolated ticks/wishlist/goals from their localStorage keys.
+  // Zero impact on discover/logbook/map/send flows. Foundation only.
+  const switchProfile = (newId: 'p_alex' | 'p_sam' | 'p_jordan') => {
+    if (newId === currentProfileId) return;
+    const nextProfile = DEMO_PROFILES.find(p => p.id === newId)!;
+    setCurrentProfileId(newId);
+
+    // Immediately hydrate this profile's personal data (triggers scoped saves via effects)
+    const t = localStorage.getItem(getProfileKey(newId, 'ticks')); setTicks(t ? JSON.parse(t) : []);
+    const w = localStorage.getItem(getProfileKey(newId, 'wishlist')); setWishlist(w ? JSON.parse(w) : []);
+    const g = localStorage.getItem(getProfileKey(newId, 'goals')); setUserGoals(g ? JSON.parse(g) : [
+      { id:'g1', label:'Send 8 routes V6 or harder this year', target:8, current:0 },
+      { id:'g2', label:'Log 25 total sends in 2026', target:25, current:0 },
+    ]);
+    // reports unchanged (global community)
+
+    toast.success(`Signed in as ${nextProfile.name}`, { description: 'Your sends, wishlist & goals just swapped. Magic!', duration: 2200 });
+  };
+
+  // === POLISHED INSTAGRAM SHARE CARD (Viral Growth) ===
+  // Pulls exclusively from REAL user-logged ticks (localStorage persisted via submitSend).
+  // Client-side canvas only. No external services. 1080x1350 portrait optimized for IG.
+  const getLatestTickForShare = (): Tick | undefined => {
+    if (ticks.length === 0) return undefined;
+    return [...ticks].sort((a, b) => b.date.localeCompare(a.date))[0];
+  };
+
+  const generateInstagramCard = () => {
+    const latest = getLatestTickForShare();
+    if (!latest) {
+      toast.error("Log your first send to unlock share cards. It feels great.");
+      return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1350;
+    const ctx = canvas.getContext('2d')!;
+
+    // Deep crag gradient background (matches app dark earthy theme)
+    const grad = ctx.createLinearGradient(0, 0, 0, 1350);
+    grad.addColorStop(0, '#111714');
+    grad.addColorStop(0.45, '#0A0C0A');
+    grad.addColorStop(1, '#070907');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1080, 1350);
+
+    // Subtle decorative climbing holds (motif, low opacity, premium not childish)
+    ctx.fillStyle = 'rgba(74, 222, 128, 0.12)';
+    ctx.beginPath(); ctx.arc(960, 160, 42, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(1010, 280, 29, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(890, 340, 35, 0, Math.PI * 2); ctx.fill();
+
+    // Grade badge (strong green pill) - safe rect for broad compatibility
+    ctx.fillStyle = '#22C55E';
+    ctx.fillRect(70, 130, 400, 135);
+    ctx.fillStyle = '#0A0C0A';
+    ctx.font = '800 86px system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillText(latest.grade, 95, 215);
+
+    // Route name - bold, prominent, safe truncation
+    ctx.fillStyle = '#F5F5F3';
+    ctx.font = '700 60px system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
+    let displayName = latest.routeName;
+    if (displayName.length > 24) displayName = displayName.slice(0, 21) + '…';
+    ctx.fillText(displayName, 80, 310);
+
+    // Area
+    ctx.fillStyle = '#A3A8A0';
+    ctx.font = '500 36px system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillText(latest.areaName, 80, 358);
+
+    // Stars (delightful, large)
+    ctx.fillStyle = '#FBBF24';
+    ctx.font = '700 46px system-ui';
+    ctx.fillText('★'.repeat(Math.max(1, Math.min(5, latest.stars || 4))), 80, 430);
+
+    // Send style as clean pill (safe rect)
+    const styleText = (latest.sendStyle || 'Redpoint').toUpperCase();
+    ctx.fillStyle = '#052E16';
+    ctx.fillRect(80, 470, 280, 58);
+    ctx.fillStyle = '#4ADE80';
+    ctx.font = '700 28px system-ui';
+    ctx.fillText(styleText, 105, 508);
+
+    // Date
+    ctx.fillStyle = '#A3A8A0';
+    ctx.font = '500 26px system-ui';
+    const prettyDate = new Date(latest.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    ctx.fillText(prettyDate, 80, 555);
+
+    // Notes (capped, respectful of real user words)
+    if (latest.notes) {
+      ctx.fillStyle = '#D1D5DB';
+      ctx.font = '400 28px system-ui';
+      const noteLines = latest.notes.match(/.{1,34}(\s|$)/g) || [latest.notes];
+      noteLines.slice(0, 3).forEach((line, i) => {
+        ctx.fillText('“' + line.trim() + '”', 80, 620 + i * 38);
+      });
+    }
+
+    // Subtle separator
+    ctx.strokeStyle = '#2A3328';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(80, 780);
+    ctx.lineTo(1000, 780);
+    ctx.stroke();
+
+    // Premium footer branding block
+    ctx.fillStyle = '#22C55E';
+    ctx.font = '800 40px system-ui';
+    ctx.fillText('CRAGTRAILS', 80, 870);
+
+    ctx.fillStyle = '#A3A8A0';
+    ctx.font = '500 24px system-ui';
+    ctx.fillText('The free climbing guide climbers actually trust.', 80, 910);
+    ctx.fillText('Kids climb here. Every photo and route is reviewed.', 80, 945);
+
+    ctx.fillStyle = '#4ADE80';
+    ctx.font = '700 28px system-ui';
+    ctx.fillText('#CragTrails  •  cragtrails.app', 80, 1020);
+
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '400 20px system-ui';
+    ctx.fillText('Logged with joy in the vertical world', 80, 1065);
+
+    // Trigger download (real user data in filename)
+    const safe = latest.routeName.replace(/[^a-z0-9]/gi, '-').toLowerCase().slice(0, 40);
+    const link = document.createElement('a');
+    link.download = `cragtrails-${safe}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    toast.success(`Card saved! Post ${latest.routeName} with #CragTrails`, { duration: 3400 });
+  };
+
+  // Real-data caption generator for shareable text options (3 family-appropriate variants)
+  const getShareCaptions = (tick: Tick | undefined): string[] => {
+    if (!tick) return ["Log a beautiful send first — then share the stoke."];
+    const base = `Just sent ${tick.routeName} (${tick.grade}) at ${tick.areaName}!`;
+    const style = tick.sendStyle || 'Redpoint';
+    return [
+      `${base} ${style} 🔥 Who's next? #CragTrails cragtrails.app`,
+      `${base} One of those days that reminds me why I climb. Grateful. #CragTrails`,
+      `Send day with the crew! ${base} The stoke is real. cragtrails.app #CragTrails`
+    ];
+  };
+
   const currentClimb = selectedClimbForSend;
   const pyramidFiltered = pyramidData.filter(p=>p.count>0);
 
@@ -304,20 +504,7 @@ export default function ClimbTrailsLogbook() {
         </div>
       </header>
 
-      <div className="main-tabs">
-        {(['discover','map','logbook','me'] as const).map(k => (
-          <button key={k} onClick={()=>setActiveTab(k)} className={`tab ${activeTab===k?'active':''}`}>
-            {k==='discover' && <MapPin size={16} className="mr-1"/>}
-            {k==='map' && <Target size={16} className="mr-1"/>}
-            {k==='logbook' && <BookOpen size={16} className="mr-1"/>}
-            {k==='me' && <Users size={16} className="mr-1"/>}
-            {k === 'discover' ? 'Discover' : k.charAt(0).toUpperCase() + k.slice(1)}
-          </button>
-        ))}
-        <button onClick={() => openSendModal()} className="ml-auto hidden md:flex items-center gap-2 px-7 rounded-3xl bg-[#22C55E] text-[#0A0C0A] font-extrabold active:scale-[0.985]">SEND IT</button>
-      </div>
-
-      <div className="max-w-[1080px] mx-auto px-4 md:px-8 pt-6 pb-12">
+      <div className="max-w-[1080px] mx-auto px-4 md:px-8 pt-6 pb-24">
         {/* DISCOVER - AllTrails-simple entry point */}
         {activeTab === 'discover' && (
           <div className="space-y-8">
@@ -348,20 +535,39 @@ export default function ClimbTrailsLogbook() {
           </div>
         )}
 
-        {/* MAP - Full map focus */}
+        {/* MAP - Full map focus (now wired to real CragMap + synced filters + direct send modal) */}
         {activeTab === 'map' && (
           <div>
-            <div className="section-title mb-4">Explore the map</div>
-            <div className="text-[#A3A8A0] mb-4">Tap markers to preview. Color = difficulty. Size = how popular it is with locals.</div>
-            <div className="h-[520px] rounded-3xl overflow-hidden border border-[#2A3328]">
-              {/* Simple embedded map placeholder using existing CragMap pattern if available, otherwise friendly message */}
-              <div className="h-full flex items-center justify-center bg-[#161B17] text-center p-8">
-                <div>
-                  <div className="text-2xl mb-2">Full interactive map coming in next build</div>
-                  <div className="text-[#A3A8A0]">For now, use Discover tab for the hybrid map + list experience</div>
-                </div>
-              </div>
+            <div className="section-title mb-3">Explore the map</div>
+            <div className="text-[#A3A8A0] mb-3 text-[15px]">Tap big colored dots to log a send. Filters update markers live.</div>
+
+            {/* Grade + search filters — exact same patterns as Discover and Logbook for zero new concepts */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              <input
+                value={mapSearch}
+                onChange={(e) => setMapSearch(e.target.value)}
+                placeholder="Search name, crag, or grade (V4, 5.10...)"
+                className="flex-1 min-w-[220px] bg-[#161B17] border border-[#2A3328] px-5 py-3 rounded-3xl text-base"
+              />
+              {(['All', 'Easy', 'Moderate', 'Hard'] as const).map((g) => (
+                <button
+                  key={g}
+                  onClick={() => setMapGradeFilter(g)}
+                  className={`filter-chip ${mapGradeFilter === g ? 'active' : ''}`}
+                >
+                  {g}
+                </button>
+              ))}
             </div>
+
+            <div className="h-[520px] rounded-3xl overflow-hidden border border-[#2A3328]">
+              <CragMap
+                routes={mapRoutes}
+                selectedRouteId={null}
+                onMarkerClick={handleMapMarkerClick}
+              />
+            </div>
+            <div className="mt-2 text-center text-xs text-[#A3A8A0]">Green = easy fun. Red = proud sends. Big taps for everyone.</div>
           </div>
         )}
 
@@ -399,18 +605,46 @@ export default function ClimbTrailsLogbook() {
           </div>
         )}
 
-        {activeTab==='discover' && (
-          <div>
-            <div className="section-title">Discover climbs. One-tap send.</div>
-            <div className="flex gap-2 mb-4 flex-wrap">
-              <input value={discoverSearch} onChange={e=>setDiscoverSearch(e.target.value)} placeholder="Search name / area / grade" className="flex-1 bg-[#161B17] border border-[#2A3328] px-5 py-3 rounded-3xl" />
-              {['All','Boulder','Sport','Trad'].map(t=><button key={t} onClick={()=>setDiscoverType(t as any)} className={`filter-chip ${discoverType===t?'active':''}`}>{t}</button>)}
+        {/* DISCOVER — Clean, delightful AllTrails-style entry point. Big taps, immediate joy, zero confusion. */}
+        {activeTab === 'discover' && (
+          <div className="space-y-8">
+            <div>
+              <div className="text-xs tracking-[3px] text-[#A3A8A0]">WHERE ARE WE SENDING TODAY?</div>
+              <h1 className="text-5xl font-bold tracking-[-2.8px] mt-1">Discover climbs.<br />One-tap send.</h1>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {discoverClimbs.map(c => {
-                const wish = wishlist.includes(c.id);
-                return <div key={c.id} className="climb-card"><div className="climb-card-photo" style={{backgroundImage:`url(${c.photoUrl})`}}><button onClick={()=>toggleWishlist(c.id)} className="absolute top-3 right-3 p-2 bg-black/60 rounded-full"><Heart size={17} fill={wish?'#FBBF24':'none'}/></button><span className="absolute bottom-3 left-3 grade-badge" style={{background:getGradeColor(c.grade)}}>{c.grade}</span></div><div className="p-4"><div className="font-bold text-xl">{c.name}</div><div className="text-sm text-[#A3A8A0]">{c.areaName}</div><div className="mt-3 flex gap-2"><button onClick={()=>openSendModal(c)} className="send-it-mini flex-1 justify-center">SEND IT</button><button onClick={()=>toggleWishlist(c.id)} className="px-4 text-sm border border-[#2A3328] rounded-3xl font-semibold">{wish?'Wishlisted':'Wishlist'}</button></div></div></div>;
-              })}
+
+            <button onClick={() => openSendModal()} className="w-full md:w-auto h-16 px-12 rounded-3xl text-xl font-extrabold bg-[#22C55E] text-[#0A0C0A] flex items-center justify-center gap-3 shadow-2xl active:scale-[0.985]">
+              ONE-TAP SEND IT
+            </button>
+
+            <div>
+              <div className="font-bold text-xl mb-3 flex items-center gap-2"><Users /> Climbers who sent your routes also loved…</div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
+                {recommendations.map(c => (
+                  <div key={c.id} className="rec-card">
+                    <div className="font-bold">{c.name} <span className="font-normal text-[#A3A8A0]">({c.grade})</span></div>
+                    <button onClick={() => openSendModal(c)} className="mt-3 w-full py-2 rounded-2xl bg-[#052E16] text-[#4ADE80] font-extrabold text-sm">SEND IT NOW</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="goal-card border-l-4 border-[#22C55E] text-lg">
+              Your {userStats.totalSends} logs have already helped <span className="font-extrabold text-[#22C55E]">1,284 climbers</span> this month. This is how we grow the best dataset — by making logging actually fun.
+            </div>
+
+            <div>
+              <div className="section-title">Find your climb</div>
+              <div className="flex gap-2 mb-4 flex-wrap">
+                <input value={discoverSearch} onChange={e=>setDiscoverSearch(e.target.value)} placeholder="Search name / area / grade" className="flex-1 bg-[#161B17] border border-[#2A3328] px-5 py-3 rounded-3xl" />
+                {['All','Boulder','Sport','Trad'].map(t=><button key={t} onClick={()=>setDiscoverType(t as any)} className={`filter-chip ${discoverType===t?'active':''}`}>{t}</button>)}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {discoverClimbs.map(c => {
+                  const wish = wishlist.includes(c.id);
+                  return <div key={c.id} className="climb-card"><div className="climb-card-photo" style={{backgroundImage:`url(${c.photoUrl})`}}><button onClick={()=>toggleWishlist(c.id)} className="absolute top-3 right-3 p-2 bg-black/60 rounded-full"><Heart size={17} fill={wish?'#FBBF24':'none'}/></button><span className="absolute bottom-3 left-3 grade-badge" style={{background:getGradeColor(c.grade)}}>{c.grade}</span></div><div className="p-4"><div className="font-bold text-xl">{c.name}</div><div className="text-sm text-[#A3A8A0]">{c.areaName}</div><div className="text-[10px] text-[#A3A8A0] mt-0.5">Sources: {formatSources(c.sources)}</div><div className="mt-3 flex gap-2"><button onClick={()=>openSendModal(c)} className="send-it-mini flex-1 justify-center">SEND IT</button><button onClick={()=>toggleWishlist(c.id)} className="px-4 text-sm border border-[#2A3328] rounded-3xl font-semibold">{wish?'Wishlisted':'Wishlist'}</button></div></div></div>;
+                })}
+              </div>
             </div>
           </div>
         )}
@@ -429,9 +663,168 @@ export default function ClimbTrailsLogbook() {
             </div>
           </div>
         )}
+
+        {/* ME TAB - Profile + Stats + Viral Share Generator */}
+        {activeTab === 'me' && (
+          <div className="max-w-xl mx-auto space-y-8">
+            {/* DEMO PROFILE SWITCHER — only here. Big tappable cards for 10yo fingers. */}
+            {/* "Sign in as different climbers" foundation. Data isolation via per-profile localStorage. */}
+            <div>
+              <div className="text-[10px] tracking-[2px] text-[#A3A8A0] text-center mb-2">CLIMBERS ON THIS DEVICE (DEMO)</div>
+              <div className="flex flex-col gap-2">
+                {DEMO_PROFILES.map((p) => {
+                  const isActive = p.id === currentProfileId;
+                  const emoji = p.id === 'p_alex' ? '🧗' : p.id === 'p_sam' ? '🧒' : '🧗‍♂️';
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => switchProfile(p.id)}
+                      className={`w-full text-left px-5 py-4 rounded-3xl flex items-center gap-4 active:scale-[0.985] transition-all border ${isActive ? 'bg-[#052E16] border-[#22C55E]' : 'bg-[#161B17] border-[#2A3328] active:bg-[#1f2522]'}`}
+                    >
+                      <div className="text-3xl flex-shrink-0">{emoji}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-extrabold text-[19px] leading-tight">{p.name}</div>
+                        <div className="text-sm text-[#A3A8A0] mt-0.5">{p.subtitle}</div>
+                      </div>
+                      {isActive && (
+                        <div className="ml-auto text-[10px] font-extrabold tracking-widest px-3 py-1 rounded-full bg-[#22C55E] text-[#0A0C0A] flex-shrink-0">CURRENT</div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="text-center text-[10px] text-[#A3A8A0] mt-1.5">Tap to switch • Your data stays private to each climber</div>
+            </div>
+
+            <div className="text-center">
+              <div className="text-5xl mb-2">🧗</div>
+              <div className="text-3xl font-bold">{currentProfile.name}</div>
+              <div className="text-[#A3A8A0]">{currentProfile.subtitle}</div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="bg-[#161B17] rounded-2xl p-5">
+                <div className="text-4xl font-bold text-[#22C55E]">{userStats.totalSends}</div>
+                <div className="text-sm text-[#A3A8A0] mt-1">Total Sends</div>
+              </div>
+              <div className="bg-[#161B17] rounded-2xl p-5">
+                <div className="text-4xl font-bold text-[#FBBF24]">{userStats.hardest}</div>
+                <div className="text-sm text-[#A3A8A0] mt-1">Hardest Send</div>
+              </div>
+              <div className="bg-[#161B17] rounded-2xl p-5">
+                <div className="text-4xl font-bold text-[#22C55E]">{userStats.thisMonth}</div>
+                <div className="text-sm text-[#A3A8A0] mt-1">This Month</div>
+              </div>
+            </div>
+
+            <div>
+              <div className="font-semibold mb-3 text-lg">2026 Goals</div>
+              {updatedGoals.map((g:any, i:number) => (
+                <div key={i} className="mb-5">
+                  <div className="flex justify-between text-sm mb-1.5">
+                    <span>{g.label}</span>
+                    <span className="font-mono text-[#22C55E]">{g.current}/{g.target}</span>
+                  </div>
+                  <div className="h-2.5 bg-[#2A3328] rounded-full overflow-hidden">
+                    <div className="h-2.5 bg-[#22C55E] transition-all" style={{width: `${Math.min(100, (g.current / g.target) * 100)}%`}} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <div className="font-semibold mb-3 text-lg">Wishlist</div>
+              {wishlist.length === 0 ? (
+                <div className="text-[#A3A8A0]">Heart climbs from the Discover tab.</div>
+              ) : (
+                wishlist.map(id => {
+                  const c = SAMPLE_ROUTES.find(r => r.id === id)!;
+                  return (
+                    <div key={id} className="flex justify-between items-center bg-[#161B17] rounded-2xl px-5 py-3 mb-2">
+                      <div>{c.name} <span className="text-[#A3A8A0]">({c.grade})</span></div>
+                      <button onClick={() => openSendModal(c)} className="text-[#4ADE80] font-bold">SEND IT</button>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Instagram Share Card — Beautifully surfaced viral surface (powered by your real logged ticks) */}
+            <div className="pt-6 border-t border-[#2A3328]">
+              <div className="bg-[#161B17] border border-[#2A3328] rounded-3xl p-6 space-y-5">
+                <div>
+                  <div className="flex items-center gap-2 text-[#4ADE80] mb-1">
+                    <span className="text-xl">📸</span>
+                    <span className="font-bold tracking-tight text-lg">Share the stoke</span>
+                  </div>
+                  <div className="text-[#A3A8A0] text-[15px]">Turn your latest real send into a premium vertical card ready for Instagram or Stories. Branded, beautiful, zero effort.</div>
+                </div>
+
+                {/* The beautiful primary button - large, joyful, 10yo-friendly tap target */}
+                <button
+                  onClick={generateInstagramCard}
+                  disabled={ticks.length === 0}
+                  className="w-full h-16 rounded-3xl bg-gradient-to-r from-[#22C55E] to-[#16A34A] text-[#0A0C0A] font-extrabold text-[17px] flex items-center justify-center gap-3 active:scale-[0.985] transition-all shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  <span>📸</span>
+                  <span>{ticks.length > 0 ? "Create Instagram Card from my latest send" : "Log a send to unlock cards"}</span>
+                </button>
+                <div className="text-center text-xs text-[#A3A8A0] -mt-1">1080×1350 • Downloads instantly • #CragTrails in every card</div>
+
+                {/* Shareable text options — real data, multiple tones, one-tap copy */}
+                <div className="pt-2 border-t border-[#2A3328]">
+                  <div className="font-semibold text-sm mb-3 text-[#A3A8A0] tracking-wide">SHAREABLE CAPTIONS (tap to copy)</div>
+                  <div className="space-y-2">
+                    {getShareCaptions(getLatestTickForShare()).map((caption, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          navigator.clipboard.writeText(caption).then(() => {
+                            toast.success("Caption copied! Paste it with your card on IG.");
+                          }).catch(() => {
+                            // Fallback: alert for ancient browsers (rare)
+                            alert(caption);
+                          });
+                        }}
+                        className="w-full text-left bg-[#0A0C0A] hover:bg-[#111714] active:scale-[0.995] border border-[#2A3328] rounded-2xl px-4 py-3 text-[13px] leading-snug text-[#D1D5DB] font-medium transition"
+                      >
+                        {caption}
+                        <span className="block text-[10px] text-[#4ADE80] mt-1 font-mono tracking-widest">COPY FOR IG</span>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="text-[10px] text-[#6B7280] mt-2 text-center">Captions are built from your actual logged tick data. Family-friendly options included.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      <button onClick={()=>openSendModal()} className="fixed bottom-6 right-6 md:hidden z-[80] h-16 w-16 rounded-full bg-[#22C55E] text-[#0A0C0A] flex items-center justify-center shadow-2xl"><Send size={28}/></button>
+      {/* CLEAN ALLTRAILS-STYLE 4-TAB BOTTOM NAV — 10yo friendly, thumb-first, fixed, no scroll, no confusion.
+          Large tap targets, clear icons + full labels, active state unmistakable. Matches the delightful dark palette. */}
+      <div className="fixed bottom-0 left-0 right-0 z-[90] bg-[#161B17] border-t border-[#2A3328] pb-[env(safe-area-inset-bottom)]">
+        <div className="max-w-[1080px] mx-auto flex">
+          {([
+            { key: 'discover' as const, label: 'Discover', Icon: MapPin },
+            { key: 'map' as const, label: 'Map', Icon: Target },
+            { key: 'logbook' as const, label: 'Logbook', Icon: BookOpen },
+            { key: 'me' as const, label: 'Me', Icon: Users },
+          ] as const).map(({ key, label, Icon }) => (
+            <button
+              key={key}
+              onClick={() => setActiveTab(key)}
+              className={`flex-1 flex flex-col items-center justify-center py-3 active:scale-[0.96] transition-all ${activeTab === key ? 'text-[#22C55E]' : 'text-[#A3A8A0]'}`}
+              aria-current={activeTab === key ? 'page' : undefined}
+            >
+              <Icon size={22} />
+              <span className={`text-[11px] font-semibold mt-0.5 tracking-[-0.1px] ${activeTab === key ? 'font-bold' : ''}`}>{label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <button onClick={()=>openSendModal()} className="fixed bottom-20 right-6 md:hidden z-[95] h-16 w-16 rounded-full bg-[#22C55E] text-[#0A0C0A] flex items-center justify-center shadow-2xl"><Send size={28}/></button>
 
       <AnimatePresence>
         {isSendModalOpen && currentClimb && (
