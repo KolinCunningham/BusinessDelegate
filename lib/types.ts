@@ -1,6 +1,12 @@
-// CragTrails - Core Data Types
-// Designed for easy merge from OpenBeta, Mountain Project API, TheCrag, and user contributions.
-// Every route/area MUST credit its primary source(s).
+// CragTrails - Core Data Types (LEGACY / SIMPLIFIED)
+// 
+// ULTIMATE MODEL: See lib/types/climbing.ts + lib/data/seed-data.ts
+// The files in lib/types/ and lib/data/ contain the full merged hierarchical model
+// with proper multi-source attribution, Area trees (parentId + ancestorIds), rich Route
+// fields, separate Photo/ConditionReport/Tick entities, and production seed for 25 routes.
+//
+// This file preserved for historical reference and any in-flight simple UI work.
+// New development MUST use the climbing.ts model.
 
 export type Grade = string; // "5.10a", "V5", "5.8", "6a+", etc.
 

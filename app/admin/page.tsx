@@ -1,5 +1,5 @@
 import { getAdminSession, loginAction } from "./actions";
-import { Users, TrendingUp, Mail, DollarSign } from "lucide-react";
+import AdminDashboard from "./_components/AdminDashboard";
 
 export default async function AdminPage({
   searchParams,
@@ -13,7 +13,8 @@ export default async function AdminPage({
     return <LoginGate error={!!params.error} />;
   }
 
-  return <SponsorshipPipelineDashboard />;
+  // Full powerful trust & safety dashboard delivered by the Admin subagent
+  return <AdminDashboard />;
 }
 
 /* ---------------- Login Gate (Server-rendered, posts to Server Action) ---------------- */
@@ -89,3 +90,8 @@ function LoginGate({ error }: { error?: boolean }) {
     </div>
   );
 }
+
+// Note: The full powerful AdminDashboard (Photos, Routes, Moderation, Health, Audit Log, Stats)
+// was delivered by the dedicated Admin/Trust subagent. It lives in _components/AdminDashboard.tsx.
+// The Sponsorship Pipeline content above was valuable revenue work and can be re-integrated
+// as a tab inside the main dashboard or a separate /admin/revenue route in a future CEO-approved iteration.

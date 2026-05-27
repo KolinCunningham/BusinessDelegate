@@ -1,5 +1,9 @@
 import { Area, Route, User, Sponsor } from "./types";
 
+// NOTE: This is the legacy/simple seed. 
+// The authoritative rich hierarchical seed lives at: lib/data/seed-data.ts
+// (8 areas with full hierarchy, 25 famous routes, photos, ticks, condition reports, full provenance)
+
 export const AREAS: Area[] = [
   {
     id: "yose",

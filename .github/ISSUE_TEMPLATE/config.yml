@@ -1,0 +1,15 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions & Questions
+    url: https://github.com/caesar/climbtrails/discussions
+    about: Please ask and answer questions here instead of opening an issue.
+  - name: 📖 Read the Contributing Guide First
+    url: https://github.com/caesar/climbtrails/blob/main/CONTRIBUTING.md
+    about: The Skeptical CEO Review Process applies to all work. Start here.
+template_chooser:
+  - name: Feature Request
+    description: Propose something new (requires early Proof of Value thinking)
+    template: feature_request.md
+  - name: Bug Report
+    description: Something isn't working as expected
+    template: bug_report.md
