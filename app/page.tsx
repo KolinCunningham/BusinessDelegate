@@ -12,7 +12,7 @@ import { seedData, formatAttribution, getSourceBadge, getAttributionLine, getGra
 import type { Route as CanonicalRoute, ConditionReport as CanonicalConditionReport, SourceAttribution, Tick as CanonicalTick } from '@/lib/types/climbing';
 import { SPONSORS } from '@/lib/seed-data';
 import dynamic from 'next/dynamic';
-import { SignInButton, UserButton, useUser } from '@clerk/nextjs';
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
 import { loadPersonalData, persistTick, persistUserProfile } from './actions/persistence';
 
 const CragMap = dynamic(() => import('./components/CragMap'), {
@@ -732,9 +732,14 @@ export default function ClimbTrailsLogbook() {
           <div className="flex items-center gap-4">
             <div className="text-sm text-[#5C6666]">{userStats.totalSends} sends logged</div>
             {!isRealSignedIn ? (
-              <SignInButton mode="modal">
-                <button className="px-6 py-2 rounded-2xl bg-[#166534] text-white text-sm font-semibold hover:bg-[#14532D]">Log in</button>
-              </SignInButton>
+              <>
+                <SignInButton mode="modal">
+                  <button className="px-6 py-2 rounded-2xl bg-[#166534] text-white text-sm font-semibold hover:bg-[#14532D]">Log in</button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button className="px-4 py-2 rounded-2xl border border-[#166534] text-[#166534] text-sm font-semibold hover:bg-[#F1F5F0]">Sign up</button>
+                </SignUpButton>
+              </>
             ) : (
               <UserButton appearance={{elements: {avatarBox: "w-8 h-8"}}} />
             )}
@@ -750,9 +755,14 @@ export default function ClimbTrailsLogbook() {
             <div className="font-bold tracking-[-1.5px] text-2xl text-[#1F2525]">CragTrails</div>
           </div>
           {!isRealSignedIn ? (
-            <SignInButton mode="modal">
-              <button className="px-4 py-1.5 text-sm rounded-2xl bg-[#166534] text-white font-semibold">Log in</button>
-            </SignInButton>
+            <>
+              <SignInButton mode="modal">
+                <button className="px-4 py-1.5 text-sm rounded-2xl bg-[#166534] text-white font-semibold">Log in</button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="px-3 py-1.5 text-sm rounded-2xl border border-[#166534] text-[#166534] font-semibold">Sign up</button>
+              </SignUpButton>
+            </>
           ) : (
             <UserButton appearance={{elements: {avatarBox: "w-8 h-8"}}} />
           )}
