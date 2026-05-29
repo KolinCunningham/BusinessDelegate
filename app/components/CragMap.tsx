@@ -62,11 +62,14 @@ export interface CragMapProps {
   routesLoaded?: boolean;
 }
 
-// Popularity -> radius (heatmap-ish)
-function getMarkerRadius(popularity: number, isSelected: boolean): number {
-  // BIGGER for 10yo / grandma fingers: min ~14px (28px diameter) tap-friendly
-  const base = 14 + Math.floor(popularity / 11); 
-  return isSelected ? base + 6 : base;
+// Popularity -> radius (zoom-aware, capped)
+function getMarkerRadius(popularity: number, isSelected: boolean, zoom: number): number {
+  // Scale with zoom: smaller at low zoom, larger when zoomed in
+  const zoomScale = Math.max(1, (zoom - 8) * 0.8);
+  // Popularity adds at most 4px
+  const popBonus = Math.min(4, popularity / 500);
+  const base = Math.min(10, 4 + zoomScale + popBonus);
+  return isSelected ? base + 3 : base;
 }
 
 // Small jitter so overlapping crag routes don't stack exactly
@@ -95,7 +98,7 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
   //   zoom <= 6  → geographic grid clustering (round lat/lng to 1 decimal) to avoid
   //                country-scale stacking of crags that share GPS coords
   const clusterMode: 'none' | 'crag' | 'geo' =
-    zoom >= 11 ? 'none' : zoom >= 7 ? 'crag' : 'geo';
+    zoom >= 13 ? 'none' : zoom >= 8 ? 'crag' : 'geo';
 
   const displayItems = useMemo(() => {
     if (clusterMode === 'none') {
@@ -146,9 +149,9 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
       {displayItems.map((item, index) => {
         const isSelected = !item.isCluster && item.id === selectedRouteId;
         const color = getGradeColor(item.route.grade);
-        const radius = item.isCluster 
-          ? Math.max(18, 16 + item.count * 1.8)  // Much larger clusters = easy big tap targets for kids/grandmas
-          : getMarkerRadius(item.route.popularity, isSelected);
+        const radius = item.isCluster
+          ? Math.min(24, 8 + Math.log2(item.count + 1) * 3)  // log scale, max 24px
+          : getMarkerRadius(item.route.popularity, isSelected, zoom);
 
         return (
           <CircleMarker
@@ -358,7 +361,7 @@ export default function CragMap({
             </span>
           ))}
         </div>
-        <div className="text-[11px] opacity-70">Big circles = popular climbs</div>
+        <div className="text-[11px] opacity-70">Zoom in to see individual routes</div>
       </div>
 
       {/* Bonus: offline map hint */}
