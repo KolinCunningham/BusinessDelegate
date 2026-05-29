@@ -182,6 +182,22 @@ const DEMO_PROFILES = [
   { id: 'p_jordan', name: 'Jordan Lee', subtitle: 'Trad dad • Family sends' },
 ] as const;
 
+// Expandable description for the route info panel
+function RouteInfoDescription({ description }: { description: string }) {
+  const [expanded, setExpanded] = React.useState(false);
+  const truncated = description.length > 160 && !expanded;
+  return (
+    <div className="text-sm text-[#5C6666] leading-relaxed">
+      {truncated ? description.slice(0, 160) + '…' : description}
+      {description.length > 160 && (
+        <button onClick={() => setExpanded(e => !e)} className="ml-1 text-[#166534] font-semibold underline-offset-2 hover:underline">
+          {expanded ? 'Show less' : 'Read more'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 // generateShareCard is now a properly-scoped helper defined inside the component
 // so it can access real user ticks from state (persisted logged sends).
 
@@ -201,6 +217,7 @@ export default function ClimbTrailsLogbook() {
 
   const [isSendModalOpen, setIsSendModalOpen] = useState(false);
   const [selectedClimbForSend, setSelectedClimbForSend] = useState<LegacyRoute | null>(null);
+  const [routeInfoRoute, setRouteInfoRoute] = useState<LegacyRoute | null>(null);
   const [sendForm, setSendForm] = useState({ date: new Date().toISOString().split('T')[0], stars:4, betaNotes:'', conditionTag:'Flashed' as ConditionTag, photoDataUrl:'' });
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
@@ -605,10 +622,18 @@ export default function ClimbTrailsLogbook() {
   };
   const closeSendModal = () => { setIsSendModalOpen(false); setSelectedClimbForSend(null); };
 
-  // Map marker -> existing send flow. Reverse lookup by name/grade (stable, no id translation needed).
+  // Map marker -> route info panel first, then send modal on explicit tap
   const handleMapMarkerClick = (mapRoute: any) => {
     const original = ROUTES.find(lr => lr.name === mapRoute.name && lr.grade === mapRoute.grade);
-    openSendModal(original || mapRoute);
+    setRouteInfoRoute(original || mapRoute);
+  };
+
+  const closeRouteInfo = () => setRouteInfoRoute(null);
+
+  const openSendFromInfo = () => {
+    if (!routeInfoRoute) return;
+    setRouteInfoRoute(null);
+    openSendModal(routeInfoRoute);
   };
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1351,6 +1376,81 @@ export default function ClimbTrailsLogbook() {
       </div>
 
       <button onClick={()=>openSendModal()} className="fixed bottom-20 right-6 md:hidden z-[9999] h-16 w-16 rounded-full bg-[#22C55E] text-[#0A0C0A] flex items-center justify-center shadow-2xl"><Send size={28}/></button>
+
+      {/* ROUTE INFO PANEL — slides up when a map marker is clicked */}
+      <AnimatePresence>
+        {routeInfoRoute && (
+          <div className="fixed inset-0 z-[9998] bg-black/60 flex items-end md:items-center justify-center p-0 md:p-6" onClick={closeRouteInfo}>
+            <motion.div
+              initial={{ y: 80, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 60, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+              className="w-full md:max-w-md bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden"
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between px-5 pt-5 pb-3">
+                <div className="flex-1 min-w-0 pr-3">
+                  <div className="text-2xl font-extrabold tracking-tight leading-tight text-[#1F2525] truncate">{routeInfoRoute.name}</div>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <span className="text-sm font-bold px-2.5 py-0.5 rounded-full text-[#0A0C0A]" style={{ background: getGradeColor(routeInfoRoute.grade) }}>{routeInfoRoute.grade}</span>
+                    <span className="text-sm text-[#5C6666]">•</span>
+                    <span className="text-sm font-medium text-[#5C6666]">{routeInfoRoute.type}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-1.5">
+                    <MapPin size={13} className="text-[#5C6666] flex-shrink-0" />
+                    <span className="text-sm text-[#5C6666] truncate">{routeInfoRoute.areaName}</span>
+                  </div>
+                  {routeInfoRoute.stars > 0 && (
+                    <div className="flex items-center gap-1 mt-1.5">
+                      {Array.from({ length: Math.round(routeInfoRoute.stars) }).map((_, i) => (
+                        <Star key={i} size={14} className="text-[#FBBF24]" fill="#FBBF24" />
+                      ))}
+                      <span className="text-xs text-[#5C6666] ml-1">{routeInfoRoute.starVotes ? `(${routeInfoRoute.starVotes} votes)` : ''}</span>
+                    </div>
+                  )}
+                </div>
+                <button onClick={closeRouteInfo} className="p-2 rounded-full hover:bg-[#F8F7F4] active:bg-[#E5E2D9] transition-colors flex-shrink-0">
+                  <X size={20} className="text-[#5C6666]" />
+                </button>
+              </div>
+
+              {/* Description */}
+              {routeInfoRoute.description && (
+                <div className="px-5 pb-3">
+                  <RouteInfoDescription description={routeInfoRoute.description} />
+                </div>
+              )}
+
+              {/* Extra info row */}
+              <div className="px-5 pb-4 flex flex-wrap gap-x-5 gap-y-1 text-xs text-[#5C6666]">
+                {routeInfoRoute.lengthFt && <span>📏 {routeInfoRoute.lengthFt} ft</span>}
+                {routeInfoRoute.fa && routeInfoRoute.fa !== 'Unknown' && <span>🧗 FA: {routeInfoRoute.fa}</span>}
+                {routeInfoRoute.ticks != null && <span>👥 {routeInfoRoute.ticks} sends</span>}
+                {routeInfoRoute.bestConditions && <span>☀️ Best: {routeInfoRoute.bestConditions}</span>}
+              </div>
+
+              {/* Action buttons */}
+              <div className="px-5 pb-6 flex gap-3">
+                <button
+                  onClick={openSendFromInfo}
+                  className="flex-1 h-14 rounded-3xl bg-gradient-to-r from-[#22C55E] to-[#16A34A] text-[#0A0C0A] font-extrabold text-base flex items-center justify-center gap-2 shadow-lg active:scale-[0.985] transition-all"
+                >
+                  SEND IT 🧗
+                </button>
+                <button
+                  onClick={() => { toggleWishlist(routeInfoRoute.id); }}
+                  className={`px-5 h-14 rounded-3xl border font-semibold text-sm flex items-center gap-2 transition-all active:scale-[0.985] ${wishlist.includes(routeInfoRoute.id) ? 'bg-[#DCFCE7] border-[#166534] text-[#166534]' : 'bg-white border-[#E5E2D9] text-[#5C6666]'}`}
+                >
+                  <Heart size={17} fill={wishlist.includes(routeInfoRoute.id) ? '#FBBF24' : 'none'} />
+                  {wishlist.includes(routeInfoRoute.id) ? 'Wishlisted' : 'Wishlist'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {isSendModalOpen && currentClimb && (
