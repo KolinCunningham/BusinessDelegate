@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Tooltip, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -170,16 +170,35 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
 }
 
 // Inner component that receives map instance
-function MapController({ center, zoom, onMapReady }: { 
-  center?: [number, number]; 
-  zoom?: number; 
+function MapController({ center, zoom, onMapReady, routes }: {
+  center?: [number, number];
+  zoom?: number;
   onMapReady?: (map: L.Map) => void;
+  routes?: Route[];
 }) {
   const map = useMap();
+  const fittedRef = useRef(false);
 
   useEffect(() => {
     if (onMapReady) onMapReady(map);
   }, [map, onMapReady]);
+
+  // Auto-fit to all routes on first load (helps users on wrong continent)
+  useEffect(() => {
+    if (fittedRef.current || !routes || routes.length === 0 || center) return;
+    const validRoutes = routes.filter(r => r.lat && r.lng && Math.abs(r.lat) > 0.001);
+    if (validRoutes.length === 0) return;
+    const lats = validRoutes.map(r => r.lat);
+    const lngs = validRoutes.map(r => r.lng);
+    const bounds: L.LatLngBoundsExpression = [
+      [Math.min(...lats) - 1, Math.min(...lngs) - 1],
+      [Math.max(...lats) + 1, Math.max(...lngs) + 1],
+    ];
+    setTimeout(() => {
+      map.fitBounds(bounds, { padding: [30, 30], maxZoom: 7 });
+      fittedRef.current = true;
+    }, 300);
+  }, [routes, map, center]);
 
   // Critical fix for maps rendered inside tabs or conditionally:
   // Leaflet often initializes with wrong size, which locks the ability to zoom out.
@@ -271,10 +290,11 @@ export default function CragMap({
           </CircleMarker>
         )}
 
-        <MapController 
-          center={center} 
-          zoom={zoom} 
-          onMapReady={onMapReady} 
+        <MapController
+          center={center}
+          zoom={zoom}
+          onMapReady={onMapReady}
+          routes={routes}
         />
       </MapContainer>
 
