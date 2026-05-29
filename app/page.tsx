@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Route as LegacyRoute, Tick, ConditionReport } from '@/lib/types';
+import type { GradeSystem } from './components/CragMap';
 import { seedData, formatAttribution, getSourceBadge, getAttributionLine, getGradeColor } from '@/lib/data/index';
 import type { Route as CanonicalRoute, ConditionReport as CanonicalConditionReport, SourceAttribution, Tick as CanonicalTick } from '@/lib/types/climbing';
 import { SPONSORS } from '@/lib/seed-data';
@@ -153,6 +154,24 @@ function launchConfetti(container: HTMLElement | null, count = 42) {
   }
 }
 
+function detectGradeSystem(): GradeSystem {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (tz.startsWith('Australia/') || tz.startsWith('Pacific/Auckland')) return 'ewbank';
+    if (tz.startsWith('Europe/') || tz.startsWith('Africa/') || tz.startsWith('Atlantic/')) return 'french';
+    if (tz.startsWith('Asia/')) return 'french';
+  } catch {}
+  return 'yds';
+}
+
+const GRADE_SYSTEM_LABELS: Record<GradeSystem, string> = {
+  yds:    'YDS (USA/Canada)',
+  french: 'French (Europe/Asia)',
+  ewbank: 'Ewbank (Australia/NZ)',
+  uiaa:   'UIAA (Germany/Austria)',
+  vscale: 'V-Scale (Bouldering)',
+};
+
 // DEMO PROFILES — the absolute minimum foundation for real auth later.
 // 3 hardcoded friendly climbers. Data (ticks/wishlist/goals) isolated per profile via localStorage keys.
 // Switcher lives ONLY in the Me tab. 10yo-friendly big taps, instant, no forms, no new files or deps.
@@ -191,6 +210,16 @@ export default function ClimbTrailsLogbook() {
   // Map tab local filters (synced live to CragMap markers). Consistent with discover + logbook patterns.
   const [mapSearch, setMapSearch] = useState('');
   const [mapGradeFilter, setMapGradeFilter] = useState<'All' | 'Easy' | 'Moderate' | 'Hard'>('All');
+
+  // Grade system preference — auto-detect from timezone, user can override in Me tab
+  const [gradeSystem, setGradeSystem] = useState<GradeSystem>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('ct_grade_system') as GradeSystem | null;
+      if (saved) return saved;
+    }
+    return detectGradeSystem();
+  });
+  useEffect(() => { localStorage.setItem('ct_grade_system', gradeSystem); }, [gradeSystem]);
 
   // Mountain Project scraped routes (loaded async from /mp-routes.json)
   const [mpRoutes, setMpRoutes] = useState<LegacyRoute[]>([]);
@@ -884,9 +913,10 @@ export default function ClimbTrailsLogbook() {
                 userLocation={userLocation}
                 center={mapCenter}
                 zoom={userLocation ? 10 : 7}
+                gradeSystem={gradeSystem}
               />
             </div>
-            <div className="mt-2 text-center text-xs text-[#5C6666]">Green = easy fun. Red = proud sends. Big taps for everyone.</div>
+            <div className="mt-2 text-center text-xs text-[#5C6666]">Grades shown in {GRADE_SYSTEM_LABELS[gradeSystem]}. Change in Me → Settings.</div>
           </div>
         )}
 
@@ -1236,6 +1266,24 @@ export default function ClimbTrailsLogbook() {
                   </div>
                   <div className="text-[10px] text-[#6B7280] mt-2 text-center">Captions are built from your actual logged tick data. Family-friendly options included.</div>
                 </div>
+              </div>
+            </div>
+
+            {/* GRADE SYSTEM PREFERENCE */}
+            <div className="bg-white border border-[#E5E2D9] rounded-2xl p-5">
+              <div className="font-semibold text-base mb-3">⚙️ Grade System</div>
+              <div className="text-xs text-[#5C6666] mb-3">Auto-detected from your location. Change to match what your local crag uses.</div>
+              <div className="flex flex-col gap-2">
+                {(Object.entries(GRADE_SYSTEM_LABELS) as [GradeSystem, string][]).map(([sys, label]) => (
+                  <button
+                    key={sys}
+                    onClick={() => setGradeSystem(sys)}
+                    className={`w-full text-left px-4 py-3 rounded-2xl border text-sm font-medium transition-all ${gradeSystem === sys ? 'bg-[#DCFCE7] border-[#166534] text-[#166534]' : 'bg-[#F8F7F4] border-[#E5E2D9] text-[#1F2525]'}`}
+                  >
+                    {label}
+                    {gradeSystem === sys && <span className="float-right text-[10px] font-extrabold tracking-widest">ACTIVE</span>}
+                  </button>
+                ))}
               </div>
             </div>
 

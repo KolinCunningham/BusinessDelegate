@@ -39,6 +39,16 @@ if (typeof window !== 'undefined') {
   });
 }
 
+export type GradeSystem = 'yds' | 'french' | 'ewbank' | 'uiaa' | 'vscale';
+
+const GRADE_BANDS: Record<GradeSystem, { color: string; label: string }[]> = {
+  yds:    [{ color:'#22c55e', label:'5.6–5.9' }, { color:'#eab308', label:'5.10' }, { color:'#f97316', label:'5.11–5.12' }, { color:'#ef4444', label:'5.13+' }],
+  french: [{ color:'#22c55e', label:'4–5c' },   { color:'#eab308', label:'6a–6c+' }, { color:'#f97316', label:'7a–7c' },   { color:'#ef4444', label:'8a+' }],
+  ewbank: [{ color:'#22c55e', label:'1–16' },    { color:'#eab308', label:'17–22' }, { color:'#f97316', label:'23–27' },   { color:'#ef4444', label:'28+' }],
+  uiaa:   [{ color:'#22c55e', label:'III–V+' },  { color:'#eab308', label:'VI–VII+' }, { color:'#f97316', label:'VIII–IX' }, { color:'#ef4444', label:'X+' }],
+  vscale: [{ color:'#22c55e', label:'V0–V2' },   { color:'#eab308', label:'V3–V5' }, { color:'#f97316', label:'V6–V8' },  { color:'#ef4444', label:'V9+' }],
+};
+
 export interface CragMapProps {
   routes: Route[];
   selectedRouteId: number | null;
@@ -46,8 +56,8 @@ export interface CragMapProps {
   center?: [number, number];
   zoom?: number;
   onMapReady?: (map: L.Map) => void;
-  /** User's current location — shows a distinct "You are here" marker on the map */
   userLocation?: { lat: number; lng: number } | null;
+  gradeSystem?: GradeSystem;
 }
 
 // Popularity -> radius (heatmap-ish)
@@ -204,7 +214,8 @@ export default function CragMap({
   center,
   zoom = 7,
   onMapReady,
-  userLocation
+  userLocation,
+  gradeSystem = 'yds',
 }: CragMapProps) {
   const defaultCenter: [number, number] = [37.6, -118.9];
   const [satellite, setSatellite] = useState(false);
@@ -275,15 +286,17 @@ export default function CragMap({
         {satellite ? '🗺 Street' : '🛰 Satellite'}
       </button>
 
-      {/* Zoom / cluster legend + offline hint — NOW BIG + KID FRIENDLY */}
-      <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 backdrop-blur px-4 py-2 rounded-xl text-sm font-medium border border-[#E5E2D9] shadow text-[#1F2525] flex flex-col gap-1">
-        <div className="flex items-center gap-2 text-[13px]">
-          <span className="inline-block w-3 h-3 rounded-full bg-green-500" /> Easy-peasy
-          <span className="inline-block w-3 h-3 rounded-full bg-yellow-500 ml-1" /> Getting fun
-          <span className="inline-block w-3 h-3 rounded-full bg-orange-500" /> Pretty hard
-          <span className="inline-block w-3 h-3 rounded-full bg-red-500" /> Super strong!
+      {/* Grade legend — shows real grades for the active system */}
+      <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 backdrop-blur px-3 py-2 rounded-xl text-xs font-medium border border-[#E5E2D9] shadow text-[#1F2525] flex flex-col gap-1">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          {GRADE_BANDS[gradeSystem].map(({ color, label }) => (
+            <span key={label} className="flex items-center gap-1">
+              <span className="inline-block w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+              {label}
+            </span>
+          ))}
         </div>
-        <div className="text-[12px] opacity-80">Big circles = super popular climbs. Tap the big colored dots!</div>
+        <div className="text-[11px] opacity-70">Big circles = popular climbs</div>
       </div>
 
       {/* Bonus: offline map hint */}
