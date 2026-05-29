@@ -72,7 +72,6 @@ function mapToAppRoute(r: CanonicalRoute): LegacyRoute {
     areaId: r.areaId,
     areaName: area?.name || 'Unknown Area',
     grade: primaryGrade,
-    grades: r.grades, // carry all systems for location-aware display
     type,
     lat: area?.lat ?? 0,
     lng: area?.lng ?? 0,
