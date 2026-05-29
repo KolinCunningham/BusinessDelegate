@@ -1431,6 +1431,20 @@ export default function ClimbTrailsLogbook() {
                 {routeInfoRoute.bestConditions && <span>☀️ Best: {routeInfoRoute.bestConditions}</span>}
               </div>
 
+              {/* View full details link */}
+              {routeInfoRoute.id && (
+                <div className="px-5 pb-2">
+                  <a
+                    href={`/route/${routeInfoRoute.id.replace(/^mp_/, '')}`}
+                    className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-2xl border border-[#E5E2D9] text-[#166534] font-semibold text-sm hover:bg-[#F0FDF4] transition-colors"
+                    onClick={closeRouteInfo}
+                  >
+                    <MapPin size={14} />
+                    View full details →
+                  </a>
+                </div>
+              )}
+
               {/* Action buttons */}
               <div className="px-5 pb-6 flex gap-3">
                 <button
