@@ -192,6 +192,15 @@ export default function ClimbTrailsLogbook() {
   const [mapSearch, setMapSearch] = useState('');
   const [mapGradeFilter, setMapGradeFilter] = useState<'All' | 'Easy' | 'Moderate' | 'Hard'>('All');
 
+  // Mountain Project scraped routes (loaded async from /mp-routes.json)
+  const [mpRoutes, setMpRoutes] = useState<LegacyRoute[]>([]);
+  useEffect(() => {
+    fetch('/mp-routes.json')
+      .then(r => r.json())
+      .then((data: LegacyRoute[]) => setMpRoutes(data))
+      .catch(() => {});
+  }, []);
+
   // Profile state for demo multi-user foundation (scoped only to ticks/wishlist/goals).
   // Default Alex. Persisted separately. Switcher UI strictly in Me tab.
   const [currentProfileId, setCurrentProfileId] = useState<'p_alex' | 'p_sam' | 'p_jordan'>('p_alex');
@@ -516,7 +525,7 @@ export default function ClimbTrailsLogbook() {
   }, []);
 
   const mapRoutes = useMemo(() => {
-    let res = [...ROUTES];
+    let res = [...ROUTES, ...mpRoutes];
     if (mapSearch) {
       const q = mapSearch.toLowerCase();
       res = res.filter(r => r.name.toLowerCase().includes(q) || r.areaName.toLowerCase().includes(q) || r.grade.toLowerCase().includes(q));
@@ -524,7 +533,7 @@ export default function ClimbTrailsLogbook() {
     if (mapGradeFilter !== 'All') {
       res = res.filter(r => {
         const b = gradeToBand(r.grade);
-        const color = getGradeColor(r.grade); // use the accurate multi-system color
+        const color = getGradeColor(r.grade);
         if (mapGradeFilter === 'Easy') return color === '#22c55e' || /easy|5\.[6-9]|V0|V1|V2/.test(b);
         if (mapGradeFilter === 'Moderate') return color === '#eab308' || /mod|5\.10|5\.11|V[3-5]/.test(b);
         if (mapGradeFilter === 'Hard') return color === '#f97316' || /hard|5\.12|5\.13|V[6-8]/.test(b);
@@ -532,7 +541,8 @@ export default function ClimbTrailsLogbook() {
       });
     }
     return res.map((r, idx) => {
-      const coords = areaCoords[r.areaId] || { lat: 37.6, lng: -118.9 };
+      // Seed routes use area coords; MP routes carry direct GPS on r.lat/r.lng
+      const coords = areaCoords[r.areaId] || { lat: r.lat, lng: r.lng };
       return {
         id: idx + 1,
         name: r.name,
@@ -540,7 +550,7 @@ export default function ClimbTrailsLogbook() {
         lat: coords.lat,
         lng: coords.lng,
         grade: r.grade,
-        grades: (r as any).grades, // carry full grade systems for location-aware display
+        grades: (r as any).grades,
         difficulty: Math.round(r.stars || 3),
         popularity: r.ticks || 120,
         type: r.type as 'Boulder' | 'Sport' | 'Trad',
@@ -548,7 +558,7 @@ export default function ClimbTrailsLogbook() {
         stars: Math.round(r.stars || 4),
       };
     });
-  }, [mapSearch, mapGradeFilter, areaCoords]);
+  }, [mapSearch, mapGradeFilter, areaCoords, mpRoutes]);
 
   // === THE CORE: ONE-TAP SEND IT (satisfying, auto-updates everything) ===
   const openSendModal = (climb?: LegacyRoute) => {
