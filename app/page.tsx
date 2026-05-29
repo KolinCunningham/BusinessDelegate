@@ -223,11 +223,18 @@ export default function ClimbTrailsLogbook() {
 
   // Mountain Project scraped routes (loaded async from /mp-routes.json)
   const [mpRoutes, setMpRoutes] = useState<LegacyRoute[]>([]);
+  const [mpRoutesLoaded, setMpRoutesLoaded] = useState(false);
   useEffect(() => {
     fetch('/mp-routes.json')
       .then(r => r.json())
-      .then((data: LegacyRoute[]) => setMpRoutes(data))
-      .catch(() => {});
+      .then((data: LegacyRoute[]) => {
+        setMpRoutes(data);
+        setMpRoutesLoaded(true);
+      })
+      .catch(() => {
+        // Even on error, mark as loaded so the map fits to seed routes
+        setMpRoutesLoaded(true);
+      });
   }, []);
 
   // Profile state for demo multi-user foundation (scoped only to ticks/wishlist/goals).
@@ -914,6 +921,7 @@ export default function ClimbTrailsLogbook() {
                 center={mapCenter}
                 zoom={userLocation ? 10 : 7}
                 gradeSystem={gradeSystem}
+                routesLoaded={mpRoutesLoaded}
               />
             </div>
             <div className="mt-2 text-center text-xs text-[#5C6666]">Grades shown in {GRADE_SYSTEM_LABELS[gradeSystem]}. Change in Me → Settings.</div>
