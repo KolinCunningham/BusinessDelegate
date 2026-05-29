@@ -1,0 +1,1758 @@
+- generic @e1:
+  - generic @e2:
+    - generic @e4:
+      - generic @e5:
+        - link "Climb" @e7 [cursor=pointer]:
+          - /url: https://www.mountainproject.com
+        - link "MTB" @e9 [cursor=pointer]:
+          - /url: https://www.mtbproject.com
+        - link "Hike" @e11 [cursor=pointer]:
+          - /url: https://www.hikingproject.com
+        - link "Trailrun" @e13 [cursor=pointer]:
+          - /url: https://www.trailrunproject.com
+        - link "Ski" @e15 [cursor=pointer]:
+          - /url: https://www.powderproject.com
+        - link "onX Backcountry" @e17 [cursor=pointer]:
+          - /url: https://webmap.onxmaps.com/backcountry/?mode=climb&utm_source=mountainproject&utm_medium=owned_referral&utm_content=ap-climb-top-nav&utm_campaign=bc_ap-climb-top-nav-12222023
+          - img "onX Backcountry" @e18
+      - generic @e26 [cursor=pointer]:
+        - img @e27
+        - text: Messages
+        - img @e31
+    - generic @e33:
+      - generic @e34:
+        - link "Logo" @e35 [cursor=pointer]:
+          - /url: /
+          - img "Logo" @e36
+        - searchbox "Find routes, areas, etc" [active] @e39: Horseshoe Canyon Ranch
+        - generic @e41:
+          - link "Route Guide" @e43 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/route-guide
+          - link "Gyms" @e45 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/gyms
+          - link "What's New" @e47 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/whats-new
+          - link "Partners" @e49 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/partner-finder
+          - link "Forum" @e51 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/forum
+          - link "AppleAndroid" @e53 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/mobile-app
+            - img "Apple" @e54
+            - img "Android" @e55
+      - link @e59 [cursor=pointer]:
+        - /url: "#"
+        - img @e60
+  - generic @e63:
+    - heading "Rock Climbing Guide" [level=1] @e65
+    - separator @e66
+    - generic @e67:
+      - generic @e68:
+        - heading "The Top 10 Classic Rock Climbing Routes" [level=2] @e69
+        - generic @e70:
+          - table @e71:
+            - rowgroup @e72:
+              - row "1. High Exposure New York > Gunks 5.6" @e73:
+                - cell "1. High Exposure" @e74:
+                  - text: "1."
+                  - link "High Exposure" @e75 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105798994/high-exposure
+                - cell "New York > Gunks" @e76:
+                  - generic @e78:
+                    - link "New York" @e79 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105800424/new-york
+                    - text: ">"
+                    - link "Gunks" @e80 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105798167/the-gunks
+                - cell @e81
+                - cell "5.6" @e82
+              - row "2. Southeast Buttress California > Yosemite NP 5.6" @e83:
+                - cell "2. Southeast Buttress" @e84:
+                  - text: "2."
+                  - link "Southeast Buttress" @e85 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105835705/southeast-buttress
+                - cell "California > Yosemite NP" @e86:
+                  - generic @e88:
+                    - link "California" @e89 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105708959/california
+                    - text: ">"
+                    - link "Yosemite NP" @e90 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105833381/yosemite-national-park
+                - cell @e91
+                - cell "5.6" @e92
+              - row "3. Corrugation Corner California > Lover's Leap 5.7" @e93:
+                - cell "3. Corrugation Corner" @e94:
+                  - text: "3."
+                  - link "Corrugation Corner" @e95 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105872293/corrugation-corner
+                - cell "California > Lover's Leap" @e96:
+                  - generic @e98:
+                    - link "California" @e99 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105708959/california
+                    - text: ">"
+                    - link "Lover's Leap" @e100 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105733959/lovers-leap
+                - cell @e101
+                - cell "5.7" @e102
+              - row "4. Epinephrine Nevada > Red Rocks 5.9" @e103:
+                - cell "4. Epinephrine" @e104:
+                  - text: "4."
+                  - link "Epinephrine" @e105 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105732422/epinephrine
+                - cell "Nevada > Red Rocks" @e106:
+                  - generic @e108:
+                    - link "Nevada" @e109 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105708961/nevada
+                    - text: ">"
+                    - link "Red Rocks" @e110 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105731932/red-rocks
+                - cell @e111
+                - cell "5.9" @e112
+              - row "5. Central Pillar of Frenzy California > Yosemite NP 5.9" @e113:
+                - cell "5. Central Pillar of Frenzy" @e114:
+                  - text: "5."
+                  - link "Central Pillar of Frenzy" @e115 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105862930/central-pillar-of-frenzy
+                - cell "California > Yosemite NP" @e116:
+                  - generic @e118:
+                    - link "California" @e119 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105708959/california
+                    - text: ">"
+                    - link "Yosemite NP" @e120 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105833381/yosemite-national-park
+                - cell @e121
+                - cell "5.9" @e122
+              - row "6. Sons of Yesterday California > Yosemite NP 5.10-" @e123:
+                - cell "6. Sons of Yesterday" @e124:
+                  - text: "6."
+                  - link "Sons of Yesterday" @e125 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105862915/sons-of-yesterday
+                - cell "California > Yosemite NP" @e126:
+                  - generic @e128:
+                    - link "California" @e129 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105708959/california
+                    - text: ">"
+                    - link "Yosemite NP" @e130 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105833381/yosemite-national-park
+                - cell @e131
+                - cell "5.10-" @e132
+              - row "7. Illusion Dweller California > Joshua Tree NP 5.10b" @e133:
+                - cell "7. Illusion Dweller" @e134:
+                  - text: "7."
+                  - link "Illusion Dweller" @e135 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105722065/illusion-dweller
+                - cell "California > Joshua Tree NP" @e136:
+                  - generic @e138:
+                    - link "California" @e139 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105708959/california
+                    - text: ">"
+                    - link "Joshua Tree NP" @e140 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105720495/joshua-tree-national-park
+                - cell @e141
+                - cell "5.10b" @e142
+              - row "8. Triassic Sands Nevada > Red Rocks 5.10" @e143:
+                - cell "8. Triassic Sands" @e144:
+                  - text: "8."
+                  - link "Triassic Sands" @e145 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105732392/triassic-sands
+                - cell "Nevada > Red Rocks" @e146:
+                  - generic @e148:
+                    - link "Nevada" @e149 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105708961/nevada
+                    - text: ">"
+                    - link "Red Rocks" @e150 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105731932/red-rocks
+                - cell @e151
+                - cell "5.10" @e152
+              - row "9. Serenity Crack California > Yosemite NP 5.10d PG13" @e153:
+                - cell "9. Serenity Crack" @e154:
+                  - text: "9."
+                  - link "Serenity Crack" @e155 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105862912/serenity-crack
+                - cell "California > Yosemite NP" @e156:
+                  - generic @e158:
+                    - link "California" @e159 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105708959/california
+                    - text: ">"
+                    - link "Yosemite NP" @e160 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105833381/yosemite-national-park
+                - cell @e161
+                - cell "5.10d PG13" @e162
+              - row "10. Scarface Utah > Indian Creek 5.11a/b" @e163:
+                - cell "10. Scarface" @e164:
+                  - text: "10."
+                  - link "Scarface" @e165 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/route/105717484/scarface
+                - cell "Utah > Indian Creek" @e166:
+                  - generic @e168:
+                    - link "Utah" @e169 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105708957/utah
+                    - text: ">"
+                    - link "Indian Creek" @e170 [cursor=pointer]:
+                      - /url: https://www.mountainproject.com/area/105716763/indian-creek
+                - cell @e171
+                - cell "5.11a/b" @e172
+          - link "Find More Classics Near You" @e174 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/area/classics
+      - generic @e176:
+        - heading "Route Finder" [level=2] @e177
+        - strong @e179: Tell us what you like, we'll tell you what to climb!
+        - table @e181:
+          - rowgroup @e182:
+            - 'row "Location: All Locations Change" @e183':
+              - cell "Location:" @e184
+              - cell "All Locations Change" @e185:
+                - strong @e186: All Locations
+                - link "Change" @e187 [cursor=pointer]:
+                  - /url: "javascript: changeAreaPickerLocation('single', 0);"
+            - 'row "Type: Rock 5.7 to 5.11d Trad Sport Toprope" @e188':
+              - cell "Type:" @e189
+              - cell "Rock 5.7 to 5.11d Trad Sport Toprope" @e190:
+                - combobox @e191:
+                  - option "Rock" [selected]
+                  - option "Boulder"
+                  - option "Aid"
+                  - option "Ice"
+                  - option "Mixed"
+                - combobox @e192:
+                  - option "3rd"
+                  - option "4th"
+                  - option "5.0"
+                  - option "5.1"
+                  - option "5.2"
+                  - option "5.3"
+                  - option "5.4"
+                  - option "5.5"
+                  - option "5.6"
+                  - option "5.7" [selected]
+                  - option "5.8"
+                  - option "5.9"
+                  - option "5.10a"
+                  - option "5.10b"
+                  - option "5.10c"
+                  - option "5.10d"
+                  - option "5.11a"
+                  - option "5.11b"
+                  - option "5.11c"
+                  - option "5.11d"
+                  - option "5.12a"
+                  - option "5.12b"
+                  - option "5.12c"
+                  - option "5.12d"
+                  - option "5.13a"
+                  - option "5.13b"
+                  - option "5.13c"
+                  - option "5.13d"
+                  - option "5.14a"
+                  - option "5.14b"
+                  - option "5.14c"
+                  - option "5.14d"
+                  - option "5.15a"
+                  - option "5.15b"
+                  - option "5.15c"
+                  - option "5.15d"
+                - text: to
+                - combobox @e193:
+                  - option "3rd"
+                  - option "4th"
+                  - option "5.0"
+                  - option "5.1"
+                  - option "5.2"
+                  - option "5.3"
+                  - option "5.4"
+                  - option "5.5"
+                  - option "5.6"
+                  - option "5.7"
+                  - option "5.8"
+                  - option "5.9"
+                  - option "5.10a"
+                  - option "5.10b"
+                  - option "5.10c"
+                  - option "5.10d"
+                  - option "5.11a"
+                  - option "5.11b"
+                  - option "5.11c"
+                  - option "5.11d" [selected]
+                  - option "5.12a"
+                  - option "5.12b"
+                  - option "5.12c"
+                  - option "5.12d"
+                  - option "5.13a"
+                  - option "5.13b"
+                  - option "5.13c"
+                  - option "5.13d"
+                  - option "5.14a"
+                  - option "5.14b"
+                  - option "5.14c"
+                  - option "5.14d"
+                  - option "5.15a"
+                  - option "5.15b"
+                  - option "5.15c"
+                  - option "5.15d"
+                - generic @e194:
+                  - generic @e195:
+                    - checkbox "Trad" [checked] @e196
+                    - text: Trad
+                  - generic @e197:
+                    - checkbox "Sport" [checked] @e198
+                    - text: Sport
+                  - generic @e199:
+                    - checkbox "Toprope" [checked] @e200
+                    - text: Toprope
+            - 'row "Quality: All star ratings" @e201':
+              - cell "Quality:" @e202
+              - cell "All star ratings" @e203:
+                - combobox @e204:
+                  - option "All star ratings" [selected]
+                  - option "1+ of 4 stars"
+                  - option "1.5+ of 4 stars"
+                  - option "2+ of 4 stars"
+                  - option "2.5+ of 4 stars"
+                  - option "3+ of 4 stars"
+            - 'row "Pitches: Any pitches" @e205':
+              - cell "Pitches:" @e206
+              - cell "Any pitches" @e207:
+                - combobox @e208:
+                  - option "Any pitches" [selected]
+                  - option "Exactly 1"
+                  - option "At least 2"
+                  - option "At least 3"
+                  - option "At least 4"
+                  - option "At least 5"
+                  - option "6+ pitches"
+            - 'row "Sort by: Area then: Difficulty" @e209':
+              - cell "Sort by:" @e210
+              - 'cell "Area then: Difficulty" @e211':
+                - combobox @e212:
+                  - option "Area" [selected]
+                  - option "Difficulty"
+                  - option "Popularity"
+                  - option "Name"
+                - text: "then:"
+                - combobox @e213:
+                  - option "Area"
+                  - option "Difficulty" [selected]
+                  - option "Popularity"
+                  - option "Name"
+            - row "Find Routes" @e214:
+              - cell @e215
+              - cell "Find Routes" @e216:
+                - button "Find Routes" @e217 [cursor=pointer]
+    - generic @e220:
+      - heading "Climbing Directory to 355,410 Routes" [level=2] @e221
+      - generic @e222:
+        - generic @e223:
+          - generic @e224:
+            - strong @e225:
+              - generic @e226:
+                - generic:
+                  - generic @e227: 2,420
+                  - link "Alabama" @e228 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105905173/alabama
+                - separator @e230
+            - generic @e232:
+              - generic:
+                - generic @e233: "238"
+                - link "Cherokee Rock Village (Sand Rock)" @e234 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105905184/cherokee-rock-village-sand-rock
+              - separator @e236
+            - generic @e238:
+              - generic:
+                - generic @e239: "50"
+                - link "Jamestown" @e240 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105905660/jamestown
+              - separator @e242
+            - generic @e244:
+              - generic:
+                - generic @e245: "61"
+                - link "Palisades Park" @e246 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105914427/palisades-park
+              - separator @e248
+            - generic @e250:
+              - generic:
+                - generic @e251: "400"
+                - link "Horse Pens 40" @e252 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106094862/horse-pens-40
+              - separator @e254
+          - generic @e255:
+            - strong @e256:
+              - generic @e257:
+                - generic:
+                  - generic @e258: 2,700
+                  - link "Alaska" @e259 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105909311/alaska
+                - separator @e261
+            - generic @e263:
+              - generic:
+                - generic @e264: "248"
+                - link "South Central Alaska Ice and Alpine" @e265 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105909315/south-central-alaska-ice-and-alpine
+              - separator @e267
+            - generic @e269:
+              - generic:
+                - generic @e270: "90"
+                - link "Denali National Park" @e271 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105909817/denali-national-park
+              - separator @e273
+            - generic @e275:
+              - generic:
+                - generic @e276: "355"
+                - link "Seward Highway" @e277 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105991968/seward-highway
+              - separator @e279
+          - generic @e280:
+            - strong @e281:
+              - generic @e282:
+                - generic:
+                  - generic @e283: 15,073
+                  - link "Arizona" @e284 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708962/arizona
+                - separator @e286
+            - generic @e288:
+              - generic:
+                - generic @e289: "820"
+                - link "Cochise Stronghold" @e290 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105738034/cochise-stronghold
+              - separator @e292
+            - generic @e294:
+              - generic:
+                - generic @e295: "620"
+                - link "Sedona Area" @e296 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105787793/sedona-area
+              - separator @e298
+            - generic @e300:
+              - generic:
+                - generic @e301: "154"
+                - link "Paradise Forks" @e302 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105787813/paradise-forks
+              - separator @e304
+            - generic @e306:
+              - generic:
+                - generic @e307: "120"
+                - link "Winslow Wall" @e308 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105989250/winslow-wall
+              - separator @e310
+            - generic @e312:
+              - generic:
+                - generic @e313: 3,316
+                - link "Mount Lemmon (Santa Catalina Mountains)" @e314 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106822076/mount-lemmon-santa-catalina-mountains
+              - separator @e316
+          - generic @e317:
+            - strong @e318:
+              - generic @e319:
+                - generic:
+                  - generic @e320: 3,732
+                  - link "Arkansas" @e321 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105901027/arkansas
+                - separator @e323
+            - generic @e325:
+              - generic:
+                - generic @e326: "526"
+                - link "Sam's Throne & Surroundings" @e327 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105901033/sams-throne-surroundings
+              - separator @e329
+            - generic @e331:
+              - generic:
+                - generic @e332: "780"
+                - link "Horseshoe Canyon Ranch" @e333 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105903004/horseshoe-canyon-ranch
+              - separator @e335
+          - generic @e336:
+            - strong @e337:
+              - generic @e338:
+                - generic:
+                  - generic @e339: 47,615
+                  - link "California" @e340 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708959/california
+                - separator @e342
+            - generic @e344:
+              - generic:
+                - generic @e345: 8,071
+                - link "Joshua Tree National Park" @e346 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105720495/joshua-tree-national-park
+              - separator @e348
+            - generic @e350:
+              - generic:
+                - generic @e351: "204"
+                - link "Lover's Leap" @e352 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105733959/lovers-leap
+              - separator @e354
+            - generic @e356:
+              - generic:
+                - generic @e357: "675"
+                - link "Tahquitz & Suicide Rocks" @e358 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105788020/tahquitz-suicide-rocks
+              - separator @e360
+            - generic @e362:
+              - generic:
+                - generic @e363: "647"
+                - link "High Sierra" @e364 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105791817/high-sierra
+              - separator @e366
+            - generic @e368:
+              - generic:
+                - generic @e369: 6,914
+                - link "Eastern Sierra" @e370 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105798288/eastern-sierra
+              - separator @e372
+            - generic @e374:
+              - generic:
+                - generic @e375: 4,493
+                - link "Lake Tahoe" @e376 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105798291/lake-tahoe
+              - separator @e378
+            - generic @e380:
+              - generic:
+                - generic @e381: 3,079
+                - link "Yosemite National Park" @e382 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105833381/yosemite-national-park
+              - separator @e384
+            - generic @e386:
+              - generic:
+                - generic @e387: "592"
+                - link "Southern Sierra - The Needles, Kern River, Domelands, etc." @e388 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105834180/southern-sierra-the-needles-kern-river-domelands-etc
+              - separator @e390
+            - generic @e392:
+              - generic:
+                - generic @e393: 1,112
+                - link "Owens River Gorge" @e394 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105843226/owens-river-gorge
+              - separator @e396
+            - generic @e398:
+              - generic:
+                - generic @e399: 1,725
+                - link "Southern-Western Sierra" @e400 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/107098288/southern-western-sierra
+              - separator @e402
+          - generic @e403:
+            - strong @e404:
+              - generic @e405:
+                - generic:
+                  - generic @e406: 38,608
+                  - link "Colorado" @e407 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708956/colorado
+                - separator @e409
+            - generic @e411:
+              - generic:
+                - generic @e412: 1,929
+                - link "Boulder Canyon" @e413 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105744222/boulder-canyon
+              - separator @e415
+            - generic @e417:
+              - generic:
+                - generic @e418: "418"
+                - link "Lumpy Ridge" @e419 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105744228/lumpy-ridge
+              - separator @e421
+            - generic @e423:
+              - generic:
+                - generic @e424: 1,298
+                - link "Eldorado Canyon State Park" @e425 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105744246/eldorado-canyon-state-park
+              - separator @e427
+            - generic @e429:
+              - generic:
+                - generic @e430: 1,332
+                - link "Shelf Road" @e431 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105744267/shelf-road
+              - separator @e433
+            - generic @e435:
+              - generic:
+                - generic @e436: "502"
+                - link "Rifle Mountain Park" @e437 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105744310/rifle-mountain-park
+              - separator @e439
+            - generic @e441:
+              - generic:
+                - generic @e442: "666"
+                - link "RMNP - Rock" @e443 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105744460/rmnp-rock
+              - separator @e445
+            - generic @e447:
+              - generic:
+                - generic @e448: 1,454
+                - link "Alpine Rock" @e449 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105744466/alpine-rock
+              - separator @e451
+            - generic @e453:
+              - generic:
+                - generic @e454: 1,478
+                - link "Flatirons" @e455 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105797700/flatirons
+              - separator @e457
+            - generic @e459:
+              - generic:
+                - generic @e460: 4,051
+                - link "South Platte" @e461 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105797719/south-platte
+              - separator @e463
+            - generic @e465:
+              - generic:
+                - generic @e466: 4,033
+                - link "Grand Junction Area" @e467 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105802036/grand-junction-area
+              - separator @e469
+            - generic @e471:
+              - generic:
+                - generic @e472: "824"
+                - link "Gunnison" @e473 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105802040/gunnison
+              - separator @e475
+            - generic @e477:
+              - generic:
+                - generic @e478: "516"
+                - link "Rifle" @e479 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105802424/rifle
+              - separator @e481
+            - generic @e483:
+              - generic:
+                - generic @e484: 1,352
+                - link "CO Ice & Mixed" @e485 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105807296/co-ice-mixed
+              - separator @e487
+          - generic @e488:
+            - strong @e489:
+              - generic @e490:
+                - generic:
+                  - generic @e491: 3,032
+                  - link "Connecticut" @e492 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105806977/connecticut
+                - separator @e494
+            - generic @e496:
+              - generic:
+                - generic @e497: "490"
+                - link "Central Valley" @e498 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106076672/central-valley
+              - separator @e500
+            - generic @e502:
+              - generic:
+                - generic @e503: 1,966
+                - link "CT Bouldering" @e504 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106359692/ct-bouldering
+              - separator @e506
+          - strong @e508:
+            - generic @e509:
+              - generic:
+                - generic @e510: "77"
+                - link "Delaware" @e511 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106861605/delaware
+              - separator @e513
+          - strong @e515:
+            - generic @e516:
+              - generic:
+                - generic @e517: "134"
+                - link "Florida" @e518 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/111721391/florida
+              - separator @e520
+          - generic @e521:
+            - strong @e522:
+              - generic @e523:
+                - generic:
+                  - generic @e524: 1,939
+                  - link "Georgia" @e525 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105897947/georgia
+                - separator @e527
+            - generic @e529:
+              - generic:
+                - generic @e530: "335"
+                - link "Rocktown" @e531 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106036120/rocktown
+              - separator @e533
+            - generic @e535:
+              - generic:
+                - generic @e536: "244"
+                - link "Mount Yonah" @e537 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105941346/mount-yonah
+              - separator @e539
+            - generic @e541:
+              - generic:
+                - generic @e542: "56"
+                - link "Lost Wall" @e543 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105900335/lost-wall
+              - separator @e545
+          - generic @e546:
+            - strong @e547:
+              - generic @e548:
+                - generic:
+                  - generic @e549: "463"
+                  - link "Hawaii" @e550 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/106316122/hawaii
+                - separator @e552
+            - generic @e554:
+              - generic:
+                - generic @e555: "67"
+                - link "Mokule'ia Wall" @e556 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106457411/mokuleia-wall
+              - separator @e558
+        - generic @e559:
+          - generic @e560:
+            - strong @e561:
+              - generic @e562:
+                - generic:
+                  - generic @e563: 5,518
+                  - link "Idaho" @e564 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708958/idaho
+                - separator @e566
+            - generic @e568:
+              - generic:
+                - generic @e569: "746"
+                - link "City of Rocks" @e570 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105739322/city-of-rocks
+              - separator @e572
+            - generic @e574:
+              - generic:
+                - generic @e575: "385"
+                - link "Castle Rocks" @e576 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105739331/castle-rocks
+              - separator @e578
+            - generic @e580:
+              - generic:
+                - generic @e581: "656"
+                - link "Massacre Rocks" @e582 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105886274/massacre-rocks
+              - separator @e584
+            - generic @e586:
+              - generic:
+                - generic @e587: "52"
+                - link "The Sawtooth Range" @e588 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105905571/the-sawtooth-range
+              - separator @e590
+            - generic @e592:
+              - generic:
+                - generic @e593: "254"
+                - link "The Fins" @e594 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/108134051/the-fins
+              - separator @e596
+          - generic @e597:
+            - strong @e598:
+              - generic @e599:
+                - generic:
+                  - generic @e600: 2,579
+                  - link "Illinois" @e601 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105911816/illinois
+                - separator @e603
+            - generic @e605:
+              - generic:
+                - generic @e606: "557"
+                - link "*Jackson Falls" @e607 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106017458/jackson-falls
+              - separator @e609
+            - generic @e611:
+              - generic:
+                - generic @e612: "140"
+                - link "Giant City State Park" @e613 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106612569/giant-city-state-park
+              - separator @e615
+            - generic @e617:
+              - generic:
+                - generic @e618: "393"
+                - link "Holy Boulders" @e619 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/108116766/holy-boulders
+              - separator @e621
+            - generic @e623:
+              - generic:
+                - generic @e624: "100"
+                - link "Pere Marquette State Park" @e625 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/112240918/pere-marquette-state-park
+              - separator @e627
+          - strong @e629:
+            - generic @e630:
+              - generic:
+                - generic @e631: "240"
+                - link "Indiana" @e632 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/112389571/indiana
+              - separator @e634
+          - strong @e636:
+            - generic @e637:
+              - generic:
+                - generic @e638: "719"
+                - link "Iowa" @e639 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106092653/iowa
+              - separator @e641
+          - strong @e643:
+            - generic @e644:
+              - generic:
+                - generic @e645: "385"
+                - link "Kansas" @e646 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/107235316/kansas
+              - separator @e648
+          - generic @e649:
+            - strong @e650:
+              - generic @e651:
+                - generic:
+                  - generic @e652: 4,602
+                  - link "Kentucky" @e653 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105868674/kentucky
+                - separator @e655
+            - generic @e657:
+              - generic:
+                - generic @e658: 3,778
+                - link "Red River Gorge" @e659 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105841134/red-river-gorge
+              - separator @e661
+          - strong @e663:
+            - generic @e664:
+              - generic:
+                - generic @e665: "41"
+                - link "Louisiana" @e666 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/116720343/louisiana
+              - separator @e668
+          - generic @e669:
+            - strong @e670:
+              - generic @e671:
+                - generic:
+                  - generic @e672: 2,395
+                  - link "Maine" @e673 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105948977/maine
+                - separator @e675
+            - generic @e677:
+              - generic:
+                - generic @e678: "431"
+                - link "-Acadia National Park" @e679 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105948980/acadia-national-park
+              - separator @e681
+          - strong @e683:
+            - generic @e684:
+              - generic:
+                - generic @e685: 2,991
+                - link "Maryland" @e686 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106029417/maryland
+              - separator @e688
+          - generic @e689:
+            - strong @e690:
+              - generic @e691:
+                - generic:
+                  - generic @e692: 6,423
+                  - link "Massachusetts" @e693 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105908062/massachusetts
+                - separator @e695
+            - generic @e697:
+              - generic:
+                - generic @e698: 1,377
+                - link "Lynn Woods" @e699 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105908096/lynn-woods
+              - separator @e701
+            - generic @e703:
+              - generic:
+                - generic @e704: "148"
+                - link "Gilbert Hills State Park" @e705 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106320464/gilbert-hills-state-park
+              - separator @e707
+          - generic @e708:
+            - strong @e709:
+              - generic @e710:
+                - generic:
+                  - generic @e711: 1,601
+                  - link "Michigan" @e712 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/106113246/michigan
+                - separator @e714
+            - generic @e716:
+              - generic:
+                - generic @e717: "86"
+                - link "Munising" @e718 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105886705/munising
+              - separator @e720
+          - generic @e721:
+            - strong @e722:
+              - generic @e723:
+                - generic:
+                  - generic @e724: 2,520
+                  - link "Minnesota" @e725 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105812481/minnesota
+                - separator @e727
+            - generic @e729:
+              - generic:
+                - generic @e730: "169"
+                - link "Red Wing (a.k.a. He Mni Can, Barn Bluff)" @e731 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105812663/red-wing-aka-he-mni-can-barn-bluff
+              - separator @e733
+          - strong @e735:
+            - generic @e736:
+              - generic:
+                - generic @e737: "115"
+                - link "Mississippi" @e738 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/108307056/mississippi
+              - separator @e740
+          - generic @e741:
+            - strong @e742:
+              - generic @e743:
+                - generic:
+                  - generic @e744: 2,425
+                  - link "Missouri" @e745 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105899020/missouri
+                - separator @e747
+            - generic @e749:
+              - generic:
+                - generic @e750: "116"
+                - 'link "EM: Elephant Rocks SP" @e751 [cursor=pointer]':
+                  - /url: https://www.mountainproject.com/area/106328972/em-elephant-rocks-sp
+              - separator @e753
+          - generic @e754:
+            - strong @e755:
+              - generic @e756:
+                - generic:
+                  - generic @e757: 4,286
+                  - link "Montana" @e758 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105907492/montana
+                - separator @e760
+            - generic @e762:
+              - generic:
+                - generic @e763: "541"
+                - link "Gallatin Canyon" @e764 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105941836/gallatin-canyon
+              - separator @e766
+            - generic @e768:
+              - generic:
+                - generic @e769: "274"
+                - link "Hyalite Canyon" @e770 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106291254/hyalite-canyon
+              - separator @e772
+            - generic @e774:
+              - generic:
+                - generic @e775: "74"
+                - link "Lost Horse" @e776 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105936708/lost-horse
+              - separator @e778
+          - strong @e780:
+            - generic @e781:
+              - generic:
+                - generic @e782: "14"
+                - link "Nebraska" @e783 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/116096758/nebraska
+              - separator @e785
+          - generic @e786:
+            - strong @e787:
+              - generic @e788:
+                - generic:
+                  - generic @e789: 7,281
+                  - link "Nevada" @e790 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708961/nevada
+                - separator @e792
+            - generic @e794:
+              - generic:
+                - generic @e795: 2,943
+                - link "Red Rocks" @e796 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105731932/red-rocks
+              - separator @e798
+            - generic @e800:
+              - generic:
+                - generic @e801: "578"
+                - link "Mount Charleston" @e802 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105850026/mount-charleston
+              - separator @e804
+          - generic @e805:
+            - strong @e806:
+              - generic @e807:
+                - generic:
+                  - generic @e808: 8,296
+                  - link "New Hampshire" @e809 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105872225/new-hampshire
+                - separator @e811
+            - generic @e813:
+              - generic:
+                - generic @e814: 1,162
+                - link "*Rumney" @e815 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105867829/rumney
+              - separator @e817
+            - generic @e819:
+              - generic:
+                - generic @e820: "291"
+                - link "*Cathedral Ledge" @e821 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105908823/cathedral-ledge
+              - separator @e823
+            - generic @e825:
+              - generic:
+                - generic @e826: "159"
+                - link "*Whitehorse Ledge" @e827 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105909079/whitehorse-ledge
+              - separator @e829
+            - generic @e831:
+              - generic:
+                - generic @e832: 1,121
+                - link "*Pawtuckaway" @e833 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105929413/pawtuckaway
+              - separator @e835
+            - generic @e837:
+              - generic:
+                - generic @e838: "537"
+                - link "* NH Ice and Mixed" @e839 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106099658/nh-ice-and-mixed
+              - separator @e841
+            - generic @e843:
+              - generic:
+                - generic @e844: "85"
+                - link "*Cannon Cliff" @e845 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/107340274/cannon-cliff
+              - separator @e847
+            - generic @e849:
+              - generic:
+                - generic @e850: "331"
+                - link "Sundown Ledge" @e851 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/107756087/sundown-ledge
+              - separator @e853
+        - generic @e854:
+          - generic @e855:
+            - strong @e856:
+              - generic @e857:
+                - generic:
+                  - generic @e858: "943"
+                  - link "New Jersey" @e859 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/106374428/new-jersey
+                - separator @e861
+            - generic @e863:
+              - generic:
+                - generic @e864: "139"
+                - link "Delaware Water Gap NRA" @e865 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/116173835/delaware-water-gap-nra
+              - separator @e867
+          - generic @e868:
+            - strong @e869:
+              - generic @e870:
+                - generic:
+                  - generic @e871: 6,782
+                  - link "New Mexico" @e872 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708964/new-mexico
+                - separator @e874
+            - generic @e876:
+              - generic:
+                - generic @e877: "340"
+                - link "Sandia Mountains (West Side)" @e878 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105788177/sandia-mountains-west-side
+              - separator @e880
+            - generic @e882:
+              - generic:
+                - generic @e883: "197"
+                - link "El Rito" @e884 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105788273/el-rito
+              - separator @e886
+            - generic @e888:
+              - generic:
+                - generic @e889: "555"
+                - link "Organ Mountains" @e890 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105789445/organ-mountains
+              - separator @e892
+            - generic @e894:
+              - generic:
+                - generic @e895: "133"
+                - link "Enchanted Tower" @e896 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105789938/enchanted-tower
+              - separator @e898
+            - generic @e900:
+              - generic:
+                - generic @e901: "780"
+                - link "Taos Area" @e902 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105868955/taos-area
+              - separator @e904
+          - generic @e905:
+            - strong @e906:
+              - generic @e907:
+                - generic:
+                  - generic @e908: 6,551
+                  - link "New York" @e909 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105800424/new-york
+                - separator @e911
+            - generic @e913:
+              - generic:
+                - generic @e914: 1,358
+                - link "The Gunks" @e915 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105798167/the-gunks
+              - separator @e917
+            - generic @e919:
+              - generic:
+                - generic @e920: 2,705
+                - link "Adirondacks" @e921 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105910378/adirondacks
+              - separator @e923
+          - generic @e924:
+            - strong @e925:
+              - generic @e926:
+                - generic:
+                  - generic @e927: 4,283
+                  - link "North Carolina" @e928 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105873282/north-carolina
+                - separator @e930
+            - generic @e932:
+              - generic:
+                - generic @e933: "446"
+                - link "Linville Gorge" @e934 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105873285/linville-gorge
+              - separator @e936
+            - generic @e938:
+              - generic:
+                - generic @e939: "196"
+                - link "Looking Glass Rock" @e940 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105873294/looking-glass-rock
+              - separator @e942
+            - generic @e944:
+              - generic:
+                - generic @e945: "85"
+                - link "Stone Mountain" @e946 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105873297/stone-mountain
+              - separator @e948
+            - generic @e950:
+              - generic:
+                - generic @e951: "87"
+                - link "Laurel Knob" @e952 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105888014/laurel-knob
+              - separator @e954
+            - generic @e956:
+              - generic:
+                - generic @e957: "594"
+                - link "Rumbling Bald" @e958 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105891895/rumbling-bald
+              - separator @e960
+            - generic @e962:
+              - generic:
+                - generic @e963: "618"
+                - link "Hanging Rock State Park" @e964 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105932741/hanging-rock-state-park
+              - separator @e966
+          - strong @e968:
+            - generic @e969:
+              - generic:
+                - generic @e970: "71"
+                - link "North Dakota" @e971 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106598130/north-dakota
+              - separator @e973
+          - generic @e974:
+            - strong @e975:
+              - generic @e976:
+                - generic:
+                  - generic @e977: 2,689
+                  - link "Ohio" @e978 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105994953/ohio
+                - separator @e980
+            - generic @e982:
+              - generic:
+                - generic @e983: "166"
+                - link "Whipps Ledges" @e984 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105992476/whipps-ledges
+              - separator @e986
+            - generic @e988:
+              - generic:
+                - generic @e989: "161"
+                - link "Chippewa Creek" @e990 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105994274/chippewa-creek
+              - separator @e992
+          - generic @e993:
+            - strong @e994:
+              - generic @e995:
+                - generic:
+                  - generic @e996: 2,496
+                  - link "Oklahoma" @e997 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105854466/oklahoma
+                - separator @e999
+            - generic @e1001:
+              - generic:
+                - generic @e1002: "215"
+                - link "Quartz Mountain" @e1003 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105854470/quartz-mountain
+              - separator @e1005
+            - generic @e1007:
+              - generic:
+                - generic @e1008: 1,380
+                - link "Wichita Mountains Wildlife Refuge" @e1009 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105858670/wichita-mountains-wildlife-refuge
+              - separator @e1011
+          - generic @e1012:
+            - strong @e1013:
+              - generic @e1014:
+                - generic:
+                  - generic @e1015: 6,173
+                  - link "Oregon" @e1016 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708965/oregon
+                - separator @e1018
+            - generic @e1020:
+              - generic:
+                - generic @e1021: 1,486
+                - link "Smith Rock" @e1022 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105788989/smith-rock
+              - separator @e1024
+            - generic @e1026:
+              - generic:
+                - generic @e1027: "30"
+                - link "a. Mt. Hood" @e1028 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105789896/mt-hood
+              - separator @e1030
+            - generic @e1032:
+              - generic:
+                - generic @e1033: "88"
+                - link "Smith Rock Bouldering" @e1034 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/108531724/smith-rock-bouldering
+              - separator @e1036
+            - generic @e1038:
+              - generic:
+                - generic @e1039: "69"
+                - link "Oregon Volcanoes" @e1040 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/109532053/oregon-volcanoes
+              - separator @e1042
+          - generic @e1043:
+            - strong @e1044:
+              - generic @e1045:
+                - generic:
+                  - generic @e1046: 4,288
+                  - link "Pennsylvania" @e1047 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105913279/pennsylvania
+                - separator @e1049
+            - generic @e1051:
+              - generic:
+                - generic @e1052: "179"
+                - link "Birdsboro Quarry" @e1053 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106214658/birdsboro-quarry
+              - separator @e1055
+            - generic @e1057:
+              - generic:
+                - generic @e1058: "417"
+                - link "Safe Harbor" @e1059 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/107374703/safe-harbor
+              - separator @e1061
+          - generic @e1062:
+            - strong @e1063:
+              - generic @e1064:
+                - generic:
+                  - generic @e1065: 2,016
+                  - link "Rhode Island" @e1066 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/106842810/rhode-island
+                - separator @e1068
+            - generic @e1070:
+              - generic:
+                - generic @e1071: 1,036
+                - link "Lincoln Woods" @e1072 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105913161/lincoln-woods
+              - separator @e1074
+          - generic @e1075:
+            - strong @e1076:
+              - generic @e1077:
+                - generic:
+                  - generic @e1078: "378"
+                  - link "South Carolina" @e1079 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/107638915/south-carolina
+                - separator @e1081
+            - generic @e1083:
+              - generic:
+                - generic @e1084: "189"
+                - link "Big Rock Mountain" @e1085 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/113573351/big-rock-mountain
+              - separator @e1087
+          - generic @e1088:
+            - strong @e1089:
+              - generic @e1090:
+                - generic:
+                  - generic @e1091: 4,153
+                  - link "South Dakota" @e1092 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708963/south-dakota
+                - separator @e1094
+            - generic @e1096:
+              - generic:
+                - generic @e1097: 1,046
+                - link "Spearfish Canyon" @e1098 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105714282/spearfish-canyon
+              - separator @e1100
+            - generic @e1102:
+              - generic:
+                - generic @e1103: "759"
+                - link "Custer State Park" @e1104 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106058091/custer-state-park
+              - separator @e1106
+          - generic @e1107:
+            - strong @e1108:
+              - generic @e1109:
+                - generic:
+                  - generic @e1110: 4,709
+                  - link "Tennessee" @e1111 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105887760/tennessee
+                - separator @e1113
+            - generic @e1115:
+              - generic:
+                - generic @e1116: "313"
+                - link "The Tennessee Wall" @e1117 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105851828/the-tennessee-wall
+              - separator @e1119
+            - generic @e1121:
+              - generic:
+                - generic @e1122: "183"
+                - link "Foster Falls" @e1123 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105883248/foster-falls
+              - separator @e1125
+            - generic @e1127:
+              - generic:
+                - generic @e1128: "190"
+                - link "Sunset Park" @e1129 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105888070/sunset-park
+              - separator @e1131
+            - generic @e1133:
+              - generic:
+                - generic @e1134: "655"
+                - link "Obed & Clear Creek" @e1135 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105891970/obed-clear-creek
+              - separator @e1137
+            - generic @e1139:
+              - generic:
+                - generic @e1140: "573"
+                - link "Stone Fort" @e1141 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106031921/stone-fort
+              - separator @e1143
+            - generic @e1145:
+              - generic:
+                - generic @e1146: "83"
+                - link "Leda" @e1147 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105888074/leda
+              - separator @e1149
+        - generic @e1150:
+          - generic @e1151:
+            - strong @e1152:
+              - generic @e1153:
+                - generic:
+                  - generic @e1154: 4,209
+                  - link "Texas" @e1155 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105835804/texas
+                - separator @e1157
+            - generic @e1159:
+              - generic:
+                - generic @e1160: "810"
+                - link "Hueco Tanks" @e1161 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105810691/hueco-tanks
+              - separator @e1163
+            - generic @e1165:
+              - generic:
+                - generic @e1166: "389"
+                - link "Enchanted Rock State Natural Area" @e1167 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105855196/enchanted-rock-state-natural-area
+              - separator @e1169
+          - generic @e1170:
+            - strong @e1171:
+              - generic @e1172:
+                - generic:
+                  - generic @e1173: 19,955
+                  - link "Utah" @e1174 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708957/utah
+                - separator @e1176
+            - generic @e1178:
+              - generic:
+                - generic @e1179: "430"
+                - link "Zion National Park" @e1180 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105716799/zion-national-park
+              - separator @e1182
+            - generic @e1184:
+              - generic:
+                - generic @e1185: "761"
+                - link "American Fork Canyon" @e1186 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105739274/american-fork-canyon
+              - separator @e1188
+            - generic @e1190:
+              - generic:
+                - generic @e1191: 2,257
+                - link "Little Cottonwood Canyon" @e1192 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105739277/little-cottonwood-canyon
+              - separator @e1194
+            - generic @e1196:
+              - generic:
+                - generic @e1197: 1,042
+                - link "Big Cottonwood Canyon" @e1198 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105739280/big-cottonwood-canyon
+              - separator @e1200
+            - generic @e1202:
+              - generic:
+                - generic @e1203: "805"
+                - link "Maple Canyon" @e1204 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105739298/maple-canyon
+              - separator @e1206
+            - generic @e1208:
+              - generic:
+                - generic @e1209: "626"
+                - link "San Rafael Swell" @e1210 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105787863/san-rafael-swell
+              - separator @e1212
+            - generic @e1214:
+              - generic:
+                - generic @e1215: "799"
+                - link "Joe's Valley" @e1216 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105880382/joes-valley
+              - separator @e1218
+            - generic @e1220:
+              - generic:
+                - generic @e1221: 1,716
+                - link "Indian Creek" @e1222 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105716763/indian-creek
+              - separator @e1224
+            - generic @e1226:
+              - generic:
+                - generic @e1227: "64"
+                - link "Castle Valley" @e1228 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105716784/castle-valley
+              - separator @e1230
+            - generic @e1232:
+              - generic:
+                - generic @e1233: "61"
+                - link "Fisher Towers" @e1234 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105716787/fisher-towers
+              - separator @e1236
+          - generic @e1237:
+            - strong @e1238:
+              - generic @e1239:
+                - generic:
+                  - generic @e1240: 2,505
+                  - link "Vermont" @e1241 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105891603/vermont
+                - separator @e1243
+            - generic @e1245:
+              - generic:
+                - generic @e1246: "470"
+                - link "Smugglers' Notch" @e1247 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105891622/smugglers-notch
+              - separator @e1249
+            - generic @e1251:
+              - generic:
+                - generic @e1252: "29"
+                - link "Lake Willoughby" @e1253 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105891650/lake-willoughby
+              - separator @e1255
+            - generic @e1257:
+              - generic:
+                - generic @e1258: "143"
+                - link "* VT Ice and Mixed" @e1259 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/107280521/vt-ice-and-mixed
+              - separator @e1261
+          - generic @e1262:
+            - strong @e1263:
+              - generic @e1264:
+                - generic:
+                  - generic @e1265: 7,245
+                  - link "Virginia" @e1266 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105852400/virginia
+                - separator @e1268
+            - generic @e1270:
+              - generic:
+                - generic @e1271: 1,323
+                - link "Grayson Highlands State Park" @e1272 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106477419/grayson-highlands-state-park
+              - separator @e1274
+            - generic @e1276:
+              - generic:
+                - generic @e1277: "411"
+                - link "Shenandoah National Park" @e1278 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/107083949/shenandoah-national-park
+              - separator @e1280
+          - generic @e1281:
+            - strong @e1282:
+              - generic @e1283:
+                - generic:
+                  - generic @e1284: 12,987
+                  - link "Washington" @e1285 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708966/washington
+                - separator @e1287
+            - generic @e1289:
+              - generic:
+                - generic @e1290: "305"
+                - link "Exit 32; Little Si" @e1291 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105789876/exit-32-little-si
+              - separator @e1293
+            - generic @e1295:
+              - generic:
+                - generic @e1296: 1,156
+                - link "Index" @e1297 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105790635/index
+              - separator @e1299
+            - generic @e1301:
+              - generic:
+                - generic @e1302: "781"
+                - link "Frenchman Coulee (Vantage)" @e1303 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105792231/frenchman-coulee-vantage
+              - separator @e1305
+            - generic @e1307:
+              - generic:
+                - generic @e1308: "453"
+                - link "Tieton River" @e1309 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105921237/tieton-river
+              - separator @e1311
+          - generic @e1312:
+            - strong @e1313:
+              - generic @e1314:
+                - generic:
+                  - generic @e1315: 6,107
+                  - link "West Virginia" @e1316 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105855459/west-virginia
+                - separator @e1318
+            - generic @e1320:
+              - generic:
+                - generic @e1321: 2,370
+                - link "The New River Gorge Region" @e1322 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105855991/the-new-river-gorge-region
+              - separator @e1324
+            - generic @e1326:
+              - generic:
+                - generic @e1327: "383"
+                - link "Seneca Rocks" @e1328 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105861910/seneca-rocks
+              - separator @e1330
+            - generic @e1332:
+              - generic:
+                - generic @e1333: "407"
+                - link "Summersville (Gauley River) Area" @e1334 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105989762/summersville-gauley-river-area
+              - separator @e1336
+          - generic @e1337:
+            - strong @e1338:
+              - generic @e1339:
+                - generic:
+                  - generic @e1340: 5,374
+                  - link "Wisconsin" @e1341 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708968/wisconsin
+                - separator @e1343
+            - generic @e1345:
+              - generic:
+                - generic @e1346: 3,069
+                - link "Devil's Lake" @e1347 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105729927/devils-lake
+              - separator @e1349
+            - generic @e1351:
+              - generic:
+                - generic @e1352: "408"
+                - link "Governor Dodge State Park" @e1353 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105730030/governor-dodge-state-park
+              - separator @e1355
+            - generic @e1357:
+              - generic:
+                - generic @e1358: 1,726
+                - link "Devil's Lake Bouldering" @e1359 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106513891/devils-lake-bouldering
+              - separator @e1361
+          - generic @e1362:
+            - strong @e1363:
+              - generic @e1364:
+                - generic:
+                  - generic @e1365: 7,448
+                  - link "Wyoming" @e1366 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105708960/wyoming
+                - separator @e1368
+            - generic @e1370:
+              - generic:
+                - generic @e1371: "161"
+                - link "Devils Tower" @e1372 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105714267/devils-tower
+              - separator @e1374
+            - generic @e1376:
+              - generic:
+                - generic @e1377: 1,212
+                - link "Vedauwoo" @e1378 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105744307/vedauwoo
+              - separator @e1380
+            - generic @e1382:
+              - generic:
+                - generic @e1383: "367"
+                - link "Grand Teton National Park" @e1384 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105802912/grand-teton-national-park
+              - separator @e1386
+            - generic @e1388:
+              - generic:
+                - generic @e1389: "980"
+                - link "Ten Sleep Canyon" @e1390 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105819641/ten-sleep-canyon
+              - separator @e1392
+            - generic @e1394:
+              - generic:
+                - generic @e1395: "277"
+                - link "Wind River Range" @e1396 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105823538/wind-river-range
+              - separator @e1398
+            - generic @e1400:
+              - generic:
+                - generic @e1401: "951"
+                - link "Sinks Canyon" @e1402 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105827053/sinks-canyon
+              - separator @e1404
+            - generic @e1406:
+              - generic:
+                - generic @e1407: "76"
+                - link "Rock Springs Buttress" @e1408 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105833991/rock-springs-buttress
+              - separator @e1410
+            - generic @e1412:
+              - generic:
+                - generic @e1413: "390"
+                - link "Wild Iris" @e1414 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105840796/wild-iris
+              - separator @e1416
+          - generic @e1417:
+            - strong @e1418:
+              - generic @e1419:
+                - generic:
+                  - generic @e1420: 74,627
+                  - link "International" @e1421 [cursor=pointer]:
+                    - /url: https://www.mountainproject.com/area/105907743/international
+                - separator @e1423
+            - generic @e1425:
+              - generic:
+                - generic @e1426: 1,624
+                - link "Australia" @e1427 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105907756/australia
+              - separator @e1429
+            - generic @e1431:
+              - generic:
+                - generic @e1432: 2,762
+                - link "Africa" @e1433 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106135596/africa
+              - separator @e1435
+            - generic @e1437:
+              - generic:
+                - generic @e1438: 22,722
+                - link "Europe" @e1439 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106660030/europe
+              - separator @e1441
+            - generic @e1443:
+              - generic:
+                - generic @e1444: 32,695
+                - link "North America" @e1445 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106661469/north-america
+              - separator @e1447
+            - generic @e1449:
+              - generic:
+                - generic @e1450: 9,347
+                - link "Asia" @e1451 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106661515/asia
+              - separator @e1453
+            - generic @e1455:
+              - generic:
+                - generic @e1456: 4,179
+                - link "South America" @e1457 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/106661603/south-america
+              - separator @e1459
+            - generic @e1461:
+              - generic:
+                - generic @e1462: 1,291
+                - link "Oceania" @e1463 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/107833406/oceania
+              - separator @e1465
+            - generic @e1467:
+              - generic:
+                - generic @e1468: "7"
+                - link "Antarctica" @e1469 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/113864722/antarctica
+              - separator @e1471
+          - strong @e1473:
+            - generic @e1474:
+              - generic:
+                - generic @e1475: 1,162
+                - link "* In Progress" @e1476 [cursor=pointer]:
+                  - /url: https://www.mountainproject.com/area/105798164/in-progress
+              - separator @e1478
+    - generic @e1480:
+      - generic @e1481:
+        - link "View Full Size Map" @e1482 [cursor=pointer]:
+          - /url: https://www.mountainproject.com/map
+        - text: "| Explore:"
+        - combobox @e1483:
+          - option "Choose Destination" [selected]
+          - 'option "BC: Squamish"'
+          - 'option "CA: Joshua Tree"'
+          - 'option "CA: Lake Tahoe"'
+          - 'option "CA: Tahquitz/Suicide"'
+          - 'option "CA: Yosemite"'
+          - 'option "CO: Boulder Canyon"'
+          - 'option "CO: Eldorado Canyon SP"'
+          - 'option "ID: City of Rocks"'
+          - 'option "KY: Red River Gorge"'
+          - 'option "NH: Rumney"'
+          - 'option "NV: Red Rock"'
+          - 'option "NY: Adirondaks"'
+          - 'option "NY: Gunks"'
+          - 'option "OR: Smith Rock"'
+          - 'option "TX: Hueco Tanks"'
+          - 'option "Thailand: Railey/Tonsai"'
+          - 'option "UT: Indian Creek"'
+          - 'option "UT: Wasatch Range"'
+          - 'option "WV: New River Gorge"'
+      - generic @e1484: TradSportTRBoulderIce
+      - generic @e1487:
+        - generic @e1489:
+          - strong @e1491: Popular Near Here
+          - generic @e1551: D'oh! Zoom out to find more.
+        - generic @e1494:
+          - generic "Map" @e1552
+          - generic:
+            - generic:
+              - button "Enter fullscreen" @e1554 [cursor=pointer]
+              - button "Find my location" @e1557 [cursor=pointer]
+              - generic @e1559:
+                - button "Zoom in" @e1560 [cursor=pointer]
+                - button "Zoom out" @e1562 [cursor=pointer]
+            - link "Mapbox logo" @e1565 [cursor=pointer]:
+              - /url: https://www.mapbox.com/
+            - generic:
+              - generic @e1566: 1 mi
+              - button "Options" @e1568 [cursor=pointer]
+  - document @e1496:
+    - generic @e1497:
+      - text: We use cookies to enhance your online experience. By using this website you agree to our
+      - link "Privacy Policy" @e1498 [cursor=pointer]:
+        - /url: https://www.adventureprojects.net/ap-privacy
+      - text: .
+    - button "Close" @e1499 [cursor=pointer]
+  - generic @e1500:
+    - generic @e1501:
+      - list @e1503:
+        - listitem @e1504:
+          - link "onX Maps" @e1505 [cursor=pointer]:
+            - /url: https://www.onxmaps.com
+            - img @e1506
+        - listitem @e1511: onX products are built by adventurers, for adventurers. We believe that every adventurer needs to know where to go, to know where they stand, and to be able to share their experiences.
+        - listitem @e1512:
+          - link "About onX" @e1513 [cursor=pointer]:
+            - /url: https://www.onxmaps.com/about
+        - listitem @e1514:
+          - link "Careers" @e1515 [cursor=pointer]:
+            - /url: https://www.onxmaps.com/join-our-team
+      - list @e1517:
+        - listitem @e1518:
+          - link "About" @e1519 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/about
+        - listitem @e1520:
+          - link "Help" @e1521 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/help
+        - listitem @e1522:
+          - link "Gyms" @e1523 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/gyms
+        - listitem @e1524:
+          - link "Partner Finder" @e1525 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/partner-finder
+        - listitem @e1526:
+          - link "What's New" @e1527 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/whats-new
+        - listitem @e1528:
+          - link "Top Contributors" @e1529 [cursor=pointer]:
+            - /url: https://www.mountainproject.com/directory/users
+        - listitem @e1530:
+          - link "Mountain Project" @e1531 [cursor=pointer]:
+            - /url: https://www.mountainproject.com
+        - listitem @e1532:
+          - link "MTB Project" @e1533 [cursor=pointer]:
+            - /url: https://www.mtbproject.com
+        - listitem @e1534:
+          - link "Hiking Project" @e1535 [cursor=pointer]:
+            - /url: https://www.hikingproject.com
+        - listitem @e1536:
+          - link "Trail Run Project" @e1537 [cursor=pointer]:
+            - /url: https://www.trailrunproject.com
+        - listitem @e1538:
+          - link "Powder Project" @e1539 [cursor=pointer]:
+            - /url: https://www.powderproject.com
+        - listitem @e1540:
+          - link "National Parks" @e1541 [cursor=pointer]:
+            - /url: https://www.hikingproject.com/nationalparks
+    - generic @e1542:
+      - link "iOS App Store" @e1543 [cursor=pointer]:
+        - /url: https://apps.apple.com/us/app/mountain-project/id452308783
+        - img "iOS App Store" @e1544
+      - link "Android App Store" @e1545 [cursor=pointer]:
+        - /url: https://play.google.com/store/apps/details?id=com.mountainproject.android
+        - img "Android App Store" @e1546
+    - generic @e1547:
+      - link "© 2026 onX Maps, Inc." @e1548 [cursor=pointer]:
+        - /url: https://www.onxmaps.com
+      - link "Terms" @e1549 [cursor=pointer]:
+        - /url: https://www.adventureprojects.net/ap-terms
+      - text: ·
+      - link "Privacy" @e1550 [cursor=pointer]:
+        - /url: https://www.adventureprojects.net/ap-privacy
