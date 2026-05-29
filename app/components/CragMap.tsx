@@ -58,6 +58,8 @@ export interface CragMapProps {
   onMapReady?: (map: L.Map) => void;
   userLocation?: { lat: number; lng: number } | null;
   gradeSystem?: GradeSystem;
+  /** Set to true once the full (async) route set has finished loading */
+  routesLoaded?: boolean;
 }
 
 // Popularity -> radius (heatmap-ish)
@@ -87,10 +89,16 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
     moveend: () => setZoom(map.getZoom()),
   });
 
-  const isClustered = zoom < 11; // Cluster below zoom 11 for overview density
+  // Three clustering tiers:
+  //   zoom >= 11 → individual dots with jitter
+  //   zoom 7–10  → group by crag name (same-area routes share a pin)
+  //   zoom <= 6  → geographic grid clustering (round lat/lng to 1 decimal) to avoid
+  //                country-scale stacking of crags that share GPS coords
+  const clusterMode: 'none' | 'crag' | 'geo' =
+    zoom >= 11 ? 'none' : zoom >= 7 ? 'crag' : 'geo';
 
   const displayItems = useMemo(() => {
-    if (!isClustered) {
+    if (clusterMode === 'none') {
       return routes.map((route, idx) => ({
         id: route.id,
         lat: jitterCoord(route.lat, idx),
@@ -98,17 +106,24 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
         route,
         isCluster: false,
         count: 1,
+        allRoutes: [route] as Route[],
       }));
     }
 
-    // Group by crag for cluster view (density visualization)
+    // Build cluster key based on mode
+    const getKey = (r: Route) =>
+      clusterMode === 'crag'
+        ? r.crag
+        : `${Math.round(r.lat * 10) / 10},${Math.round(r.lng * 10) / 10}`;
+
     const groups = new Map<string, Route[]>();
     routes.forEach((r) => {
-      if (!groups.has(r.crag)) groups.set(r.crag, []);
-      groups.get(r.crag)!.push(r);
+      const key = getKey(r);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key)!.push(r);
     });
 
-    return Array.from(groups.entries()).map(([crag, groupRoutes], idx) => {
+    return Array.from(groups.entries()).map(([, groupRoutes]) => {
       // Centroid of the group
       const avgLat = groupRoutes.reduce((s, r) => s + r.lat, 0) / groupRoutes.length;
       const avgLng = groupRoutes.reduce((s, r) => s + r.lng, 0) / groupRoutes.length;
@@ -124,7 +139,7 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
         allRoutes: groupRoutes,
       };
     });
-  }, [routes, isClustered]);
+  }, [routes, clusterMode]);
 
   return (
     <>
@@ -137,7 +152,7 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
 
         return (
           <CircleMarker
-            key={`${item.id}-${index}-${isClustered ? 'cluster' : 'single'}`}
+            key={`${item.id}-${index}-${clusterMode}`}
             center={[item.lat, item.lng]}
             radius={radius}
             pathOptions={{
@@ -149,8 +164,15 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
             eventHandlers={{
               click: () => {
                 if (item.isCluster) {
-                  // Cluster: zoom in only, no popup
-                  map.flyTo([item.lat, item.lng], Math.min(14, zoom + 3), { duration: 0.5 });
+                  // Fit to the bounding box of all routes in this cluster so it
+                  // always zooms far enough to break the cluster apart.
+                  const lats = item.allRoutes.map((r: Route) => r.lat);
+                  const lngs = item.allRoutes.map((r: Route) => r.lng);
+                  const clusterBounds: L.LatLngBoundsExpression = [
+                    [Math.min(...lats) - 0.5, Math.min(...lngs) - 0.5],
+                    [Math.max(...lats) + 0.5, Math.max(...lngs) + 0.5],
+                  ];
+                  map.flyToBounds(clusterBounds, { padding: [40, 40], maxZoom: 13, duration: 0.6 });
                 } else {
                   onMarkerClick(item.route);
                 }
@@ -170,22 +192,36 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
 }
 
 // Inner component that receives map instance
-function MapController({ center, zoom, onMapReady, routes }: {
+function MapController({ center, zoom, onMapReady, routes, routesLoaded }: {
   center?: [number, number];
   zoom?: number;
   onMapReady?: (map: L.Map) => void;
   routes?: Route[];
+  routesLoaded?: boolean;
 }) {
   const map = useMap();
+  // Only block re-fitting once the user has manually interacted with the map.
+  const userInteractedRef = useRef(false);
   const fittedRef = useRef(false);
 
   useEffect(() => {
     if (onMapReady) onMapReady(map);
   }, [map, onMapReady]);
 
-  // Auto-fit to all routes on first load (helps users on wrong continent)
+  // Track manual user interaction so we don't override their pan/zoom
+  useMapEvents({
+    dragstart: () => { userInteractedRef.current = true; },
+    zoomstart: () => { userInteractedRef.current = true; },
+  });
+
+  // Auto-fit to all routes once the full route set has loaded.
+  // routesLoaded=true means MP routes are done — fit to the complete dataset.
+  // If routesLoaded is not provided (legacy usage) fall back to fitting on any
+  // non-empty routes array, but still respect user interaction.
   useEffect(() => {
-    if (fittedRef.current || !routes || routes.length === 0 || center) return;
+    const readyToFit = routesLoaded !== undefined ? routesLoaded : true;
+    if (!readyToFit || fittedRef.current || userInteractedRef.current) return;
+    if (!routes || routes.length === 0 || center) return;
     const validRoutes = routes.filter(r => r.lat && r.lng && Math.abs(r.lat) > 0.001);
     if (validRoutes.length === 0) return;
     const lats = validRoutes.map(r => r.lat);
@@ -198,7 +234,7 @@ function MapController({ center, zoom, onMapReady, routes }: {
       map.fitBounds(bounds, { padding: [30, 30], maxZoom: 7 });
       fittedRef.current = true;
     }, 300);
-  }, [routes, map, center]);
+  }, [routes, routesLoaded, map, center]);
 
   // Critical fix for maps rendered inside tabs or conditionally:
   // Leaflet often initializes with wrong size, which locks the ability to zoom out.
@@ -235,6 +271,7 @@ export default function CragMap({
   onMapReady,
   userLocation,
   gradeSystem = 'yds',
+  routesLoaded,
 }: CragMapProps) {
   const defaultCenter: [number, number] = [37.6, -118.9];
   const [satellite, setSatellite] = useState(false);
@@ -299,6 +336,7 @@ export default function CragMap({
           zoom={zoom}
           onMapReady={onMapReady}
           routes={routes}
+          routesLoaded={routesLoaded}
         />
       </MapContainer>
 
