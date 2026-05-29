@@ -1,0 +1,586 @@
+[
+  {
+    "name": "Wild Iris",
+    "routes": 74627
+  },
+  {
+    "name": "Horseshoe Canyon Ranch",
+    "routes": 47615
+  },
+  {
+    "name": "Southern-Western Sierra",
+    "routes": 38608
+  },
+  {
+    "name": "Europe",
+    "routes": 32695
+  },
+  {
+    "name": "Africa",
+    "routes": 22722
+  },
+  {
+    "name": "Seward Highway",
+    "routes": 15073
+  },
+  {
+    "name": "Shenandoah National Park",
+    "routes": 12987
+  },
+  {
+    "name": "North America",
+    "routes": 9347
+  },
+  {
+    "name": "Mount Charleston",
+    "routes": 8296
+  },
+  {
+    "name": "California",
+    "routes": 8071
+  },
+  {
+    "name": "Nebraska",
+    "routes": 7281
+  },
+  {
+    "name": "High Sierra",
+    "routes": 6914
+  },
+  {
+    "name": "Delaware Water Gap NRA",
+    "routes": 6782
+  },
+  {
+    "name": "Taos Area",
+    "routes": 6551
+  },
+  {
+    "name": "Maryland",
+    "routes": 6423
+  },
+  {
+    "name": "Wichita Mountains Wildlife Refuge",
+    "routes": 6173
+  },
+  {
+    "name": "Tieton River",
+    "routes": 6107
+  },
+  {
+    "name": "Custer State Park",
+    "routes": 4709
+  },
+  {
+    "name": "Kansas",
+    "routes": 4602
+  },
+  {
+    "name": "Eastern Sierra",
+    "routes": 4493
+  },
+  {
+    "name": "Oregon Volcanoes",
+    "routes": 4288
+  },
+  {
+    "name": "Adirondacks",
+    "routes": 4283
+  },
+  {
+    "name": "Leda",
+    "routes": 4209
+  },
+  {
+    "name": "Asia",
+    "routes": 4179
+  },
+  {
+    "name": "Flatirons",
+    "routes": 4051
+  },
+  {
+    "name": "South Platte",
+    "routes": 4033
+  },
+  {
+    "name": "Kentucky",
+    "routes": 3778
+  },
+  {
+    "name": "Lake Tahoe",
+    "routes": 3079
+  },
+  {
+    "name": "Wisconsin",
+    "routes": 3069
+  },
+  {
+    "name": "Nevada",
+    "routes": 2943
+  },
+  {
+    "name": "Australia",
+    "routes": 2762
+  },
+  {
+    "name": "The Gunks",
+    "routes": 2705
+  },
+  {
+    "name": "North Dakota",
+    "routes": 2689
+  },
+  {
+    "name": "The Fins",
+    "routes": 2579
+  },
+  {
+    "name": "Munising",
+    "routes": 2520
+  },
+  {
+    "name": "Fisher Towers",
+    "routes": 2505
+  },
+  {
+    "name": "Chippewa Creek",
+    "routes": 2496
+  },
+  {
+    "name": "Mississippi",
+    "routes": 2425
+  },
+  {
+    "name": "Name",
+    "routes": 2420
+  },
+  {
+    "name": "Louisiana",
+    "routes": 2395
+  },
+  {
+    "name": "West Virginia",
+    "routes": 2370
+  },
+  {
+    "name": "American Fork Canyon",
+    "routes": 2257
+  },
+  {
+    "name": "Safe Harbor",
+    "routes": 2016
+  },
+  {
+    "name": "Florida",
+    "routes": 1939
+  },
+  {
+    "name": "Colorado",
+    "routes": 1929
+  },
+  {
+    "name": "Governor Dodge State Park",
+    "routes": 1726
+  },
+  {
+    "name": "Owens River Gorge",
+    "routes": 1725
+  },
+  {
+    "name": "International",
+    "routes": 1624
+  },
+  {
+    "name": "Gilbert Hills State Park",
+    "routes": 1601
+  },
+  {
+    "name": "Oregon",
+    "routes": 1486
+  },
+  {
+    "name": "Quartz Mountain",
+    "routes": 1380
+  },
+  {
+    "name": "Massachusetts",
+    "routes": 1377
+  },
+  {
+    "name": "New York",
+    "routes": 1358
+  },
+  {
+    "name": "Rifle",
+    "routes": 1352
+  },
+  {
+    "name": "Eldorado Canyon State Park",
+    "routes": 1332
+  },
+  {
+    "name": "Virginia",
+    "routes": 1323
+  },
+  {
+    "name": "Lumpy Ridge",
+    "routes": 1298
+  },
+  {
+    "name": "South America",
+    "routes": 1291
+  },
+  {
+    "name": "Devils Tower",
+    "routes": 1212
+  },
+  {
+    "name": "New Hampshire",
+    "routes": 1162
+  },
+  {
+    "name": "Antarctica",
+    "routes": 1162
+  },
+  {
+    "name": "South Dakota",
+    "routes": 1046
+  },
+  {
+    "name": "Little Cottonwood Canyon",
+    "routes": 1042
+  },
+  {
+    "name": "Rhode Island",
+    "routes": 1036
+  },
+  {
+    "name": "Grand Teton National Park",
+    "routes": 980
+  },
+  {
+    "name": "Wind River Range",
+    "routes": 951
+  },
+  {
+    "name": "Sundown Ledge",
+    "routes": 943
+  },
+  {
+    "name": "Grand Junction Area",
+    "routes": 824
+  },
+  {
+    "name": "Arizona",
+    "routes": 820
+  },
+  {
+    "name": "Texas",
+    "routes": 810
+  },
+  {
+    "name": "Big Cottonwood Canyon",
+    "routes": 805
+  },
+  {
+    "name": "San Rafael Swell",
+    "routes": 799
+  },
+  {
+    "name": "Index",
+    "routes": 781
+  },
+  {
+    "name": "Enchanted Tower",
+    "routes": 780
+  },
+  {
+    "name": "Zion National Park",
+    "routes": 761
+  },
+  {
+    "name": "Spearfish Canyon",
+    "routes": 759
+  },
+  {
+    "name": "Idaho",
+    "routes": 746
+  },
+  {
+    "name": "Indiana",
+    "routes": 719
+  },
+  {
+    "name": "Lover's Leap",
+    "routes": 675
+  },
+  {
+    "name": "Rifle Mountain Park",
+    "routes": 666
+  },
+  {
+    "name": "Sunset Park",
+    "routes": 655
+  },
+  {
+    "name": "Maple Canyon",
+    "routes": 626
+  },
+  {
+    "name": "Cochise Stronghold",
+    "routes": 620
+  },
+  {
+    "name": "Rumbling Bald",
+    "routes": 618
+  },
+  {
+    "name": "Laurel Knob",
+    "routes": 594
+  },
+  {
+    "name": "Yosemite National Park",
+    "routes": 592
+  },
+  {
+    "name": "Illinois",
+    "routes": 557
+  },
+  {
+    "name": "El Rito",
+    "routes": 555
+  },
+  {
+    "name": "Montana",
+    "routes": 541
+  },
+  {
+    "name": "Arkansas",
+    "routes": 526
+  },
+  {
+    "name": "Gunnison",
+    "routes": 516
+  },
+  {
+    "name": "Shelf Road",
+    "routes": 502
+  },
+  {
+    "name": "Connecticut",
+    "routes": 490
+  },
+  {
+    "name": "Vermont",
+    "routes": 470
+  },
+  {
+    "name": "North Carolina",
+    "routes": 446
+  },
+  {
+    "name": "Maine",
+    "routes": 431
+  },
+  {
+    "name": "Utah",
+    "routes": 430
+  },
+  {
+    "name": "Birdsboro Quarry",
+    "routes": 417
+  },
+  {
+    "name": "Grayson Highlands State Park",
+    "routes": 411
+  },
+  {
+    "name": "Devil's Lake",
+    "routes": 408
+  },
+  {
+    "name": "Palisades Park",
+    "routes": 400
+  },
+  {
+    "name": "Giant City State Park",
+    "routes": 393
+  },
+  {
+    "name": "Hueco Tanks",
+    "routes": 389
+  },
+  {
+    "name": "Iowa",
+    "routes": 385
+  },
+  {
+    "name": "The New River Gorge Region",
+    "routes": 383
+  },
+  {
+    "name": "Lincoln Woods",
+    "routes": 378
+  },
+  {
+    "name": "Vedauwoo",
+    "routes": 367
+  },
+  {
+    "name": "Denali National Park",
+    "routes": 355
+  },
+  {
+    "name": "New Mexico",
+    "routes": 340
+  },
+  {
+    "name": "Georgia",
+    "routes": 335
+  },
+  {
+    "name": "Tennessee",
+    "routes": 313
+  },
+  {
+    "name": "Washington",
+    "routes": 305
+  },
+  {
+    "name": "Ten Sleep Canyon",
+    "routes": 277
+  },
+  {
+    "name": "The Sawtooth Range",
+    "routes": 254
+  },
+  {
+    "name": "Alaska",
+    "routes": 248
+  },
+  {
+    "name": "Pere Marquette State Park",
+    "routes": 240
+  },
+  {
+    "name": "Alabama",
+    "routes": 238
+  },
+  {
+    "name": "Oklahoma",
+    "routes": 215
+  },
+  {
+    "name": "Joshua Tree National Park",
+    "routes": 204
+  },
+  {
+    "name": "Linville Gorge",
+    "routes": 196
+  },
+  {
+    "name": "South Carolina",
+    "routes": 189
+  },
+  {
+    "name": "Pennsylvania",
+    "routes": 179
+  },
+  {
+    "name": "Minnesota",
+    "routes": 169
+  },
+  {
+    "name": "Ohio",
+    "routes": 166
+  },
+  {
+    "name": "Whipps Ledges",
+    "routes": 161
+  },
+  {
+    "name": "Wyoming",
+    "routes": 161
+  },
+  {
+    "name": "Sedona Area",
+    "routes": 154
+  },
+  {
+    "name": "Lynn Woods",
+    "routes": 148
+  },
+  {
+    "name": "Lake Willoughby",
+    "routes": 143
+  },
+  {
+    "name": "New Jersey",
+    "routes": 139
+  },
+  {
+    "name": "Delaware",
+    "routes": 134
+  },
+  {
+    "name": "Organ Mountains",
+    "routes": 133
+  },
+  {
+    "name": "Paradise Forks",
+    "routes": 120
+  },
+  {
+    "name": "Missouri",
+    "routes": 116
+  },
+  {
+    "name": "Stone Mountain",
+    "routes": 87
+  },
+  {
+    "name": "Michigan",
+    "routes": 86
+  },
+  {
+    "name": "Stone Fort",
+    "routes": 83
+  },
+  {
+    "name": "Sinks Canyon",
+    "routes": 76
+  },
+  {
+    "name": "Hyalite Canyon",
+    "routes": 74
+  },
+  {
+    "name": "Hawaii",
+    "routes": 67
+  },
+  {
+    "name": "Indian Creek",
+    "routes": 64
+  },
+  {
+    "name": "Jamestown",
+    "routes": 61
+  },
+  {
+    "name": "Mount Yonah",
+    "routes": 56
+  },
+  {
+    "name": "Red River Gorge",
+    "routes": 41
+  },
+  {
+    "name": "Smugglers' Notch",
+    "routes": 29
+  },
+  {
+    "name": "Lost Horse",
+    "routes": 14
+  }
+]
