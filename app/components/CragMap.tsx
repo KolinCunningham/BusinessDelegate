@@ -248,21 +248,25 @@ export default function CragMap({
         style={{ background: '#F8F7F4' }}
         zoomControl={true}
         attributionControl={true}
-        minZoom={3}
+        minZoom={2}
         maxZoom={18}
+        maxBounds={[[-85, -180], [85, 180]]}
+        maxBoundsViscosity={1.0}
+        worldCopyJump={false}
       >
         {satellite ? (
           <TileLayer
             attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
             maxZoom={18}
+            noWrap={true}
           />
         ) : (
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
             maxZoom={19}
-            minZoom={3}
+            noWrap={true}
           />
         )}
 
