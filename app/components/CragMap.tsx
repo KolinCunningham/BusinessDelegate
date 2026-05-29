@@ -138,12 +138,9 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
             }}
             eventHandlers={{
               click: () => {
-                if (item.isCluster && (item as any).allRoutes) {
-                  // On cluster click: zoom in + center on representative
-                  map.flyTo([item.lat, item.lng], Math.min(13, zoom + 2.5), { duration: 0.6 });
-                  // Select the most popular in cluster
-                  const best = [...(item as any).allRoutes].sort((a, b) => b.popularity - a.popularity)[0];
-                  onMarkerClick(best);
+                if (item.isCluster) {
+                  // Cluster: zoom in only, no popup
+                  map.flyTo([item.lat, item.lng], Math.min(14, zoom + 3), { duration: 0.5 });
                 } else {
                   onMarkerClick(item.route);
                 }
@@ -200,17 +197,17 @@ function MapController({ center, zoom, onMapReady }: {
   return null;
 }
 
-export default function CragMap({ 
-  routes, 
-  selectedRouteId, 
-  onMarkerClick, 
-  center, 
-  zoom = 7, 
+export default function CragMap({
+  routes,
+  selectedRouteId,
+  onMarkerClick,
+  center,
+  zoom = 7,
   onMapReady,
-  userLocation 
+  userLocation
 }: CragMapProps) {
-  // Default center: US West climbing heartland (Bishop / Yosemite area)
   const defaultCenter: [number, number] = [37.6, -118.9];
+  const [satellite, setSatellite] = useState(false);
 
   return (
     <div className="relative h-full w-full rounded-2xl overflow-hidden border border-[#E5E2D9] shadow-xl bg-[#F8F7F4]">
@@ -224,13 +221,20 @@ export default function CragMap({
         minZoom={3}
         maxZoom={18}
       >
-        {/* OpenStreetMap tiles - free, no key required */}
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          maxZoom={19}
-          minZoom={3}
-        />
+        {satellite ? (
+          <TileLayer
+            attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            maxZoom={18}
+          />
+        ) : (
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
+            minZoom={3}
+          />
+        )}
 
         <RouteMarkers 
           routes={routes} 
@@ -262,6 +266,14 @@ export default function CragMap({
           onMapReady={onMapReady} 
         />
       </MapContainer>
+
+      {/* Satellite / Street toggle */}
+      <button
+        onClick={() => setSatellite(s => !s)}
+        className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg text-xs font-semibold border border-[#E5E2D9] shadow text-[#1F2525] hover:bg-white transition-colors flex items-center gap-1.5"
+      >
+        {satellite ? '🗺 Street' : '🛰 Satellite'}
+      </button>
 
       {/* Zoom / cluster legend + offline hint — NOW BIG + KID FRIENDLY */}
       <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 backdrop-blur px-4 py-2 rounded-xl text-sm font-medium border border-[#E5E2D9] shadow text-[#1F2525] flex flex-col gap-1">
