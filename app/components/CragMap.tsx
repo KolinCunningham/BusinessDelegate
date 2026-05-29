@@ -153,7 +153,7 @@ function RouteMarkers({ routes, selectedRouteId, onMarkerClick }: {
             <Tooltip direction="top" offset={[0, -6]} opacity={0.95} className="font-sans text-xs">
               {item.isCluster 
                 ? `${item.count} routes @ ${item.route.crag} — click to zoom` 
-                : `${item.route.name} • ${getDisplayGrade(item.route.grades, userLocation?.lat, userLocation?.lng)} • ${item.route.crag} • ★${item.route.stars} • ${item.route.type} • ${item.route.popularity} sends`}
+                : `${item.route.name} • ${getDisplayGrade(item.route.grades, undefined, undefined)} • ${item.route.crag} • ★${item.route.stars} • ${item.route.type} • ${item.route.popularity} sends`}
             </Tooltip>
           </CircleMarker>
         );
